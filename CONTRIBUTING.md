@@ -3,6 +3,19 @@
 ## Coding Style Guidelines
 For the most part, contributers should adhere to the [pep8](https://www.python.org/dev/peps/pep-0008) style guide. Since pep8 is a bit ambiguous in some cases, we enforce the additional rules below.
 
+### Source files:
+
+All Python source files should be UTF-8 encoded with the UTF-8 header on top like so:
+```python
+# -*- coding: utf-8 -*-
+```
+
+Standalone scripts should also have a hashbang header like so:
+```python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+```
+
 ### Indentation:
 
 * Each indentation level is 4 spaces (no tabs).
@@ -27,6 +40,7 @@ If we missed to mention a particular case, you should always follow the below pr
 
 
 ## Python 2 and 3 support
+
 CAMeL tools should be able to run on Python 2 and 3.
 [Here's a nice cheat-sheet](http://python-future.org/compatible_idioms.html) of how to do that.
 
