@@ -1,4 +1,4 @@
-![logo](camel_logo.png)
+![alt text](camel_logo.png "CAMeL logo")
 
 # CAMeL Tools
 
