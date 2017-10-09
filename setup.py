@@ -1,4 +1,13 @@
+import os
 from setuptools import setup
+
+
+version_file = os.path.join(os.path.dirname(__file__),
+                            'camel_tools',
+                            'VERSION')
+with open(version_file) as fh:
+    VERSION = fh.read().strip()
+
 
 CLASSIFIERS = [
     'Development Status :: 1 - Planning',
@@ -29,16 +38,28 @@ DESCRIPTION = ('A suite of morphological analysis and disambiguation tools '
 
 LONG_DESCRIPTION = open('README.md', 'rt').read()
 
+INSTALL_REQUIRES = [
+    'docopt',
+]
+
 setup(
     name='camel_tools',
-    version='0.1.0',
+    version=VERSION,
     author='Ossama W. Obeid',
     author_email='oobeid@nyu.edu',
+    maintainer='Ossama W. Obeid',
+    maintainer_email='oobeid@nyu.edu',
     packages=['camel_tools'],
-    scripts=[],
+    entry_points={
+        'console_scripts': [
+            ('camel_disambig='
+             'camel_tools.scripts.camel_disambig.camel_disambig:main'),
+        ],
+    },
     url='https://github.com/owo/CAMeL_Tools',
     license='UNLICENSED',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
+    install_requires=INSTALL_REQUIRES,
 )
