@@ -1,3 +1,5 @@
+![logo](camel_logo.png)
+
 # CAMeL Tools
 
 ## Introduction
