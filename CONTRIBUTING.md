@@ -4,6 +4,8 @@ Thank you for considering to contribute to CAMeL Tools, we appreciate the help :
 To make sure that we maintain the highest quality of code, we do have to adhere to some strict guidelines though.
 Please read through this document to help you get up and running.
 
+If you would like to report a bug, suggest enhancements, or request a new feature, jump to the [Issues section](#issues).
+
 
 ## Git + GitHub
 We use the [Git](https://git-scm.com/) version control system to manage the development with the repository hosted on [GitHub](https://github.com).
@@ -122,3 +124,16 @@ Before submitting a pull request, please make sure you follow the guidelines bel
 * Each commit should have a descriptive commit message.
 * You should make sure your code passes all tests before committing.
 * Changes to VERSION files are done **only** by the maintainer!
+
+
+## Issues
+Not all contributions have to be in code.
+If you would like to report a bug, suggest enhancements, or request a new feature, please use the [issues page](https://github.com/owo/CAMeL_Tools/issues) to do so.
+
+Please adhere to the following rules when posting a new issue:
+
+* Try not to post duplicate issues. Search through previous issues to see if your issue has been posted before.
+* Create one issue per bug, enhancement suggestion, or feature request.
+* Use appropriate labels to indicate the type of issue you are posting.
+* Provide detailed information on the system you are running (operating system, Python version, etc.),
+exact steps to reproduce the issue, sample input file(s), and the output produced when submitting bug reports.
