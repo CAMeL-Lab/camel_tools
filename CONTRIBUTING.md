@@ -18,7 +18,7 @@ If you're already familiar with Git and GitHub, please read [Submitting Pull Req
 ## Setting Up a Development Environment
 
 We recommend installing Python through [pyenv](https://github.com/pyenv/pyenv).
-This helps with managing multiple Python versions for testing easily (see the section on [Tests](#tests).
+This helps with managing multiple Python versions for testing easily (see the section on [Tests](#tests)).
 
 We also recommend using [virtualenv](https://virtualenv.pypa.io/en/stable/) while developing for CAMeL Tools to insure a clean development environment.
 
