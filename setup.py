@@ -53,7 +53,7 @@ setup(
     entry_points={
         'console_scripts': [
             ('camel_disambig='
-             'camel_tools.scripts.camel_disambig.camel_disambig:main'),
+             'camel_tools.disambig.camel_disambig:main'),
         ],
     },
     url='https://github.com/owo/CAMeL_Tools',

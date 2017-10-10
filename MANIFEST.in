@@ -1,6 +1,5 @@
 include README.md MANIFEST.in camel_logo.png
 include setup.py
 include camel_tools/VERSION
-include camel_tools/scripts/camel_disambig/VERSION
 include tests/*.py
 global-exclude *~
