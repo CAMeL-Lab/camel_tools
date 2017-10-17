@@ -39,6 +39,8 @@ DESCRIPTION = ('A suite of morphological analysis and disambiguation tools '
 LONG_DESCRIPTION = open('README.md', 'rt').read()
 
 INSTALL_REQUIRES = [
+    'future',
+    'six',
     'docopt',
 ]
 
