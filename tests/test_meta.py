@@ -5,9 +5,8 @@ configured.
 This will eventually be removed.
 """
 
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
-import os
 import camel_tools as camelt
 from camel_tools.disambig import camel_disambig
 
