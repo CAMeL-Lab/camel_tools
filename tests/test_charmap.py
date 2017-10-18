@@ -10,7 +10,8 @@ from collections import Mapping
 
 import pytest
 
-from camel_tools.utils import CharMapper, InvalidCharMapKeyError
+from camel_tools.utils import CharMapper
+from camel_tools.utils import InvalidCharMapKeyError, BuiltinCharMapNotFound
 
 
 validMap = {
@@ -137,3 +138,34 @@ class TestCharMapper(object):
     def test_mapString_arabic(self):
         mapper = CharMapper(validMap)
         assert(mapper.mapString(u'٠١٢٣٤٥٦٧٨٩') == u'012---++++')
+
+    def test_builtinMapper_ar2bw(self):
+        assert(CharMapper.builtinMapper('ar2bw'))
+
+    def test_builtinMapper_ar2safebw(self):
+        assert(CharMapper.builtinMapper('ar2safebw'))
+
+    def test_builtinMapper_ar2xmlbw(self):
+        assert(CharMapper.builtinMapper('ar2xmlbw'))
+
+    def test_builtinMapper_ar2hsb(self):
+        assert(CharMapper.builtinMapper('ar2bw'))
+
+    def test_builtinMapper_bw2ar(self):
+        assert(CharMapper.builtinMapper('bw2ar'))
+
+    def test_builtinMapper_safebw2ar(self):
+        assert(CharMapper.builtinMapper('safebw2ar'))
+
+    def test_builtinMapper_xmlbw2ar(self):
+        assert(CharMapper.builtinMapper('xmlbw2ar'))
+
+    def test_builtinMapper_hsb2ar(self):
+        assert(CharMapper.builtinMapper('hsb2ar'))
+
+    def test_builtinMapper_arclean(self):
+        assert(CharMapper.builtinMapper('arclean'))
+
+    def test_builinMapper_Invalid(self):
+        with pytest.raises(BuiltinCharMapNotFound):
+            CharMapper.builtinMapper('hello')
