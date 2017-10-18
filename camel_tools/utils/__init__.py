@@ -1,2 +1,3 @@
 from .stringutils import isUnicode
-from .charmap import CharMapper, InvalidCharMapKeyError
+from .charmap import CharMapper
+from .charmap import InvalidCharMapKeyError, BuiltinCharMapNotFound
