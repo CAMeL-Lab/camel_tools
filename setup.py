@@ -56,6 +56,8 @@ setup(
         'console_scripts': [
             ('camel_disambig='
              'camel_tools.disambig.camel_disambig:main'),
+            ('camel_transliterate='
+             'camel_tools.transliterate.camel_transliterate:main'),
         ],
     },
     url='https://github.com/owo/CAMeL_Tools',
