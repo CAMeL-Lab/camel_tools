@@ -84,7 +84,7 @@ def main():  # pragma: no cover
     if arguments['--list']:
         for s in _BUILTIN_SCHEMES:
             print("{}   {}".format(s[0].ljust(10), s[1]))
-            sys.exit(0)
+        sys.exit(0)
 
     if arguments['--scheme'] is not None:
         if arguments['--scheme'] not in [s[0] for s in _BUILTIN_SCHEMES]:
