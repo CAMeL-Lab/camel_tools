@@ -51,7 +51,7 @@ setup(
     author_email='oobeid@nyu.edu',
     maintainer='Ossama W. Obeid',
     maintainer_email='oobeid@nyu.edu',
-    packages=['camel_tools'],
+    packages=['camel_tools', 'camel_tools.transliterate', 'camel_tools.utils'],
     entry_points={
         'console_scripts': [
             ('camel_disambig='
