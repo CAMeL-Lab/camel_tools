@@ -55,8 +55,7 @@ setup(
               'camel_tools.transliterate',
               'camel_tools.utils'],
     package_data={
-        'camel_tools.transliterate': ['camel_tools/utils/charmaps/*.json'],
-        'camel_tools.utils': ['camel_tools/utils/charmaps/*.json'],
+        'camel_tools.utils': ['charmaps/*.json'],
     },
     include_package_data=True,
     entry_points={
