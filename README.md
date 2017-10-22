@@ -3,7 +3,10 @@
 # CAMeL Tools
 
 ## Introduction
-A suite of morphological analysis and disambiguation tools for Arabic developed by the [CAMeL Lab](https://nyuad.nyu.edu/en/research/faculty-research/camel-lab.html) at [New York University Abu Dhabi](http://nyuad.nyu.edu/).
+A suite of morphological analysis and disambiguation tools for Arabic developed
+by the
+[CAMeL Lab](https://nyuad.nyu.edu/en/research/faculty-research/camel-lab.html)
+at [New York University Abu Dhabi](http://nyuad.nyu.edu/).
 
 
 ## Installation
