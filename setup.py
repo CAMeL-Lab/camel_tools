@@ -1,4 +1,5 @@
 import os
+import codecs
 from setuptools import setup
 
 
@@ -36,7 +37,7 @@ DESCRIPTION = ('A suite of morphological analysis and disambiguation tools '
                'for Arabic developed by the CAMeL Lab at New York University '
                'Abu Dhabi.')
 
-LONG_DESCRIPTION = open('README.md', 'rt').read()
+LONG_DESCRIPTION = codecs.open('README.md', 'r', encoding='utf-8').read()
 
 INSTALL_REQUIRES = [
     'future',
