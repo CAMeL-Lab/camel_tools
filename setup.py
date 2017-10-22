@@ -51,7 +51,14 @@ setup(
     author_email='oobeid@nyu.edu',
     maintainer='Ossama W. Obeid',
     maintainer_email='oobeid@nyu.edu',
-    packages=['camel_tools', 'camel_tools.transliterate', 'camel_tools.utils'],
+    packages=['camel_tools',
+              'camel_tools.transliterate',
+              'camel_tools.utils'],
+    package_data={
+        'camel_tools.transliterate': ['camel_tools/utils/charmaps/*.json'],
+        'camel_tools.utils': ['camel_tools/utils/charmaps/*.json'],
+    },
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             ('camel_disambig='
