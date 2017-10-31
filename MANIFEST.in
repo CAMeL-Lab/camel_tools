@@ -3,6 +3,7 @@ include setup.py
 include camel_tools/VERSION
 include camel_tools/utils/charmaps/*.json
 include camel_tools/transliterate/*.py
+include camel_tools/arclean/*.py
 include camel_tools/utils/*.py
 include tests/*.py
 global-exclude *~

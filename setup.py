@@ -65,6 +65,8 @@ setup(
              'camel_tools.disambig.camel_disambig:main'),
             ('camel_transliterate='
              'camel_tools.transliterate.camel_transliterate:main'),
+            ('camel_arclean='
+             'camel_tools.arclean.camel_arclean:main'),
         ],
     },
     url='https://github.com/owo/CAMeL_Tools',
