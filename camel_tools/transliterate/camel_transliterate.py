@@ -41,7 +41,6 @@ _BUILTIN_SCHEMES = [
     ('safebw2ar', 'Safe Buckwalter to Arabic'),
     ('xmlbw2ar', 'XML Buckwalter to Arabic'),
     ('hsb2ar', 'Habash-Soudi-Buckwalter to Arabic'),
-    ('arclean', 'Clean Arabic text')
 ]
 
 
