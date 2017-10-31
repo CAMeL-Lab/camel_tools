@@ -12,4 +12,4 @@ from camel_tools.disambig import camel_disambig
 
 
 def test_camelToolsVersion():
-    assert camel_disambig.__version__ == camelt.__version__
+    assert(camel_disambig.__version__ == camelt.__version__)

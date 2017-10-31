@@ -14,7 +14,7 @@ from camel_tools.utils import CharMapper
 from camel_tools.utils import InvalidCharMapKeyError, BuiltinCharMapNotFound
 
 
-validMap = {
+VALID_MAP = {
     u'e': u'u',
     u'h-m': u'*',
     u'a-d': u'm',
@@ -119,24 +119,24 @@ class TestCharMapper(object):
 
     def test_mapString_None(self):
         with pytest.raises(TypeError):
-            mapper = CharMapper(validMap)
+            mapper = CharMapper(VALID_MAP)
             mapper.mapString(None)
 
     def test_mapString_emptyString(self):
-        mapper = CharMapper(validMap)
+        mapper = CharMapper(VALID_MAP)
         assert(mapper.mapString(u'') == u'')
 
     def test_mapString_notUnicode(self):
         with pytest.raises(TypeError):
-            mapper = CharMapper(validMap)
+            mapper = CharMapper(VALID_MAP)
             mapper.mapString(b'Hello, world!')
 
     def test_mapString_english(self):
-        mapper = CharMapper(validMap)
+        mapper = CharMapper(VALID_MAP)
         assert(mapper.mapString(u'Hello, world!') == u'Hu**o, wor*m!')
 
     def test_mapString_arabic(self):
-        mapper = CharMapper(validMap)
+        mapper = CharMapper(VALID_MAP)
         assert(mapper.mapString(u'٠١٢٣٤٥٦٧٨٩') == u'012---++++')
 
     def test_builtinMapper_ar2bw(self):
