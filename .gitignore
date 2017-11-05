@@ -50,5 +50,8 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
-#Pyenv
+# Pyenv
 .python-version
+
+# VS Code
+.vscode/
