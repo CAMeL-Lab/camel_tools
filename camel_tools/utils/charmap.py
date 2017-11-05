@@ -46,7 +46,7 @@ class BuiltinCharMapNotFoundError(ValueError):
         self.message = message
 
     def __repr__(self):
-        return 'InvalidCharMapKeyError({}, {})'.format(
+        return 'BuiltinCharMapNotFoundError({}, {})'.format(
             repr(self.map_name), repr(self.message)
         )
 
