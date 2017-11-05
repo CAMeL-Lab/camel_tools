@@ -57,7 +57,7 @@ Standalone scripts should also have a hashbang header like so:
 ### Indentation:
 
 * Each indentation level is 4 spaces (no tabs).
-* Arguments should be aligned with the opening delimiter as in the first example [pep8 indentation section](https://www.python.org/dev/peps/pep-0008/#indentation).
+* Arguments should be aligned with the opening delimiter when possible as in the first example [pep8 indentation section](https://www.python.org/dev/peps/pep-0008/#indentation).
 * If arguments are to be split into multiple lines, there should only be one argument per line.
 
 ### Strings:
@@ -68,10 +68,10 @@ Standalone scripts should also have a hashbang header like so:
 ### Naming Conventions:
 
 * Classes are always in camel case (eg. `SomeClass`).
-* Variables, functions, and methods are always mixed case (eg. `someVar`).
+* Variables, functions, and methods are always written in snake case (eg. `some_var`).
 * Constants are always uppercase with underscore as a separator (eg. `SOME_CONSTANT`).
 * Private classes, variables, constants, functions, and methods (ie. only used within a module or a class)
-follow the same rules as above but are prefixed with a single underscore (eg. `_someVar`, `_SomeClass`, `_SOME_CONSTANT`).
+follow the same rules as above but are prefixed with a single underscore (eg. `_some_var`, `_SomeClass`, `_SOME_CONSTANT`).
 
 ## Python 2 and 3 Support
 
