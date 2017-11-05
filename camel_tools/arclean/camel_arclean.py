@@ -56,7 +56,7 @@ def _open_files(finpath, foutpath):
 
 def _arclean(mapper, fin, fout):
     for line in fin:
-        fout.write(mapper.mapString(line))
+        fout.write(mapper.map_string(line))
     fout.flush()
 
 
@@ -68,7 +68,7 @@ def main():  # pragma: no cover
     fin, fout = _open_files(arguments['FILE'], arguments['--output'])
 
     try:
-        mapper = CharMapper.builtinMapper('arclean')
+        mapper = CharMapper.builtin_mapper('arclean')
         _arclean(mapper, fin, fout)
 
      # If everything worked so far, this shouldn't happen
