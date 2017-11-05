@@ -1,12 +1,14 @@
+# -*- coding: utf-8 -*-
+
 import os
 import codecs
 from setuptools import setup
 
 
-version_file = os.path.join(os.path.dirname(__file__),
+VERSION_FILE = os.path.join(os.path.dirname(__file__),
                             'camel_tools',
                             'VERSION')
-with open(version_file) as fh:
+with open(VERSION_FILE) as fh:
     VERSION = fh.read().strip()
 
 
@@ -25,7 +27,6 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7',
     'Topic :: Scientific/Engineering',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
     'Topic :: Scientific/Engineering :: Information Analysis',
