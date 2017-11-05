@@ -10,7 +10,7 @@ from __future__ import absolute_import
 import six
 
 
-def isUnicode(obj):
+def isunicode(obj):
     """Checks if an object is a unicode encoded string. Useful for Python 2 and
     3 compatibility.
 
