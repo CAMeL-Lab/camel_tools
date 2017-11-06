@@ -223,8 +223,9 @@ class CharMapper(object):
             json_dict = json.loads(jsonstr)
 
         return CharMapper(
-            json_dict.get('charmap', {}),
-            default=json_dict.get('default', None))
+            json_dict.get('charMap', {}),
+            default=json_dict.get('default', None)
+        )
 
     @staticmethod
     def builtin_mapper(map_name):
