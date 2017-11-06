@@ -80,7 +80,6 @@ class Transliterator(object):
         buff = deque()
 
         splits = self._markerre.split(_string)
-        print(splits)
         for spl in splits:
             if spl.startswith(self._marker):
                 if ignore_markers:
