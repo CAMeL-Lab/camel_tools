@@ -5,6 +5,9 @@
 
 Usage:
     camel_transliterate (-s SCHEME | --scheme=SCHEME)
+                        [-m MARKER | --marker=MARKER]
+                        [-I | --ignore-markers]
+                        [-S | --strip-markers]
                         [-o OUTPUT | --output=OUTPUT] [FILE]
     camel_transliterate (-l | --list)
     camel_transliterate (-v | --version)
@@ -15,6 +18,10 @@ Options:
   -o OUTPUT --output=OUTPUT   Output file. If not specified, output will be
                               printed to stdout.
   -l --list                   Show a list of available transliteration schemes.
+  -m MARKER --marker=MARKER   Marker used to prefix tokens not to be
+                              transliterated. Set to '@@IGNORE@@' by default.
+  -I --ignore-markers         Transliterate marked words as well.
+  -S --strip-markers          Remove markers in output.
   -h --help                   Show this screen.
   -v --version                Show version.
 """
@@ -27,6 +34,7 @@ from docopt import docopt
 
 import camel_tools as camelt
 from camel_tools.utils import CharMapper
+from camel_tools.transliterate import Transliterator
 
 
 __version__ = camelt.__version__
@@ -70,19 +78,13 @@ def _open_files(finpath, foutpath):
     return fin, fout
 
 
-def _transliterate(mapper, fin, fout):
-    for line in fin:
-        fout.write(mapper.map_string(line))
-    fout.flush()
-
-
 def main():  # pragma: no cover
     version = ('CAMeL Tools v{}'.format(__version__))
     arguments = docopt(__doc__, version=version)
 
     if arguments['--list']:
-        for s in _BUILTIN_SCHEMES:
-            print("{}   {}".format(s[0].ljust(10), s[1]))
+        for scheme in _BUILTIN_SCHEMES:
+            print("{}   {}".format(scheme[0].ljust(10), scheme[1]))
         sys.exit(0)
 
     if arguments['--scheme'] is not None:
@@ -93,12 +95,26 @@ def main():  # pragma: no cover
                              '\n'.format(repr(arguments['--scheme'])))
             sys.exit(1)
 
+        if arguments['--marker'] is None:
+            marker = '@@IGNORE@@'
+        else:
+            marker = arguments['--marker']
+
+        ignore_markers = arguments['--ignore-markers']
+        strip_markers = arguments['--strip-markers']
+
         # Open files (or just use stdin and stdout)
         fin, fout = _open_files(arguments['FILE'], arguments['--output'])
 
         try:
             mapper = CharMapper.builtin_mapper(arguments['--scheme'])
-            _transliterate(mapper, fin, fout)
+            trans = Transliterator(mapper, marker)
+
+            for line in fin:
+                fout.write(
+                    trans.transliterate(line, strip_markers, ignore_markers)
+                )
+            fout.flush()
 
         # If everything worked so far, this shouldn't happen
         except Exception:
