@@ -44,6 +44,7 @@ INSTALL_REQUIRES = [
     'future',
     'six',
     'docopt',
+    'regex'
 ]
 
 setup(
