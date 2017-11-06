@@ -17,11 +17,11 @@ Options:
   -s SCHEME --scheme          Scheme used for transliteration.
   -o OUTPUT --output=OUTPUT   Output file. If not specified, output will be
                               printed to stdout.
-  -l --list                   Show a list of available transliteration schemes.
   -m MARKER --marker=MARKER   Marker used to prefix tokens not to be
                               transliterated. Set to '@@IGNORE@@' by default.
   -I --ignore-markers         Transliterate marked words as well.
   -S --strip-markers          Remove markers in output.
+  -l --list                   Show a list of available transliteration schemes.
   -h --help                   Show this screen.
   -v --version                Show version.
 """
