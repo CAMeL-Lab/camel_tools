@@ -58,7 +58,7 @@ def _open_files(finpath, foutpath):
     else:
         try:
             fin = open(finpath, 'r')
-        except Exception:
+        except OSError:
             sys.stderr.write('Error: Couldn\'t open input file {}.'
                              '\n'.format(repr(finpath)))
             sys.exit(1)
@@ -68,7 +68,7 @@ def _open_files(finpath, foutpath):
     else:
         try:
             fout = open(foutpath, 'w')
-        except Exception:
+        except OSError:
             sys.stderr.write('Error: Couldn\'t open output file {}.'
                              '\n'.format(repr(foutpath)))
             if finpath is not None:
@@ -106,10 +106,17 @@ def main():  # pragma: no cover
         # Open files (or just use stdin and stdout)
         fin, fout = _open_files(arguments['FILE'], arguments['--output'])
 
+        # Load the CharMapper and initialize a Transliterator with it
         try:
             mapper = CharMapper.builtin_mapper(arguments['--scheme'])
             trans = Transliterator(mapper, marker)
+        except Exception:  # pylint: disable=W0703
+            sys.stderr.write('Error: Could not load builtin scheme'
+                             ' {}.\n'.format(repr(arguments['--scheme'])))
+            sys.exit(1)
 
+        # Transliterate lines
+        try:
             for line in fin:
                 fout.write(
                     trans.transliterate(line, strip_markers, ignore_markers)
@@ -117,11 +124,9 @@ def main():  # pragma: no cover
             fout.flush()
 
         # If everything worked so far, this shouldn't happen
-        except Exception:
-            sys.stderr.write('Error: An error occured during '
+        except Exception:  # pylint: disable=W0703
+            sys.stderr.write('Error: An unkown error occured during '
                              'transliteration.\n')
-            fin.close()
-            fout.close()
             sys.exit(1)
 
         # Cleanup
