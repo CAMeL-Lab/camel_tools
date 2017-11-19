@@ -21,7 +21,4 @@ def isunicode(obj):
         bool: True if obj is a unicode encoded string, False otherwise.
     """
 
-    if isinstance(obj, six.text_type):
-        return True
-
-    return False
+    return isinstance(obj, six.text_type)
