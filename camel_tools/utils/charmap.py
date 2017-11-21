@@ -64,8 +64,14 @@ class CharMapper(object):
         'ar2xmlbw',
         'ar2hsb',
         'bw2ar',
+        'bw2safebw',
+        'bw2xmlbw',
         'safebw2ar',
+        'safebw2bw',
+        'safebw2xmlbw',
         'xmlbw2ar',
+        'xmlbw2bw',
+        'xmlbw2safebw',
         'hsb2ar',
         'arclean',
     )
@@ -233,7 +239,7 @@ class CharMapper(object):
 
         List of built-in mappings:
 
-            ----------------- Arabic Transliteration -----------------
+        ------------------- Arabic Transliteration -------------------
 
                 'ar2bw': Transliterates Arabic text to Buckwalter scheme.
             'ar2safebw': Transliterates Arabic text to Safe Buckwalter scheme.
@@ -241,12 +247,23 @@ class CharMapper(object):
                'ar2hsb': Transliterates Arabic text to  Habash-Soudi-Buckwalter
                          scheme.
                 'bw2ar': Transliterates Buckwalter scheme text to Arabic.
+            'bw2safebw': Transliterates Buckwalter scheme text to Safe
+                         Buckwalter scheme.
+             'bw2xmlbw': Transliterates Buckwalter scheme text to XML
+                         Buckwalter scheme.
             'safebw2ar': Transliterates Safe Buckwalter scheme text to Arabic.
+            'safebw2bw': Transliterates Safe Buckwalter scheme text to Arabic.
+         'safebw2xmlbw': Transliterates Safe Buckwalter scheme text to XML
+                         Buckwalter scheme.
              'xmlbw2ar': Transliterates XML Buckwalter Scheme text to Arabic.
+             'xmlbw2bw': Transliterates XML Buckwalter Scheme text to
+                         Buckwalter scheme.
+         'xmlbw2safebw': Transliterates XML Buckwalter Scheme text to Safe
+                         Buckwalter scheme.
                'hsb2ar': Transliterates Habash-Soudi-Buckwalter scheme text to
                          Arabic.
 
-            ------------------------ Utility ------------------------
+        -------------------------- Utility --------------------------
 
               'arclean': Cleans Arabic text by:
                            - Deleting characters that are not in Arabic, ASCII,
