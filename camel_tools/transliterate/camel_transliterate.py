@@ -46,8 +46,14 @@ _BUILTIN_SCHEMES = [
     ('ar2xmlbw', 'Arabic to XML Buckwalter'),
     ('ar2hsb', 'Arabic to Habash-Soudi-Buckwalter'),
     ('bw2ar', 'Buckwalter to Arabic'),
+    ('bw2safebw', 'Buckwalter to Safe Buckwalter'),
+    ('bw2xmlbw', 'Buckwalter to XML Buckwalter'),
     ('safebw2ar', 'Safe Buckwalter to Arabic'),
+    ('safebw2bw', 'Safe Buckwalter to Buckwalter'),
+    ('safebw2xmlbw', 'Safe Buckwalter to XML Buckwalter'),
     ('xmlbw2ar', 'XML Buckwalter to Arabic'),
+    ('xmlbw2bw', 'XML Buckwalter to Buckwalter'),
+    ('xmlbw2safebw', 'XML Buckwalter to Safe Buckwalter'),
     ('hsb2ar', 'Habash-Soudi-Buckwalter to Arabic'),
 ]
 
@@ -84,7 +90,7 @@ def main():  # pragma: no cover
 
     if arguments['--list']:
         for scheme in _BUILTIN_SCHEMES:
-            print("{}   {}".format(scheme[0].ljust(10), scheme[1]))
+            print("{}   {}".format(scheme[0].ljust(14), scheme[1]))
         sys.exit(0)
 
     if arguments['--scheme'] is not None:
