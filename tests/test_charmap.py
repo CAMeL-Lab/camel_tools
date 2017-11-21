@@ -271,17 +271,55 @@ class TestCharMapperBuiltinMapper(object):
 
         assert CharMapper.builtin_mapper('bw2ar')
 
+    def test_builtinmapper_bw2safebw(self):
+        """Test that the builtin 'bw2safebw' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('bw2safebw')
+
+    def test_builtinmapper_bw2xmlbw(self):
+        """Test that the builtin 'bw2xmlbw' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('bw2xmlbw')
+
     def test_builtinmapper_safebw2ar(self):
         """Test that the builtin 'safebw2ar' scheme is loaded without errors.
         """
 
         assert CharMapper.builtin_mapper('safebw2ar')
 
+    def test_builtinmapper_safebw2bw(self):
+        """Test that the builtin 'safebw2bw' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('safebw2bw')
+
+    def test_builtinmapper_safebw2xmlbw(self):
+        """Test that the builtin 'safebw2xmlbw' scheme is loaded without
+        errors.
+        """
+
+        assert CharMapper.builtin_mapper('safebw2xmlbw')
+
     def test_builtinmapper_xmlbw2ar(self):
         """Test that the builtin 'xmlbw2ar' scheme is loaded without errors.
         """
 
         assert CharMapper.builtin_mapper('xmlbw2ar')
+
+    def test_builtinmapper_xmlbw2bw(self):
+        """Test that the builtin 'xmlbw2bw' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('xmlbw2bw')
+
+    def test_builtinmapper_xmlbw2safebw(self):
+        """Test that the builtin 'xmlbw2safebw' scheme is loaded without
+        errors.
+        """
+
+        assert CharMapper.builtin_mapper('xmlbw2safebw')
 
     def test_builtinmapper_hsb2ar(self):
         """Test that the builtin 'hsb2ar' scheme is loaded without errors.
