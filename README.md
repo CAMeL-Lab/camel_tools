@@ -201,3 +201,8 @@ Coming soon...
 
 If you would like to contribute to CAMeL Tools, please read the
 [CONTRIBUTE.md](./CONTRIBUTING.md) file.
+
+## Contributors
+
+- [Ossama Obeid](https://github.com/owo)
+- [Go Inoue](https://github.com/go-inoue)
