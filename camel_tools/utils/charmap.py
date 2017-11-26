@@ -66,13 +66,19 @@ class CharMapper(object):
         'bw2ar',
         'bw2safebw',
         'bw2xmlbw',
+        'bw2hsb',
         'safebw2ar',
         'safebw2bw',
         'safebw2xmlbw',
+        'safebw2hsb',
         'xmlbw2ar',
         'xmlbw2bw',
         'xmlbw2safebw',
+        'xmlbw2hsb',
         'hsb2ar',
+        'hsb2bw',
+        'hsb2safebw',
+        'hsb2xmlbw',
         'arclean',
     )
 
@@ -251,17 +257,30 @@ class CharMapper(object):
                          Buckwalter scheme.
              'bw2xmlbw': Transliterates Buckwalter scheme text to XML
                          Buckwalter scheme.
+               'bw2hsb': Transliterates Buckwalter scheme text to
+                         Habash-Soudi-Buckwalter scheme.
             'safebw2ar': Transliterates Safe Buckwalter scheme text to Arabic.
-            'safebw2bw': Transliterates Safe Buckwalter scheme text to Arabic.
+            'safebw2bw': Transliterates Safe Buckwalter scheme text to
+                         Buckwalter scheme.
          'safebw2xmlbw': Transliterates Safe Buckwalter scheme text to XML
                          Buckwalter scheme.
+           'safebw2hsb': Transliterates Safe Buckwalter scheme text to
+                         Habash-Soudi-Buckwalter scheme.
              'xmlbw2ar': Transliterates XML Buckwalter Scheme text to Arabic.
              'xmlbw2bw': Transliterates XML Buckwalter Scheme text to
                          Buckwalter scheme.
          'xmlbw2safebw': Transliterates XML Buckwalter Scheme text to Safe
                          Buckwalter scheme.
+            'xmlbw2hsb': Transliterates XML Buckwalter Scheme text to
+                         Habash-Soudi-Buckwalter scheme.
                'hsb2ar': Transliterates Habash-Soudi-Buckwalter scheme text to
                          Arabic.
+               'hsb2bw': Transliterates Habash-Soudi-Buckwalter scheme text to
+                         Buckwalter scheme.
+           'hsb2safebw': Transliterates Habash-Soudi-Buckwalter scheme text to
+                         Safe Buckwalter scheme..
+            'hsb2xmlbw': Transliterates Habash-Soudi-Buckwalter scheme text to
+                         XML Buckwalter scheme..
 
         -------------------------- Utility --------------------------
 
