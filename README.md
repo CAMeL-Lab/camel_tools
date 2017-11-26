@@ -77,13 +77,19 @@ ar2hsb           Arabic to Habash-Soudi-Buckwalter
 bw2ar            Buckwalter to Arabic
 bw2safebw        Buckwalter to Safe Buckwalter
 bw2xmlbw         Buckwalter to XML Buckwalter
+bw2hsb           Buckwalter to Habash-Soudi-Buckwalter
 safebw2ar        Safe Buckwalter to Arabic
 safebw2bw        Safe Buckwalter to Buckwalter
 safebw2xmlbw     Safe Buckwalter to XML Buckwalter
+safebw2hsb       Safe Buckwalter to Habash-Soudi-Buckwalter
 xmlbw2ar         XML Buckwalter to Arabic
 xmlbw2bw         XML Buckwalter to Buckwalter
 xmlbw2safebw     XML Buckwalter to Safe Buckwalter
+xmlbw2hsb        XML Buckwalter to Habash-Soudi-Buckwalter
 hsb2ar           Habash-Soudi-Buckwalter to Arabic
+hsb2bw           Habash-Soudi-Buckwalter to Buckwalter
+hsb2safebw       Habash-Soudi-Buckwalter to Safe Buckwalter
+hsb2xmlbw        Habash-Soudi-Buckwalter to Habash-Soudi-Buckwalter
 ```
 
 ##### Notes on markers
@@ -101,10 +107,11 @@ Buckwalter (Safe BW), XML Buckwalter (XML BW),
 and Habash-Soudi-Buckwalter (HSB) transliteration schemes.
 
 The transliteration schemes `ar2bw`, `ar2safebw`, `ar2xmlbw`, `ar2hsb`,
-`bw2ar`, `bw2safebw`, `bw2xmlbw`, `safebw2ar`, `safebw2bw`, `safebw2xmlbw`,
-`xmlbw2ar`, `xmlbw2bw`, `xmlbw2safebw`, and `hsb2ar` all use the conversion
-table below for transliteration. Input characters not listed in the table below
-are output as they appear without any transliteration.
+`bw2ar`, `bw2safebw`, `bw2xmlbw`, `bw2hsb`, `safebw2ar`, `safebw2bw`,
+`safebw2xmlbw`, `safebw2hsb`, `xmlbw2ar`, `xmlbw2bw`, `xmlbw2safebw`,
+`xmlbw2hsb`, `hsb2ar`, `hsb2bw`, `hsb2safebw`, `hsb2xmlbw`, and all use the
+conversion table below for transliteration. Input characters not listed in the
+table below are output as they appear without any transliteration.
 
 | Unicode | Arabic | BW | Safe BW | XML BW | HSB |
 |:------:|:------:|:--:|:-------:|:------:|:----:|

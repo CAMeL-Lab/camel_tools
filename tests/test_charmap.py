@@ -283,6 +283,12 @@ class TestCharMapperBuiltinMapper(object):
 
         assert CharMapper.builtin_mapper('bw2xmlbw')
 
+    def test_builtinmapper_bw2hsb(self):
+        """Test that the builtin 'bw2hsb' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('bw2hsb')
+
     def test_builtinmapper_safebw2ar(self):
         """Test that the builtin 'safebw2ar' scheme is loaded without errors.
         """
@@ -301,6 +307,13 @@ class TestCharMapperBuiltinMapper(object):
         """
 
         assert CharMapper.builtin_mapper('safebw2xmlbw')
+
+    def test_builtinmapper_safebw2hsb(self):
+        """Test that the builtin 'safebw2hsb' scheme is loaded without
+        errors.
+        """
+
+        assert CharMapper.builtin_mapper('safebw2hsb')
 
     def test_builtinmapper_xmlbw2ar(self):
         """Test that the builtin 'xmlbw2ar' scheme is loaded without errors.
@@ -321,11 +334,36 @@ class TestCharMapperBuiltinMapper(object):
 
         assert CharMapper.builtin_mapper('xmlbw2safebw')
 
+    def test_builtinmapper_xmlbw2hsb(self):
+        """Test that the builtin 'xmlbw2hsb' scheme is loaded without
+        errors.
+        """
+
+        assert CharMapper.builtin_mapper('xmlbw2hsb')
+
     def test_builtinmapper_hsb2ar(self):
         """Test that the builtin 'hsb2ar' scheme is loaded without errors.
         """
 
         assert CharMapper.builtin_mapper('hsb2ar')
+
+    def test_builtinmapper_hsb2bw(self):
+        """Test that the builtin 'hsb2bw' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('hsb2bw')
+
+    def test_builtinmapper_hsb2safebw(self):
+        """Test that the builtin 'hsb2safebw' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('hsb2safebw')
+
+    def test_builtinmapper_hsb2xmlbw(self):
+        """Test that the builtin 'hsb2xmlbw' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('hsb2xmlbw')
 
     def test_builtinmapper_arclean(self):
         """Test that the builtin 'arclean' scheme is loaded without errors.
