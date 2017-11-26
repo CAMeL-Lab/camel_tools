@@ -48,13 +48,19 @@ _BUILTIN_SCHEMES = [
     ('bw2ar', 'Buckwalter to Arabic'),
     ('bw2safebw', 'Buckwalter to Safe Buckwalter'),
     ('bw2xmlbw', 'Buckwalter to XML Buckwalter'),
+    ('bw2hsb', 'Buckwalter to Habash-Soudi-Buckwalter'),
     ('safebw2ar', 'Safe Buckwalter to Arabic'),
     ('safebw2bw', 'Safe Buckwalter to Buckwalter'),
     ('safebw2xmlbw', 'Safe Buckwalter to XML Buckwalter'),
+    ('safebw2hsb', 'Safe Buckwalter to Habash-Soudi-Buckwalter'),
     ('xmlbw2ar', 'XML Buckwalter to Arabic'),
     ('xmlbw2bw', 'XML Buckwalter to Buckwalter'),
     ('xmlbw2safebw', 'XML Buckwalter to Safe Buckwalter'),
+    ('xmlbw2hsb', 'XML Buckwalter to Habash-Soudi-Buckwalter'),
     ('hsb2ar', 'Habash-Soudi-Buckwalter to Arabic'),
+    ('hsb2bw', 'Habash-Soudi-Buckwalter to Buckwalter'),
+    ('hsb2safebw', 'Habash-Soudi-Buckwalter to Safe Buckwalter'),
+    ('hsb2xmlbw', 'Habash-Soudi-Buckwalter to Habash-Soudi-Buckwalter'),
 ]
 
 
@@ -90,7 +96,7 @@ def main():  # pragma: no cover
 
     if arguments['--list']:
         for scheme in _BUILTIN_SCHEMES:
-            print("{}   {}".format(scheme[0].ljust(14), scheme[1]))
+            print("{}   {}".format(scheme[0].ljust(20), scheme[1]))
         sys.exit(0)
 
     if arguments['--scheme'] is not None:
