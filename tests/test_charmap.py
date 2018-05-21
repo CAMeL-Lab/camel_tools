@@ -371,6 +371,12 @@ class TestCharMapperBuiltinMapper(object):
 
         assert CharMapper.builtin_mapper('arclean')
 
+    def test_builtinmapper_dediac(self):
+        """Test that the builtin 'dediac' scheme is loaded without errors.
+        """
+
+        assert CharMapper.builtin_mapper('dediac')
+
     def test_builtinmapper_invalid(self):
         """Test that an invalid builtin scheme name raises a
         BuiltinCharMapNotFound exception.

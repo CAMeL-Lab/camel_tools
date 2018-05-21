@@ -80,6 +80,7 @@ class CharMapper(object):
         'hsb2safebw',
         'hsb2xmlbw',
         'arclean',
+        'dediac',
     )
 
     @staticmethod
