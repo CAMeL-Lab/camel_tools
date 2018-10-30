@@ -44,7 +44,7 @@ INSTALL_REQUIRES = [
     'future',
     'six',
     'docopt',
-    'regex'
+    'regex',
 ]
 
 setup(
@@ -56,19 +56,20 @@ setup(
     maintainer_email='oobeid@nyu.edu',
     packages=['camel_tools',
               'camel_tools.transliterate',
-              'camel_tools.utils'],
+              'camel_tools.utils',
+              'camel_tools.calima_star'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
     },
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            ('camel_disambig='
-             'camel_tools.disambig.camel_disambig:main'),
             ('camel_transliterate='
              'camel_tools.transliterate.camel_transliterate:main'),
             ('camel_arclean='
              'camel_tools.arclean.camel_arclean:main'),
+            ('camel_calima_star='
+             'camel_tools.calima_star.camel_calima_star:main'),
         ],
     },
     url='https://github.com/owo/CAMeL_Tools',
