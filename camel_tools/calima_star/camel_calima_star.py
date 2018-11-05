@@ -36,8 +36,9 @@ Options:
 
 from __future__ import absolute_import
 
-import sys
 import collections
+import sys
+import re
 
 from docopt import docopt
 
@@ -57,9 +58,15 @@ _ANALYSIS_BACKOFFS = frozenset(('NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
                                 'ADD_PROP'))
 _GENARATION_BACKOFFS = frozenset(('NONE', 'REINFLECT'))
 
+_DIAC_RE = re.compile(r'[ًٌٍَُِّْٰ]')
+
 
 def _tokenize(s):
     return s.split()
+
+
+def _dediac(word):
+    return _DIAC_RE.sub('', word)
 
 
 def _open_files(finpath, foutpath):
@@ -182,6 +189,7 @@ def _analyze(db, fin, fout, backoff, cache):
 
 def _generate(db, fin, fout, backoff):
     generator = CalimaStarGenerator(db)
+    reinflector = CalimaStarReinflector(db) if backoff == 'REINFLECT' else None
 
     line = fin.readline().strip()
     line_num = 1
@@ -225,13 +233,13 @@ def _generate(db, fin, fout, backoff):
                     analyses = generator.generate(lemma, feats)
 
                     if len(analyses) == 0 and backoff == 'REINFLECT':
-                        # TODO: Reinflect as backoff
-                        pass
-                    else:
-                        serialized = _serialize_analyses(fout, lemma, analyses,
-                                                         db.order, True)
-                        fout.write(serialized)
-                        fout.write('\n\n')
+                        word = _dediac(lemma)
+                        analyses = reinflector.reinflect(word, feats)
+
+                    serialized = _serialize_analyses(fout, lemma, analyses,
+                                                     db.order, True)
+                    fout.write(serialized)
+                    fout.write('\n\n')
                 except GeneratorError as error:
                     if fin is sys.stdin:
                         sys.stderr.write('Error: {}.\n'.format(error.msg))
