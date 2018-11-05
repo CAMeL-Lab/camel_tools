@@ -26,9 +26,10 @@ _REWRITE_DIAC_RE_5 = re.compile(r'\+')
 _REWRITE_DIAC_RE_6 = re.compile(r'ّ+')
 
 # Sun letters
-_REWRITE_CAPHI_RE_1 = re.compile(r'^((w\_a\_|f\_a\_|2\_a\_)?(b\_i\_|k\_a\_|l\_i\_)?l)\+'
-                                 r'(t\_|th\_|d\_|th\.\_|r\_|z\_|s\_|sh\_|s\.\_|d\.\_|'
-                                 r't\.\_|dh\.\_|l\_|n\_|dh\_)')
+_REWRITE_CAPHI_RE_1 = re.compile(r'^((w\_a\_|f\_a\_|2\_a\_)?'
+                                 r'(b\_i\_|k\_a\_|l\_i\_)?l)\+'
+                                 r'(t\_|th\_|d\_|th\.\_|r\_|z\_|s\_|sh\_|'
+                                 r's\.\_|d\.\_|t\.\_|dh\.\_|l\_|n\_|dh\_)')
 # Replace shadda
 _REWRITE_CAPHI_RE_2 = re.compile(r'(\S)\+~')
 # Remove '+'s
@@ -99,7 +100,7 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
     result['stem'] = stem_feats['diac']
     result['stemgloss'] = stem_feats.get('gloss', '')
     result['diac'] = normalize_tanwyn(rewrite_diac(result['diac']),
-                                        diac_mode)
+                                      diac_mode)
     result['caphi'] = rewrite_caphi(result.get('caphi', ''))
 
     if result['gen'] == '-':

@@ -16,33 +16,43 @@ from camel_tools.calima_star.utils import merge_features
 
 
 class CalimaStarGenerator(object):
-    """[summary]
+    """CALIMA Star generator class.
     """
 
     def __init__(self, db):
-        """[summary]
+        """Class constructor.
 
         Arguments:
-            db {[type]} -- [description]
+            db {CalimaStarDB} -- Database to use for generation. Must be opened
+                in generation or reinflection mode.
+
+        Raises:
+            GeneratorError -- If database is not an instance of CalimaStarDB or
+                if DB does not support generation.
         """
 
         if not isinstance(db, CalimaStarDB):
-            raise GeneratorError('db is not an instance of CalimaStarDB')
-
-        if not db.flags.analysis:
-            raise GeneratorError('db does not support analysis')
+            raise GeneratorError('DB is not an instance of CalimaStarDB')
+        if not db.flags.generation:
+            raise GeneratorError('DB does not support generation')
 
         self._db = db
 
     def generate(self, lemma, feats):
-        """[summary]
+        """Generate analyses for a given lemma and a given set of features.
 
         Arguments:
-            lemma {str} -- lemma to generate from.
-            feats {dict} -- dictionary of features.
+            lemma {str} -- Lemma to generate from.
+            feats {dict} -- Dictionary of features. Must contain 'pos' feature.
+
+        Raises:
+            InvalidGeneratorFeature -- If a feature is given that is not
+                defined in database.
+            InvalidGeneratorFeatureValue -- If an invalid value is given to a
+                feature or if 'pos' feature is not defined.
 
         Returns:
-            list -- list of generated analyses.
+            list -- List of generated analyses.
         """
 
         if lemma not in self._db.lemma_hash:
@@ -88,9 +98,9 @@ class CalimaStarGenerator(object):
             for feat in ['prc0', 'prc1', 'prc2', 'prc3', 'enc0']:
                 if feat not in feats:
                     continue
-                if ((feat in stem_feats and
-                    stem_feats[feat] != '0' and
-                    feats[feat] != stem_feats[feat])):
+                if (feat in stem_feats and
+                        stem_feats[feat] != '0' and
+                        feats[feat] != stem_feats[feat]):
                     ignore_stem = True
                     break
 
@@ -112,7 +122,8 @@ class CalimaStarGenerator(object):
                         if feat not in feats:
                             continue
                         if ((feats[feat] != '0' and
-                             feat not in prefix_feats and stem_feats.get(feat, '0') != feats[feat]) or
+                             feat not in prefix_feats and
+                             stem_feats.get(feat, '0') != feats[feat]) or
                             (feat in prefix_feats and
                              feats[feat] != prefix_feats[feat])):
                             ignore_prefix = True
@@ -124,11 +135,13 @@ class CalimaStarGenerator(object):
                     for suffix_cat in suffix_cats:
                         if suffix_cat not in self._db.suffix_cat_hash:
                             continue
-                        suffix_feats_list = self._db.suffix_cat_hash[suffix_cat]
+                        suffix_feats_list = (
+                            self._db.suffix_cat_hash[suffix_cat])
                         for suffix_feats in suffix_feats_list:
-                            if ((prefix_cat not in self._db.prefix_suffix_compat) or
+                            if ((prefix_cat not in
+                                 self._db.prefix_suffix_compat) or
                                 (suffix_cat not in
-                                self._db.prefix_suffix_compat[prefix_cat])):
+                                 self._db.prefix_suffix_compat[prefix_cat])):
                                 continue
 
                             ignore_suffix = False
@@ -137,9 +150,10 @@ class CalimaStarGenerator(object):
                                 if feat not in feats:
                                     continue
                                 if ((feats[feat] != '0' and
-                                    feat not in suffix_feats and stem_feats.get(feat, '0') != feats[feat]) or
-                                    (feat in suffix_feats and
-                                    feats[feat] != suffix_feats[feat])):
+                                     feat not in suffix_feats and
+                                     stem_feats.get(feat, '0') != feats[feat])
+                                    or (feat in suffix_feats and
+                                        feats[feat] != suffix_feats[feat])):
                                     ignore_suffix = True
                                     break
 
@@ -151,7 +165,8 @@ class CalimaStarGenerator(object):
 
                             ignore_analysis = False
                             for feat in feats.keys():
-                                if feat in merged and merged[feat] != feats[feat]:
+                                if (feat in merged and
+                                        merged[feat] != feats[feat]):
                                     ignore_analysis = True
                                     break
 

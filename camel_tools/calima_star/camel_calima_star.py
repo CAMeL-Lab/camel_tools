@@ -1,43 +1,61 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""The CAMeL Tools Arabic cleaning utility.
+"""The CALIMA Star morphological analyzer, generator, and reinflector.
 
 Usage:
-    camel_calima_star (-d DATABASE | --db=DATABASE)
+    camel_calima_star analyze
+                      (-d DATABASE | --db=DATABASE)
+                      [-b BACKOFF | --backoff BACKOFF]
+                      [-c | --cache]
+                      [-o OUTPUT | --output=OUTPUT] [FILE]
+    camel_calima_star generate
+                      (-d DATABASE | --db=DATABASE)
+                      [-b BACKOFF | --backoff BACKOFF]
+                      [-o OUTPUT | --output=OUTPUT] [FILE]
+    camel_calima_star reinflect
+                      (-d DATABASE | --db=DATABASE)
                       [-o OUTPUT | --output=OUTPUT] [FILE]
     camel_calima_star (-v | --version)
     camel_calima_star (-h | --help)
 
 Options:
-  -d DATABASE --db=DATABASE   CalimaStar database to use.
-  -o OUTPUT --output=OUTPUT   Output file. If not specified, output will be
-                              printed to stdout.
-  -h --help                   Show this screen.
-  -v --version                Show version.
+  -b BACKOFF --backoff BACKOFF  Backoff mode for analyzer and generator. In
+                                analyze mode, it can have the following
+                                values: NONE, NOAN_ALL, NOAN_PROP, ADD_ALL,
+                                ADD_PROP. In generate mode it can have the
+                                following values: NONE, REINFLECT. Defaults to
+                                NONE if not specified.
+  -c --cache                    Cache computed analyses (only in analyze mode).
+  -d DATABASE --db=DATABASE     CalimaStar database to use.
+  -o OUTPUT --output=OUTPUT     Output file. If not specified, output will be
+                                printed to stdout.
+  -h --help                     Show this screen.
+  -v --version                  Show version.
 """
 
 from __future__ import absolute_import
 
 import sys
-import unicodedata
-import re
 import collections
 
 from docopt import docopt
 
 import camel_tools as camelt
-from camel_tools.utils import CharMapper
 from camel_tools.calima_star.database import CalimaStarDB
 from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
+from camel_tools.calima_star.generator import CalimaStarGenerator
+from camel_tools.calima_star.reinflector import CalimaStarReinflector
+from camel_tools.calima_star.errors import DatabaseError, AnalyzerError
+from camel_tools.calima_star.errors import GeneratorError, CalimaStarError
 
 
 __version__ = camelt.__version__
 
 
-_ALL_PUNCT = ''.join(chr(x) for x in range(65536)
-                    if unicodedata.category(chr(x))[0] in ['P', 'S'])
-_RE_TOKENIZE = re.compile('[' + re.escape(_ALL_PUNCT) + ']|\w+')
+_ANALYSIS_BACKOFFS = frozenset(('NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
+                                'ADD_PROP'))
+_GENARATION_BACKOFFS = frozenset(('NONE', 'REINFLECT'))
 
 
 def _tokenize(s):
@@ -47,10 +65,11 @@ def _tokenize(s):
 def _open_files(finpath, foutpath):
     if finpath is None:
         fin = sys.stdin
+
     else:
         try:
             fin = open(finpath, 'r')
-        except Exception:
+        except IOError:
             sys.stderr.write('Error: Couldn\'t open input file {}.'
                              '\n'.format(repr(finpath)))
             sys.exit(1)
@@ -60,7 +79,7 @@ def _open_files(finpath, foutpath):
     else:
         try:
             fout = open(foutpath, 'w')
-        except Exception:
+        except IOError:
             sys.stderr.write('Error: Couldn\'t open output file {}.'
                              '\n'.format(repr(foutpath)))
             if finpath is not None:
@@ -70,50 +89,282 @@ def _open_files(finpath, foutpath):
     return fin, fout
 
 
-def _serialize_analyses(fout, word, analyses, order):
+def _serialize_analyses(fout, word, analyses, order, generation=False):
     buff = collections.deque()
-    buff.append('#WORD: {}'.format(word))
+    buff.append('#{}: {}'.format('LEMMA' if generation else 'WORD', word))
+
     if len(analyses) == 0:
         buff.append('NO_ANALYSIS')
     else:
         sub_buff = set()
         for a in analyses:
-            output = ' '.join(['{}:{}'.format(f, a[f]) for f in order if f in a])
+            output = u' '.join([u'{}:{}'.format(f,
+                               a[f]) for f in order if f in a])
             sub_buff.add(output)
         buff.extend(sub_buff)
 
     return '\n'.join(buff)
 
 
-def main():  # pragma: no cover
-    version = ('CAMeL Tools v{}'.format(__version__))
-    arguments = docopt(__doc__, version=version)
+def _parse_generator_line(line):
+    lemma = None
+    feats = {}
 
-    # Open files (or just use stdin and stdout)
-    fin, fout = _open_files(arguments['FILE'], arguments['--output'])
+    tokens = line.strip().split()
+    for token in tokens:
+        subtokens = token.split(':')
+        if len(subtokens) < 2:
+            return None
+        else:
+            feat = subtokens[0]
+            val = ':'.join(subtokens[1:])
 
-    # FIXME: Handle FileNotFoundError and other Database errors
-    db = CalimaStarDB(arguments['--db'])
+            if feat == 'lex' or feat == 'lemma':
+                lemma = val
+            else:
+                feats[feat] = val
 
-    # FIXME: Handle Analyzer errors
-    analyzer = CalimaStarAnalyzer(db)
+    return (lemma, feats)
 
-    memoize_table = {}
 
-    for line in fin:
-        tokens = _tokenize(line.strip())
+def _parse_reinflector_line(line):
+    word = None
+    feats = {}
+
+    tokens = line.strip().split()
+
+    if len(tokens) < 1:
+        return None
+
+    word = tokens[0]
+
+    for token in tokens[1:]:
+        subtokens = token.split(':')
+        if len(subtokens) < 2:
+            return None
+        else:
+            feat = subtokens[0]
+            val = ':'.join(subtokens[1:])
+            feats[feat] = val
+
+    return (word, feats)
+
+
+def _analyze(db, fin, fout, backoff, cache):
+    analyzer = CalimaStarAnalyzer(db, backoff)
+    memoize_table = {} if cache else None
+
+    line = fin.readline().strip()
+
+    while line:
+        if len(line) == 0:
+            line = fin.readline().strip()
+            continue
+
+        tokens = _tokenize(line)
+
         for token in tokens:
-            if token in memoize_table:
+            if cache and token in memoize_table:
                 fout.write(memoize_table[token])
                 fout.write('\n\n')
             else:
                 analyses = analyzer.analyze(token)
                 serialized = _serialize_analyses(fout, token, analyses,
                                                  db.order)
-                memoize_table[token] = serialized
+                if cache:
+                    memoize_table[token] = serialized
+
                 fout.write(serialized)
                 fout.write('\n\n')
 
+        line = fin.readline().strip()
+
+
+def _generate(db, fin, fout, backoff):
+    generator = CalimaStarGenerator(db)
+
+    line = fin.readline().strip()
+    line_num = 1
+
+    while line:
+        if len(line) == 0:
+            line = fin.readline().strip()
+            line_num += 1
+            continue
+
+        parsed = _parse_generator_line(line)
+
+        if parsed is None:
+            if fin is sys.stdin:
+                sys.stderr.write('Error: Invalid input line.\n')
+            else:
+                sys.stderr.write(
+                    'Error: Invalid input line ({}).\n'.format(line_num))
+
+        else:
+            lemma = parsed[0]
+            feats = parsed[1]
+
+            # Make sure lemma and pos are specified first
+            if lemma is None:
+                if fin is sys.stdin:
+                    sys.stderr.write('Error: Missing lex/lemma feature.\n')
+                else:
+                    sys.stderr.write(
+                        'Error: Missing lex/lemma feature. [{}].\n'.format(
+                            line_num))
+            elif 'pos' not in feats:
+                if fin is sys.stdin:
+                    sys.stderr.write('Error: Missing pos feature.\n')
+                else:
+                    sys.stderr.write(
+                        'Error: Missing pos feature. [{}]\n'.format(
+                            line_num))
+            else:
+                try:
+                    analyses = generator.generate(lemma, feats)
+
+                    if len(analyses) == 0 and backoff == 'REINFLECT':
+                        # TODO: Reinflect as backoff
+                        pass
+                    else:
+                        serialized = _serialize_analyses(fout, lemma, analyses,
+                                                         db.order, True)
+                        fout.write(serialized)
+                        fout.write('\n\n')
+                except GeneratorError as error:
+                    if fin is sys.stdin:
+                        sys.stderr.write('Error: {}.\n'.format(error.msg))
+                    else:
+                        sys.stderr.write('Error: {}. [{}]\n'.format(error.msg,
+                                                                    line_num))
+
+        line = fin.readline().strip()
+        line_num += 1
+
+
+def _reinflect(db, fin, fout):
+    reinflector = CalimaStarReinflector(db)
+
+    line = fin.readline().strip()
+    line_num = 1
+
+    while line:
+        if len(line) == 0:
+            line = fin.readline().strip()
+            line_num += 1
+            continue
+
+        parsed = _parse_reinflector_line(line)
+
+        if parsed is None:
+            if fin is sys.stdin:
+                sys.stderr.write('Error: Invalid input line.\n')
+            else:
+                sys.stderr.write(
+                    'Error: Invalid input line. [{}]\n'.format(line_num))
+
+        else:
+            word = parsed[0]
+            feats = parsed[1]
+
+            try:
+                analyses = reinflector.reinflect(word, feats)
+
+                serialized = _serialize_analyses(fout, word, analyses,
+                                                 db.order)
+                fout.write(serialized)
+                fout.write('\n\n')
+            except CalimaStarError as error:
+                # This could be thrown by the analyzer, generator, or
+                # reinflector.
+                if fin is sys.stdin:
+                    sys.stderr.write('Error: {}.\n'.format(error.msg))
+                else:
+                    sys.stderr.write('Error: {}. [{}]\n'.format(error.msg,
+                                                                line_num))
+
+        line = fin.readline().strip()
+        line_num += 1
+
+
+def main():  # pragma: no cover
+    try:
+        version = ('CAMeL Tools v{}'.format(__version__))
+        arguments = docopt(__doc__, version=version)
+
+        analyze = arguments.get('analyze', False)
+        generate = arguments.get('generate', False)
+        reinflect = arguments.get('reinflect', False)
+
+        cache = arguments.get('--cache', False)
+        backoff = arguments.get('--backoff', 'NONE')
+
+        # Make sure we have a valid backoff mode
+        if backoff is None:
+            backoff = 'NONE'
+        if analyze and backoff not in _ANALYSIS_BACKOFFS:
+            sys.stderr.write('Error: invalid backoff mode.\n')
+            sys.exit(1)
+        if generate and backoff not in _GENARATION_BACKOFFS:
+            sys.stderr.write('Error: invalid backoff mode.\n')
+            sys.exit(1)
+
+        # Open files (or just use stdin and stdout)
+        fin, fout = _open_files(arguments['FILE'], arguments['--output'])
+
+        # Determine required DB flags
+        if analyze:
+            dbflags = 'a'
+        elif generate and backoff == 'NONE':
+            dbflags = 'g'
+        else:
+            dbflags = 'r'
+
+        # Load DB
+        try:
+            db = CalimaStarDB(arguments['--db'], dbflags)
+        except DatabaseError:
+            sys.stderr.write('Error: Couldn\'t parse database.\n')
+            sys.exit(1)
+        except IOError:
+            sys.stderr.write('Error: Database file could not be read.\n')
+            sys.exit(1)
+
+        # Continue execution in requested mode
+        if analyze:
+            try:
+                _analyze(db, fin, fout, backoff, cache)
+            except AnalyzerError as error:
+                sys.stderr.write('Error: {}\n'.format(error.msg))
+                sys.exit(1)
+            except IOError:
+                sys.stderr.write('Error: An IO error occurred.\n')
+                sys.exit(1)
+
+        elif generate:
+            try:
+                _generate(db, fin, fout, backoff)
+            except IOError:
+                sys.stderr.write('Error: An IO error occurred.\n')
+                sys.exit(1)
+
+        elif reinflect:
+            try:
+                _reinflect(db, fin, fout)
+            except IOError:
+                sys.stderr.write('Error: An IO error occurred.\n')
+                sys.exit(1)
+
+        sys.exit(0)
+
+    except KeyboardInterrupt:
+        sys.stderr.write('Exiting...\n')
+        sys.exit(1)
+    except Exception:
+        sys.stderr.write('Error: An unknown error occurred.\n')
+        sys.exit(1)
+
 
 if __name__ == '__main__':
-    main()
+        main()

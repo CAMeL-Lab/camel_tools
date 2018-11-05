@@ -11,13 +11,16 @@ import itertools
 import re
 import unicodedata
 
+from six import unichr
+
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.calima_star.database import CalimaStarDB
 from camel_tools.calima_star.errors import AnalyzerError
 from camel_tools.calima_star.utils import merge_features
 
-_ALL_PUNC = ''.join(chr(x) for x in range(65536)
-                    if unicodedata.category(chr(x))[0] in ['P', 'S'])
+
+_ALL_PUNC = u''.join(unichr(x) for x in range(65536)
+                     if unicodedata.category(unichr(x))[0] in ['P', 'S'])
 
 _DIAC_RE = re.compile(r'[ًٌٍَُِّْٰ]')
 _IS_DIGIT_RE = re.compile(r'^[0-9٠-٩]+$')
@@ -30,12 +33,12 @@ _IS_AR_RE = re.compile(
 _NOAN_RE = re.compile(r'NOAN')
 
 _DEFAULT_NORMALIZE_MAP = CharMapper({
-    'إ': 'ا',
-    'أ': 'ا',
-    'آ': 'ا',
-    'ٱ': 'ا',
-    'ى': 'ي',
-    'ة': 'ه'
+    u'إ': u'ا',
+    u'أ': u'ا',
+    u'آ': u'ا',
+    u'ٱ': u'ا',
+    u'ى': u'ي',
+    u'ة': u'ه'
 })
 
 # features which should be concatinated when generating analysis
@@ -50,24 +53,24 @@ _OVERWRITE_FEATS = ['lex', 'pos', 'prc3', 'prc2', 'prc1', 'prc0', 'per', 'asp',
                     'cas', 'enc0', 'rat', 'form_gen', 'form_num']
 
 
-def dediac(word):
+def _dediac(word):
     return _DIAC_RE.sub('', word)
 
 
-def is_digit(word):
+def _is_digit(word):
     return _IS_DIGIT_RE.match(word) is not None
 
 
-def is_punc(word):
-    return _IS_PUNC_RE.fullmatch(word) is not None
+def _is_punc(word):
+    return _IS_PUNC_RE.match(word) is not None
 
 
-def has_punc(word):
+def _has_punc(word):
     return _HAS_PUNC_RE.match(word) is not None
 
 
-def is_ar(word):
-    return _IS_AR_RE.fullmatch(word) is not None
+def _is_ar(word):
+    return _IS_AR_RE.match(word) is not None
 
 
 def _segments_gen(word, max_prefix=1, max_suffix=1):
@@ -81,17 +84,34 @@ def _segments_gen(word, max_prefix=1, max_suffix=1):
 
 
 class CalimaStarAnalyzer:
-    """[summary]
+    """CALIMA Star analyzer class.
     """
 
     def __init__(self, db, backoff='NONE',
                  normalization_map=_DEFAULT_NORMALIZE_MAP):
+        """Class constructor.
+
+        Arguments:
+            db {CalimaStarDB} -- Database to use for analysis. Must be opened
+                in analysis or reinflection mode.
+
+        Keyword Arguments:
+            backoff {str} -- Backoff mode. Can be one of the following:
+                'NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL', 'ADD_PROP'.
+                (default: 'NONE')
+            normalization_map {CharMapper} -- character map for normalizing
+                input words.
+
+        Raises:
+            AnalyzerError -- If database is not an instance of CalimaStarDB,
+                if DB does not support analysis, or if backoff mode is not
+                valid.
+        """
 
         if not isinstance(db, CalimaStarDB):
-            raise AnalyzerError('db is not an instance of CalimaStarDB')
-
+            raise AnalyzerError('DB is not an instance of CalimaStarDB')
         if not db.flags.analysis:
-            raise AnalyzerError('db does not support analysis')
+            raise AnalyzerError('DB does not support analysis')
 
         self._db = db
 
@@ -114,7 +134,7 @@ class CalimaStarAnalyzer:
             self._backoff_condition = 'ADD'
             self._backoff_action = 'PROP'
         else:
-            raise AnalyzerError('invalid backoff mode {}'.format(
+            raise AnalyzerError('Invalid backoff mode {}'.format(
                 repr(backoff)))
 
     def _normalize(self, word):
@@ -150,7 +170,7 @@ class CalimaStarAnalyzer:
                     merged['stem'] = stem_feats['diac']
                     merged['stemcat'] = stem_cat
 
-                    merged_dediac = dediac(merged['diac'])
+                    merged_dediac = _dediac(merged['diac'])
                     if word_dediac != merged_dediac:
                         merged['source'] = 'spvar'
 
@@ -181,7 +201,7 @@ class CalimaStarAnalyzer:
                         continue
 
                     if (self._backoff_action == 'PROP' and
-                        'NOUN_PROP' not in stem_feats['bw']):
+                            'NOUN_PROP' not in stem_feats['bw']):
                         continue
 
                     stem_feats['bw'] = _NOAN_RE.sub(stem, stem_feats['bw'])
@@ -204,18 +224,18 @@ class CalimaStarAnalyzer:
         """Analyze a given word.
 
         Arguments:
-            word {string} -- Word to analyze.
+            word {str} -- Word to analyze.
 
         Returns:
-            list -- the list of analyses for a given word.
+            list -- The list of analyses for a given word.
         """
 
-        word = str(word).strip()
+        word = word.strip()
 
         if word == '':
             return []
 
-        if is_digit(word):
+        if _is_digit(word):
             result = copy.copy(self._db.defaults['digit'])
             result['diac'] = word
             result['lex'] = word + '_0'
@@ -223,17 +243,17 @@ class CalimaStarAnalyzer:
             result['gloss'] = word
             result['source'] = 'digit'
             return [result]
-        elif is_punc(word):
-            result=copy.copy(self._db.defaults['punc'])
+        elif _is_punc(word):
+            result = copy.copy(self._db.defaults['punc'])
             result['diac'] = word
             result['lex'] = word + '_0'
             result['bw'] = word + '/PUNC'
             result['gloss'] = word
             result['source'] = 'punc'
             return [result]
-        elif has_punc(word):
+        elif _has_punc(word):
             return []
-        elif not is_ar(word):
+        elif not _is_ar(word):
             result = copy.copy(self._db.defaults['noun'])
             result['diac'] = word
             result['lex'] = word + '_0'
@@ -242,11 +262,11 @@ class CalimaStarAnalyzer:
             result['source'] = 'foreign'
             return [result]
 
-        word_dediac = dediac(word)
+        word_dediac = _dediac(word)
         word_normal = self._normalize(word_dediac)
 
         segments_gen = _segments_gen(word_normal, self._db.max_prefix_size,
-                                   self._db.max_suffix_size)
+                                     self._db.max_suffix_size)
 
         analyses = collections.deque()
 
@@ -265,20 +285,22 @@ class CalimaStarAnalyzer:
 
             if stem_analyses is not None:
                 combined = self._combined_analyses(word_dediac,
-                                                 prefix_analyses,
-                                                 stem_analyses,
-                                                 suffix_analyses)
+                                                   prefix_analyses,
+                                                   stem_analyses,
+                                                   suffix_analyses)
                 analyses.extend(combined)
 
         if ((self._backoff_condition == 'NOAN' and len(analyses) == 0) or
-            (self._backoff_condition == 'ADD')):
+                (self._backoff_condition == 'ADD')):
 
             segments_gen = _segments_gen(word_normal,
-                                        self._db.max_prefix_size,
-                                        self._db.max_suffix_size)
+                                         self._db.max_prefix_size,
+                                         self._db.max_suffix_size)
 
             backoff_cats = self._db.stem_backoffs[self._backoff_action]
-            stem_analyses = [(cat, analysis) for cat, analysis in self._db.stem_hash['NOAN'] if cat in backoff_cats]
+            stem_analyses = [(cat, analysis)
+                             for cat, analysis in self._db.stem_hash['NOAN']
+                             if cat in backoff_cats]
 
             for segmentation in segments_gen:
                 prefix = segmentation[0]

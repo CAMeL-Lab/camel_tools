@@ -23,7 +23,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-.env/
+.env*/
 env/
 bin/
 build/

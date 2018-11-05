@@ -68,7 +68,7 @@ class InvalidGeneratorFeature(GeneratorError):
     """
 
     def __init__(self, feat):
-        GeneratorError.__init__(self, 'invalid feature {}'.format(repr(feat)))
+        GeneratorError.__init__(self, 'Invalid feature {}'.format(repr(feat)))
 
 
 class InvalidGeneratorFeatureValue(GeneratorError):
@@ -76,7 +76,7 @@ class InvalidGeneratorFeatureValue(GeneratorError):
     """
 
     def __init__(self, feat, val):
-        GeneratorError.__init__(self, 'invalid value {} feature {}'.format(
+        GeneratorError.__init__(self, 'Invalid value {} for feature {}'.format(
             repr(val), repr(feat)))
 
 
@@ -88,3 +88,20 @@ class ReinflectorError(CalimaStarError):
 
     def __init__(self, msg):
         CalimaStarError.__init__(self, msg)
+
+
+class InvalidReinflectorFeature(ReinflectorError):
+    """Error thrown when an invalid feature
+    """
+
+    def __init__(self, feat):
+        GeneratorError.__init__(self, 'Invalid feature {}'.format(repr(feat)))
+
+
+class InvalidReinflectorFeatureValue(ReinflectorError):
+    """Error thrown when an invalid value is given to a feature.
+    """
+
+    def __init__(self, feat, val):
+        GeneratorError.__init__(self, 'Invalid value {} for feature {}'.format(
+            repr(val), repr(feat)))
