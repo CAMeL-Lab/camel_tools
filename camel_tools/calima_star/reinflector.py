@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""The generator component of CALIMA Star.
+"""The reinflector component of CALIMA Star.
 """
 
 from __future__ import absolute_import
@@ -9,8 +9,12 @@ from collections import deque
 
 import re
 
+from camel_tools.calima_star.database import CalimaStarDB
 from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
 from camel_tools.calima_star.generator import CalimaStarGenerator
+from camel_tools.calima_star.errors import ReinflectorError
+from camel_tools.calima_star.errors import InvalidReinflectorFeature
+from camel_tools.calima_star.errors import InvalidReinflectorFeatureValue
 from camel_tools.utils.dediac import dediac_ar
 
 
@@ -28,15 +32,49 @@ _LEMMA_SPLIT_RE = re.compile(r'-|_')
 
 
 class CalimaStarReinflector(object):
-    """[summary]
+    """CALIMA Star reinflector class.
     """
 
     def __init__(self, db):
+        """Class constructor.
+
+        Arguments:
+            db {CalimaStarDB} -- database to use for generation. Must be opened
+                in reinflection mode or both analysis and generation modes.
+
+        Raises:
+            ReinflectorError -- If database is not an instance of CalimaStarDB
+                or if DB does not support reinflection.
+        """
+
+        if not isinstance(db, CalimaStarDB):
+            raise ReinflectorError('DB is not an instance of CalimaStarDB')
+        if not db.flags.generation:
+            raise ReinflectorError('DB does not support reinflection')
+
         self._db = db
+
         self._analyzer = CalimaStarAnalyzer(db)
         self._generator = CalimaStarGenerator(db)
 
     def reinflect(self, word, feats):
+        """Generate analyses for a given word from a given set of inflectional
+        features.
+
+        Arguments:
+            word {str} -- Word to reinflect.
+            feats {dict} -- Dictionary of features.
+
+        Raises:
+            InvalidReinflectorFeature -- If a feature is given that is not
+                defined in database.
+            InvalidReinflectorFeatureValue -- If an invalid value is given to a
+                feature or if 'pos' feature is not defined.
+
+        Returns:
+            list -- List of generated analyses.
+        """
+
         analyses = self._analyzer.analyze(word)
 
         if not analyses or len(analyses) == 0:
@@ -44,14 +82,10 @@ class CalimaStarReinflector(object):
 
         for feat in feats:
             if feat not in self._db.defines:
-                # FIXME: Throw exception instead
-                # print('Feat key not in defines')
-                return None
+                raise InvalidReinflectorFeature(feat)
             elif (self._db.defines[feat] is not None and
                   feats[feat] not in self._db.defines[feat]):
-                # print('Feat val not in defines')
-                # FIXME: Throw exception instead
-                return None
+                raise InvalidReinflectorFeatureValue(feat, feats[feat])
 
         has_clitics = False
         for feat in _CLITIC_FEATS:

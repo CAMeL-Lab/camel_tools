@@ -11,7 +11,7 @@ import os
 import json
 
 
-from builtins import range  #pylint: disable=W0622
+from builtins import range  # pylint: disable=W0622
 import six
 
 from .stringutils import isunicode
@@ -228,9 +228,9 @@ class CharMapper(object):
         with open(fpath, 'r') as infile:
             jsonstr = infile.read()
 
-            # With Python 2, we need to force the JSOn string to unicode
+            # With Python 2, we need to force the JSON string to unicode
             if six.PY2:  # pragma: no coverage
-                jsonstr = unicode(jsonstr)  #pylint: disable=E0602
+                jsonstr = unicode(jsonstr)  # pylint: disable=E0602
 
             json_dict = json.loads(jsonstr)
 

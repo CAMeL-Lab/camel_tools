@@ -20,17 +20,25 @@ CalimaStarDBFlags = namedtuple('CalimaStarDBFlags', ['analysis', 'generation',
 
 
 class CalimaStarDB:
-    """Class providing CALIMA Star Database.
+    """Class providing indexes from a given CALIMA Star database file.
     """
 
     def __init__(self, fpath, flags='a'):
-        """[summary]
-        
+        """Class constructor.
+
         Arguments:
-            fpath {[type]} -- [description]
-        
+            fpath {str} -- File path to database.
+
         Keyword Arguments:
-            flags {str} -- [description] (default: {'a'})
+            flags {str} -- Flag string (similar to opening files) indicates
+                what components the database will be used for. 'a' indicates
+                analysis, 'g' indicates generation, and 'r' indicates indicates
+                reinflection. 'r' is equivalent to 'rg' since the reinflector
+                uses both analyzer and generator components internally.
+                (default: 'a')
+
+        Raises:
+            InvalidDatabaseFlagError -- When an invalid flag value is given.
         """
 
         self._withAnalysis = False
@@ -171,13 +179,14 @@ class CalimaStarDB:
                         'invalid DEFAULTS line {}'.format(repr(line)))
 
                 parsed_default = self._parse_defaults_line_toks(toks[1:])
-                
-                if not self._defaultKey in parsed_default:
-                    raise DatabaseParseError(
-                        'DEFAULTS line {} missing {} value'.format(repr(line),
-                            self._defaultKey))
 
-                self.defaults[parsed_default[self._defaultKey]] = parsed_default
+                if self._defaultKey not in parsed_default:
+                    raise DatabaseParseError(
+                        'DEFAULTS line {} missing {} value'.format(
+                            repr(line), self._defaultKey))
+
+                dkey = parsed_default[self._defaultKey]
+                self.defaults[dkey] = parsed_default
 
             # Process ORDER
             for line in dbfile:
@@ -189,8 +198,8 @@ class CalimaStarDB:
 
                 toks = line.split(' ')
 
-                if (self.order is not None and len(toks) < 2 and 
-                    toks[0] != 'ORDER'):
+                if (self.order is not None and len(toks) < 2 and
+                        toks[0] != 'ORDER'):
                     raise DatabaseParseError(
                         'invalid ORDER line {}'.format(repr(line)))
 
@@ -199,8 +208,7 @@ class CalimaStarDB:
                         'invalid feature {} in ORDER line.'.format(
                             repr(toks[1])))
 
-
-                self.order = toks[1:] 
+                self.order = toks[1:]
 
             # Process STEMBACKOFFS
             for line in dbfile:
@@ -215,7 +223,7 @@ class CalimaStarDB:
                     raise DatabaseParseError(
                         'invalid STEMBACKOFFS line {}'.format(repr(line)))
 
-                self.stem_backoffs[toks[1]] = toks[2:] 
+                self.stem_backoffs[toks[1]] = toks[2:]
 
             # Process PREFIXES
             for line in dbfile:
@@ -239,7 +247,7 @@ class CalimaStarDB:
                     self.prefix_hash[prefix].append((category, analysis))
 
                 if self._withGeneration:
-                    # FIXME: Make sure analyses for category are unique
+                    # FIXME: Make sure analyses for category are unique?
                     if category not in self.prefix_cat_hash:
                         self.prefix_cat_hash[category] = []
                     self.prefix_cat_hash[category].append(analysis)
@@ -266,7 +274,7 @@ class CalimaStarDB:
                     self.suffix_hash[suffix].append((category, analysis))
 
                 if self._withGeneration:
-                    # FIXME: Make sure analyses for category are unique
+                    # FIXME: Make sure analyses for category are unique?
                     if category not in self.suffix_cat_hash:
                         self.suffix_cat_hash[category] = []
                     self.suffix_cat_hash[category].append(analysis)
@@ -294,7 +302,7 @@ class CalimaStarDB:
                     self.stem_hash[stem].append((category, analysis))
 
                 if self._withGeneration:
-                    # FIXME: Make sure analyses for category are unique
+                    # FIXME: Make sure analyses for category are unique?
                     lemma = analysis['lex']
                     lemma_key = _LEMMA_SPLIT_RE.split(lemma)[0]
                     analysis['stemcat'] = category
