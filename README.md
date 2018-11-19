@@ -61,6 +61,11 @@ In analyzer mode
 
 Coming soon...
 
+## LICENSE
+
+CAMeL Tools is available under the MIT license.
+See the [LICENSE file](./LICENSE) for more info.
+
 ## Contribute
 
 If you would like to contribute to CAMeL Tools, please read the
