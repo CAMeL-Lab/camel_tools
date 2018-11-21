@@ -53,10 +53,6 @@ morphological analyzer, generator, and reinflector.
 
 [See here](./docs/cli/camel_calima_star.md) for more information.
 
-##### Input Format
-
-In analyzer mode
-
 ### Python API
 
 Coming soon...
