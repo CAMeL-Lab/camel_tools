@@ -31,25 +31,24 @@ import collections
 import copy
 import itertools
 import re
-import unicodedata
 
-from six import unichr
+from camel_tools.utils.charsets import UNICODE_PUNCT_SYMBOL_CHARSET
+from camel_tools.utils.charsets import AR_CHARSET, AR_DIAC_CHARSET
 
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.calima_star.database import CalimaStarDB
 from camel_tools.calima_star.errors import AnalyzerError
 from camel_tools.calima_star.utils import merge_features
+from camel_tools.utils.dediac import dediac_ar
 
 
-_ALL_PUNC = u''.join(unichr(x) for x in range(65536)
-                     if unicodedata.category(unichr(x))[0] in ['P', 'S'])
+_ALL_PUNC = u''.join(UNICODE_PUNCT_SYMBOL_CHARSET)
 
-_DIAC_RE = re.compile(r'[ًٌٍَُِّْٰ]')
+_DIAC_RE = re.compile(r'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + r']')
 _IS_DIGIT_RE = re.compile(r'^[0-9٠-٩]+$')
 _IS_PUNC_RE = re.compile(r'^[' + re.escape(_ALL_PUNC) + r']+$')
 _HAS_PUNC_RE = re.compile(r'[' + re.escape(_ALL_PUNC) + r']+')
-_IS_AR_RE = re.compile(
-    r'''^['ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىيًٌٍَُِّْٰٱپچڤگ']+$''')
+_IS_AR_RE = re.compile(r'^[' + re.escape(u''.join(AR_CHARSET)) + r']+$')
 
 # Identify No Analysis marker
 _NOAN_RE = re.compile(r'NOAN')
@@ -73,10 +72,6 @@ _CONCAT_FEATS = ['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6', 'ud',
 _OVERWRITE_FEATS = ['lex', 'pos', 'prc3', 'prc2', 'prc1', 'prc0', 'per', 'asp',
                     'vox', 'mod', 'gen', 'num', 'stt',
                     'cas', 'enc0', 'rat', 'form_gen', 'form_num']
-
-
-def _dediac(word):
-    return _DIAC_RE.sub('', word)
 
 
 def _is_digit(word):
@@ -192,7 +187,7 @@ class CalimaStarAnalyzer:
                     merged['stem'] = stem_feats['diac']
                     merged['stemcat'] = stem_cat
 
-                    merged_dediac = _dediac(merged['diac'])
+                    merged_dediac = dediac_ar(merged['diac'])
                     if word_dediac != merged_dediac:
                         merged['source'] = 'spvar'
 
@@ -284,7 +279,7 @@ class CalimaStarAnalyzer:
             result['source'] = 'foreign'
             return [result]
 
-        word_dediac = _dediac(word)
+        word_dediac = dediac_ar(word)
         word_normal = self._normalize(word_dediac)
 
         segments_gen = _segments_gen(word_normal, self._db.max_prefix_size,

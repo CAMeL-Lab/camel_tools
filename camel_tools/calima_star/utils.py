@@ -68,11 +68,11 @@ _NORMALIZE_TANWYN_YF_RE = re.compile(r'ىً')
 
 def normalize_tanwyn(word, mode='AF'):
     if mode == 'FA':
-        word = _NORMALIZE_TANWYN_FA_RE.sub('ًا', word)
-        word = _NORMALIZE_TANWYN_FY_RE.sub('ًى', word)
+        word = _NORMALIZE_TANWYN_FA_RE.sub(u'ًا', word)
+        word = _NORMALIZE_TANWYN_FY_RE.sub(u'ًى', word)
     else:
-        word = _NORMALIZE_TANWYN_AF_RE.sub('اً', word)
-        word = _NORMALIZE_TANWYN_YF_RE.sub('ىً', word)
+        word = _NORMALIZE_TANWYN_AF_RE.sub(u'اً', word)
+        word = _NORMALIZE_TANWYN_YF_RE.sub(u'ىً', word)
     return word
 
 
@@ -91,7 +91,7 @@ def rewrite_caphi(word):
     word = _REWRITE_CAPHI_RE_1.sub(r'\2\3\4\4', word)
     word = _REWRITE_CAPHI_RE_2.sub(r'\1_\1', word)
     word = _REWRITE_CAPHI_RE_3.sub(r'_', word)
-    word = _REWRITE_CAPHI_RE_4.sub('', word)
+    word = _REWRITE_CAPHI_RE_4.sub(r'', word)
     return word
 
 
@@ -108,13 +108,13 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
             result[stem_feat] = prefix_feat_val
 
     for concat_feat in _CONCAT_FEATS:
-        result[concat_feat] = '{}+{}+{}'.format(
+        result[concat_feat] = u'{}+{}+{}'.format(
             prefix_feats.get(concat_feat, ''),
             stem_feats.get(concat_feat, ''),
             suffix_feats.get(concat_feat, ''))
 
     for concat_feat in _CONCAT_FEATS_NONE:
-        result[concat_feat] = '{}{}{}'.format(
+        result[concat_feat] = u'{}{}{}'.format(
             prefix_feats.get(concat_feat, ''),
             stem_feats.get(concat_feat, ''),
             suffix_feats.get(concat_feat, ''))
@@ -132,8 +132,8 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
         result['num'] = result['form_num']
 
     if 'pattern' in db.compute_feats:
-        result['pattern'] = '{}{}{}'.format(prefix_feats.get('diac', ''),
-                                            stem_feats['pattern'],
-                                            suffix_feats.get('diac', ''))
+        result['pattern'] = u'{}{}{}'.format(prefix_feats.get('diac', ''),
+                                             stem_feats['pattern'],
+                                             suffix_feats.get('diac', ''))
 
     return result

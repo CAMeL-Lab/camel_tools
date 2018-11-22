@@ -30,6 +30,7 @@ from __future__ import absolute_import
 from collections import namedtuple
 import re
 
+from camel_tools.utils.stringutils import force_unicode
 from camel_tools.calima_star.errors import InvalidDatabaseFlagError
 from camel_tools.calima_star.errors import DatabaseParseError
 
@@ -149,7 +150,7 @@ class CalimaStarDB:
         with open(fpath, 'r') as dbfile:
             # Process DEFINES
             for line in dbfile:
-                line = line.strip()
+                line = line = force_unicode(line).strip()
 
                 if line == '###DEFINES###':
                     continue
@@ -189,7 +190,7 @@ class CalimaStarDB:
 
             # Process DEFAULTS
             for line in dbfile:
-                line = line.strip()
+                line = force_unicode(line).strip()
 
                 if line == '###ORDER###':
                     break
@@ -212,7 +213,7 @@ class CalimaStarDB:
 
             # Process ORDER
             for line in dbfile:
-                line = line.strip()
+                line = force_unicode(line).strip()
 
                 if line == '###STEMBACKOFF###':
                     self.compute_feats.update(self.order)
@@ -234,7 +235,7 @@ class CalimaStarDB:
 
             # Process STEMBACKOFFS
             for line in dbfile:
-                line = line.strip()
+                line = force_unicode(line).strip()
 
                 if line == '###PREFIXES###':
                     break
@@ -249,7 +250,7 @@ class CalimaStarDB:
 
             # Process PREFIXES
             for line in dbfile:
-
+                line = force_unicode(line)
                 parts = line.split('\t')
 
                 if len(parts) != 3:
@@ -276,7 +277,7 @@ class CalimaStarDB:
 
             # Process SUFFIXES
             for line in dbfile:
-
+                line = force_unicode(line)
                 parts = line.split('\t')
 
                 if len(parts) != 3:
@@ -303,12 +304,12 @@ class CalimaStarDB:
 
             # Process STEMS
             for line in dbfile:
-                line = line.strip()
+                line = force_unicode(line).strip()
 
                 if line == '###TABLE AB###':
                     break
 
-                parts = line.split('\t')
+                parts = line.split(u'\t')
 
                 if len(parts) != 3:
                     raise DatabaseParseError(
@@ -316,7 +317,7 @@ class CalimaStarDB:
 
                 stem = parts[0]
                 category = parts[1]
-                analysis = self._parse_analysis_line_toks(parts[2].split(' '))
+                analysis = self._parse_analysis_line_toks(parts[2].split(u' '))
 
                 if self._withAnalysis:
                     if stem not in self.stem_hash:
@@ -334,7 +335,7 @@ class CalimaStarDB:
 
             # Process prefix_stem compatibility table
             for line in dbfile:
-                line = line.strip()
+                line = force_unicode(line).strip()
 
                 if line == '###TABLE BC###':
                     break
@@ -360,7 +361,7 @@ class CalimaStarDB:
 
             # Process stem_suffix compatibility table
             for line in dbfile:
-                line = line.strip()
+                line = force_unicode(line).strip()
 
                 if line == '###TABLE AC###':
                     break
@@ -380,7 +381,7 @@ class CalimaStarDB:
 
             # Process prefix_suffix compatibility table
             for line in dbfile:
-                line = line.strip()
+                line = force_unicode(line).strip()
 
                 toks = line.split()
 
