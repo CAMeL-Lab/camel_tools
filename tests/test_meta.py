@@ -32,7 +32,7 @@ from __future__ import absolute_import, print_function
 import os
 
 import camel_tools as camelt
-from camel_tools.disambig import camel_disambig
+from camel_tools.calima_star import camel_calima_star
 from camel_tools.transliterate import camel_transliterate
 from camel_tools.arclean import camel_arclean
 
@@ -49,6 +49,6 @@ def test_camel_tools_version():
 
     assert(VERSION ==
            camelt.__version__ ==
-           camel_disambig.__version__ ==
+           camel_calima_star.__version__ ==
            camel_transliterate.__version__ ==
            camel_arclean.__version__)
