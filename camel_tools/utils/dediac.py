@@ -28,37 +28,45 @@ different encodings.
 
 from __future__ import absolute_import
 
-import regex as re
+import re
 
 from camel_tools.utils.charsets import AR_DIAC_CHARSET, BW_DIAC_CHARSET
 from camel_tools.utils.charsets import SAFEBW_DIAC_CHARSET, XMLBW_DIAC_CHARSET
 from camel_tools.utils.charsets import HSB_DIAC_CHARSET
 
 
-_DIAC_RE_BW = re.compile(r'[' + re.escape(''.join(BW_DIAC_CHARSET)) + ']')
-_DIAC_RE_SAFEBW = re.compile(r'[' + re.escape(''.join(SAFEBW_DIAC_CHARSET)) +
-                             ']')
-_DIAC_RE_XMLBW = re.compile(r'[' + re.escape(''.join(XMLBW_DIAC_CHARSET)) +
-                            ']')
-_DIAC_RE_HSB = re.compile(r'[' + re.escape(''.join(HSB_DIAC_CHARSET)) + ']')
-_DIAC_RE_AR = re.compile(r'[' + re.escape(''.join(AR_DIAC_CHARSET)) + ']')
+_DIAC_RE_BW = re.compile(r'[' +
+                         re.escape(u''.join(BW_DIAC_CHARSET)) +
+                         r']')
+_DIAC_RE_SAFEBW = re.compile(r'[' +
+                             re.escape(u''.join(SAFEBW_DIAC_CHARSET)) +
+                             r']')
+_DIAC_RE_XMLBW = re.compile(r'[' +
+                            re.escape(u''.join(XMLBW_DIAC_CHARSET)) +
+                            r']')
+_DIAC_RE_HSB = re.compile(r'[' +
+                          re.escape(u''.join(HSB_DIAC_CHARSET)) +
+                          r']')
+_DIAC_RE_AR = re.compile(r'[' +
+                         re.escape(u''.join(AR_DIAC_CHARSET)) +
+                         r']')
 
 
 def dediac_bw(s):
-    return _DIAC_RE_BW.sub('', s)
+    return _DIAC_RE_BW.sub(u'', s)
 
 
 def dediac_safebw(s):
-    return _DIAC_RE_SAFEBW.sub('', s)
+    return _DIAC_RE_SAFEBW.sub(u'', s)
 
 
 def dediac_xmlbw(s):
-    return _DIAC_RE_XMLBW.sub('', s)
+    return _DIAC_RE_XMLBW.sub(u'', s)
 
 
 def dediac_hsb(s):
-    return _DIAC_RE_HSB.sub('', s)
+    return _DIAC_RE_HSB.sub(u'', s)
 
 
 def dediac_ar(s):
-    return _DIAC_RE_AR.sub('', s)
+    return _DIAC_RE_AR.sub(u'', s)

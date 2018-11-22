@@ -65,6 +65,8 @@ import re
 from docopt import docopt
 
 import camel_tools as camelt
+from camel_tools.utils.charsets import AR_DIAC_CHARSET
+from camel_tools.utils.stringutils import force_unicode
 from camel_tools.calima_star.database import CalimaStarDB
 from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
 from camel_tools.calima_star.generator import CalimaStarGenerator
@@ -80,7 +82,7 @@ _ANALYSIS_BACKOFFS = frozenset(('NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
                                 'ADD_PROP'))
 _GENARATION_BACKOFFS = frozenset(('NONE', 'REINFLECT'))
 
-_DIAC_RE = re.compile(r'[ًٌٍَُِّْٰ]')
+_DIAC_RE = re.compile(r'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + r']')
 
 
 def _tokenize(s):
@@ -120,10 +122,11 @@ def _open_files(finpath, foutpath):
 
 def _serialize_analyses(fout, word, analyses, order, generation=False):
     buff = collections.deque()
-    buff.append('#{}: {}'.format('LEMMA' if generation else 'WORD', word))
+    buff.append(u'#{}: {}'.format(u'LEMMA' if generation else u'WORD',
+                                  word))
 
     if len(analyses) == 0:
-        buff.append('NO_ANALYSIS')
+        buff.append(u'NO_ANALYSIS')
     else:
         sub_buff = set()
         for a in analyses:
@@ -132,7 +135,7 @@ def _serialize_analyses(fout, word, analyses, order, generation=False):
             sub_buff.add(output)
         buff.extend(sub_buff)
 
-    return '\n'.join(buff)
+    return u'\n'.join(buff)
 
 
 def _parse_generator_line(line):
@@ -183,7 +186,7 @@ def _analyze(db, fin, fout, backoff, cache):
     analyzer = CalimaStarAnalyzer(db, backoff)
     memoize_table = {} if cache else None
 
-    line = fin.readline().strip()
+    line = force_unicode(fin.readline()).strip()
 
     while line:
         if len(line) == 0:
@@ -213,7 +216,7 @@ def _generate(db, fin, fout, backoff):
     generator = CalimaStarGenerator(db)
     reinflector = CalimaStarReinflector(db) if backoff == 'REINFLECT' else None
 
-    line = fin.readline().strip()
+    line = force_unicode(fin.readline()).strip()
     line_num = 1
 
     while line:
@@ -276,7 +279,7 @@ def _generate(db, fin, fout, backoff):
 def _reinflect(db, fin, fout):
     reinflector = CalimaStarReinflector(db)
 
-    line = fin.readline().strip()
+    line = force_unicode(fin.readline()).strip()
     line_num = 1
 
     while line:
