@@ -29,13 +29,13 @@ CharMapper).
 from __future__ import absolute_import
 
 from collections import deque
-import regex
+import re
 import six
 
-from ..utils import CharMapper
+from camel_tools.utils.charmap import CharMapper
 
 
-_WHITESPACE_RE = regex.compile(r'\s', regex.UNICODE)
+_WHITESPACE_RE = re.compile(r'\s')
 
 
 class Transliterator(object):
@@ -76,9 +76,9 @@ class Transliterator(object):
         else:
             raise ValueError('Marker contains whitespace.')
 
-        self._markerre = regex.compile(
-            r'({}\S+)'.format(regex.escape(marker)),
-            regex.UNICODE | regex.MULTILINE
+        self._markerre = re.compile(
+            r'({}\S+)'.format(re.escape(marker)),
+            re.UNICODE | re.MULTILINE
         )
 
     def transliterate(self, _string, strip_markers=False, ignore_markers=False):
