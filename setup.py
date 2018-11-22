@@ -65,8 +65,7 @@ LONG_DESCRIPTION = codecs.open('README.md', 'r', encoding='utf-8').read()
 INSTALL_REQUIRES = [
     'future',
     'six',
-    'docopt',
-    'regex',
+    'docopt'
 ]
 
 setup(

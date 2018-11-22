@@ -26,7 +26,7 @@
 """
 
 import copy
-import regex as re
+import re
 
 # features which should be concatinated when generating analysis
 _CONCAT_FEATS = ['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6', 'ud']
