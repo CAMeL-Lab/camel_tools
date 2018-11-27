@@ -56,7 +56,7 @@ from docopt import docopt
 
 import camel_tools as camelt
 from camel_tools.utils import CharMapper
-from camel_tools.transliterate import Transliterator
+from camel_tools.utils.transliterate import Transliterator
 
 
 __version__ = camelt.__version__
