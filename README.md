@@ -32,8 +32,9 @@ pip install .
 
 ## Documentation
 
-You can find the [full online documentation here](/#) for both the
-command-line tools and the Python API.
+You can find the
+[full online documentation here](https://camel-tools.readthedocs.io) for both
+the command-line tools and the Python API.
 
 Alternatively, you can build your own local copy of the documentation as
 follows:
