@@ -42,9 +42,11 @@ from __future__ import print_function, absolute_import
 import sys
 
 from docopt import docopt
+import six
 
 import camel_tools as camelt
-from camel_tools.utils import CharMapper
+from camel_tools.utils.stringutils import force_encoding, force_unicode
+from camel_tools.utils.charmap import CharMapper
 
 
 __version__ = camelt.__version__
@@ -78,7 +80,12 @@ def _open_files(finpath, foutpath):
 
 def _arclean(mapper, fin, fout):
     for line in fin:
-        fout.write(mapper.map_string(line))
+        line = force_unicode(line)
+
+        if six.PY3:
+            fout.write(mapper.map_string(line))
+        else:
+            fout.write(force_encoding(mapper.map_string(line)))
     fout.flush()
 
 
@@ -93,7 +100,7 @@ def main():  # pragma: no cover
         mapper = CharMapper.builtin_mapper('arclean')
         _arclean(mapper, fin, fout)
 
-     # If everything worked so far, this shouldn't happen
+    # If everything worked so far, this shouldn't happen
     except Exception:
         sys.stderr.write('Error: An error occured during cleaning.\n')
         fin.close()

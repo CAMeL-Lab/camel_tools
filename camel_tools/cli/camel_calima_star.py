@@ -63,10 +63,11 @@ import sys
 import re
 
 from docopt import docopt
+import six
 
 import camel_tools as camelt
 from camel_tools.utils.charsets import AR_DIAC_CHARSET
-from camel_tools.utils.stringutils import force_unicode
+from camel_tools.utils.stringutils import force_unicode, force_encoding
 from camel_tools.calima_star.database import CalimaStarDB
 from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
 from camel_tools.calima_star.generator import CalimaStarGenerator
@@ -123,15 +124,15 @@ def _open_files(finpath, foutpath):
 def _serialize_analyses(fout, word, analyses, order, generation=False):
     buff = collections.deque()
     buff.append(u'#{}: {}'.format(u'LEMMA' if generation else u'WORD',
-                                  word))
+                                  force_unicode(word)))
 
     if len(analyses) == 0:
         buff.append(u'NO_ANALYSIS')
     else:
         sub_buff = set()
         for a in analyses:
-            output = u' '.join([u'{}:{}'.format(f,
-                               a[f]) for f in order if f in a])
+            output = u' '.join([u'{}:{}'.format(force_unicode(f),
+                               force_unicode(a[f])) for f in order if f in a])
             sub_buff.add(output)
         buff.extend(sub_buff)
 
@@ -190,26 +191,35 @@ def _analyze(db, fin, fout, backoff, cache):
 
     while line:
         if len(line) == 0:
-            line = fin.readline().strip()
+            line = force_unicode(fin.readline()).strip()
             continue
 
         tokens = _tokenize(line)
 
         for token in tokens:
             if cache and token in memoize_table:
-                fout.write(memoize_table[token])
+                if six.PY3:
+                    fout.write(memoize_table[token])
+                else:
+                    fout.write(force_encoding(memoize_table[token]))
+
                 fout.write('\n\n')
             else:
                 analyses = analyzer.analyze(token)
                 serialized = _serialize_analyses(fout, token, analyses,
                                                  db.order)
+
                 if cache:
                     memoize_table[token] = serialized
 
-                fout.write(serialized)
+                if six.PY3:
+                    fout.write(serialized)
+                else:
+                    fout.write(force_encoding(serialized))
+
                 fout.write('\n\n')
 
-        line = fin.readline().strip()
+        line = force_unicode(fin.readline()).strip()
 
 
 def _generate(db, fin, fout, backoff):
@@ -221,7 +231,7 @@ def _generate(db, fin, fout, backoff):
 
     while line:
         if len(line) == 0:
-            line = fin.readline().strip()
+            line = force_unicode(fin.readline()).strip()
             line_num += 1
             continue
 
@@ -263,7 +273,12 @@ def _generate(db, fin, fout, backoff):
 
                     serialized = _serialize_analyses(fout, lemma, analyses,
                                                      db.order, True)
-                    fout.write(serialized)
+
+                    if six.PY3:
+                        fout.write(serialized)
+                    else:
+                        fout.write(force_encoding(serialized))
+
                     fout.write('\n\n')
                 except GeneratorError as error:
                     if fin is sys.stdin:
@@ -272,7 +287,7 @@ def _generate(db, fin, fout, backoff):
                         sys.stderr.write('Error: {}. [{}]\n'.format(error.msg,
                                                                     line_num))
 
-        line = fin.readline().strip()
+        line = force_encoding(fin.readline()).strip()
         line_num += 1
 
 
@@ -284,7 +299,7 @@ def _reinflect(db, fin, fout):
 
     while line:
         if len(line) == 0:
-            line = fin.readline().strip()
+            line = force_unicode(fin.readline()).strip()
             line_num += 1
             continue
 
@@ -306,7 +321,12 @@ def _reinflect(db, fin, fout):
 
                 serialized = _serialize_analyses(fout, word, analyses,
                                                  db.order)
-                fout.write(serialized)
+
+                if six.PY3:
+                    fout.write(serialized)
+                else:
+                    fout.write(force_encoding(serialized))
+
                 fout.write('\n\n')
             except CalimaStarError as error:
                 # This could be thrown by the analyzer, generator, or
@@ -317,7 +337,7 @@ def _reinflect(db, fin, fout):
                     sys.stderr.write('Error: {}. [{}]\n'.format(error.msg,
                                                                 line_num))
 
-        line = fin.readline().strip()
+        line = force_unicode(fin.readline()).strip()
         line_num += 1
 
 

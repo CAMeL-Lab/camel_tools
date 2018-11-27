@@ -60,7 +60,7 @@ def force_unicode(s, encoding='utf-8'):
         :obj:`str`: A Unicode (decoded) version of **s**.
     """
 
-    if isinstance(s, six.text_type):
+    if s is None or isinstance(s, six.text_type):
         return s
 
     return s.decode(encoding)
@@ -81,7 +81,7 @@ def force_encoding(s, encoding='utf-8'):
         :obj:`str`: An encoded version of **s**.
     """
 
-    if isinstance(s, six.binary_type):
+    if s is None or isinstance(s, six.binary_type):
         return s
 
     return s.encode(encoding)
