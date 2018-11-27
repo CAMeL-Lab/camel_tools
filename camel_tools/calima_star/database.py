@@ -113,12 +113,15 @@ class CalimaStarDB:
         res = {}
 
         for tok in toks:
-            subtoks = tok.split(':')
+            if len(tok) == 0:
+                continue
+
+            subtoks = tok.split(u':')
             if len(subtoks) < 2:
                 raise DatabaseParseError(
                     'invalid key value pair {}'.format(repr(tok)))
 
-            res[subtoks[0]] = ':'.join(subtoks[1:])
+            res[subtoks[0]] = u':'.join(subtoks[1:])
 
         return res
 
@@ -126,7 +129,7 @@ class CalimaStarDB:
         res = {}
 
         for tok in toks:
-            subtoks = tok.split(':')
+            subtoks = tok.split(u':')
             if len(subtoks) < 2:
                 raise DatabaseParseError(
                     'invalid key value pair {} in DEFAULTS'.format(
@@ -157,7 +160,7 @@ class CalimaStarDB:
                 if line == '###DEFAULTS###':
                     break
 
-                toks = line.split(' ')
+                toks = line.split(u' ')
 
                 # Check if line has the minimum viable format
                 if len(toks) < 3 or toks[0] != 'DEFINE':
@@ -194,7 +197,7 @@ class CalimaStarDB:
                 if line == '###ORDER###':
                     break
 
-                toks = line.split(' ')
+                toks = line.split(u' ')
 
                 if len(toks) < 2 or toks[0] != 'DEFAULT':
                     raise DatabaseParseError(
@@ -218,7 +221,7 @@ class CalimaStarDB:
                     self.compute_feats.update(self.order)
                     break
 
-                toks = line.split(' ')
+                toks = line.split(u' ')
 
                 if (self.order is not None and len(toks) < 2 and
                         toks[0] != 'ORDER'):
@@ -239,7 +242,7 @@ class CalimaStarDB:
                 if line == '###PREFIXES###':
                     break
 
-                toks = line.split(' ')
+                toks = line.split(u' ')
 
                 if len(toks) < 3 or toks[0] != 'STEMBACKOFF':
                     raise DatabaseParseError(
@@ -250,7 +253,7 @@ class CalimaStarDB:
             # Process PREFIXES
             for line in dbfile:
                 line = force_unicode(line)
-                parts = line.split('\t')
+                parts = line.split(u'\t')
 
                 if len(parts) != 3:
                     if line.strip() == '###SUFFIXES###':
@@ -261,7 +264,7 @@ class CalimaStarDB:
                 prefix = parts[0].strip()
                 category = parts[1]
                 analysis = self._parse_analysis_line_toks(
-                    parts[2].strip().split(' '))
+                    parts[2].strip().split(u' '))
 
                 if self._withAnalysis:
                     if prefix not in self.prefix_hash:
@@ -277,7 +280,7 @@ class CalimaStarDB:
             # Process SUFFIXES
             for line in dbfile:
                 line = force_unicode(line)
-                parts = line.split('\t')
+                parts = line.split(u'\t')
 
                 if len(parts) != 3:
                     if line.strip() == '###STEMS###':
@@ -288,7 +291,7 @@ class CalimaStarDB:
                 suffix = parts[0].strip()
                 category = parts[1]
                 analysis = self._parse_analysis_line_toks(
-                    parts[2].strip().split(' '))
+                    parts[2].strip().split(u' '))
 
                 if self._withAnalysis:
                     if suffix not in self.suffix_hash:
