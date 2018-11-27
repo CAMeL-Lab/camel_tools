@@ -31,7 +31,7 @@ from __future__ import absolute_import
 import pytest
 
 from camel_tools.utils import CharMapper
-from camel_tools.transliterate import Transliterator
+from camel_tools.utils.transliterate import Transliterator
 
 
 # A mapper that translates lower-case English characters to a lower-case x and

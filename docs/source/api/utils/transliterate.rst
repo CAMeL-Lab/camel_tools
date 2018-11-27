@@ -7,5 +7,5 @@ Contains the Transliterator class for transliterating text using a
 Classes
 -------
 
-.. autoclass:: camel_tools.transliterate.Transliterator
+.. autoclass:: camel_tools.utils.transliterate.Transliterator
    :members:

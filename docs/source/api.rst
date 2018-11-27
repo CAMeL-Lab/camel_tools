@@ -14,5 +14,4 @@ Python API Reference
    :caption: Modules:
 
    api/utils
-   api/transliterate
    api/calima_star

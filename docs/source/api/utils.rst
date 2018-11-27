@@ -7,5 +7,6 @@ camel_tools.utils
 
    utils/charsets
    utils/charmap
+   utils/transliterate
    utils/dediac
    utils/stringutils
