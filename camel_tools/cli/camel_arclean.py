@@ -90,30 +90,37 @@ def _arclean(mapper, fin, fout):
 
 
 def main():  # pragma: no cover
-    version = ('CAMeL Tools v{}'.format(__version__))
-    arguments = docopt(__doc__, version=version)
-
-    # Open files (or just use stdin and stdout)
-    fin, fout = _open_files(arguments['FILE'], arguments['--output'])
-
     try:
-        mapper = CharMapper.builtin_mapper('arclean')
-        _arclean(mapper, fin, fout)
+        version = ('CAMeL Tools v{}'.format(__version__))
+        arguments = docopt(__doc__, version=version)
 
-    # If everything worked so far, this shouldn't happen
-    except Exception:
-        sys.stderr.write('Error: An error occured during cleaning.\n')
-        fin.close()
-        fout.close()
-        sys.exit(1)
+        # Open files (or just use stdin and stdout)
+        fin, fout = _open_files(arguments['FILE'], arguments['--output'])
 
-        # Cleanup
-        if arguments['FILE'] is not None:
+        try:
+            mapper = CharMapper.builtin_mapper('arclean')
+            _arclean(mapper, fin, fout)
+
+        # If everything worked so far, this shouldn't happen
+        except Exception:
+            sys.stderr.write('Error: An error occured during cleaning.\n')
             fin.close()
-        if arguments['--output'] is not None:
             fout.close()
+            sys.exit(1)
 
-    sys.exit(0)
+            # Cleanup
+            if arguments['FILE'] is not None:
+                fin.close()
+            if arguments['--output'] is not None:
+                fout.close()
+
+        sys.exit(0)
+    except KeyboardInterrupt:
+        sys.stderr.write('Exiting...\n')
+        sys.exit(1)
+    except Exception:
+        sys.stderr.write('Error: An unknown error occurred.\n')
+        sys.exit(1)
 
 
 if __name__ == '__main__':  # pragma: no cover
