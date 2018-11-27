@@ -22,7 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""A collection of useful helper functions when working with strings.
+"""This submodule contains a collection of useful helper functions when working
+with strings.
 """
 
 
@@ -32,14 +33,15 @@ import six
 
 
 def isunicode(obj):
-    """Checks if an object is a unicode encoded string. Useful for Python 2 and
+    """Checks if an object is a Unicode encoded string. Useful for Python 2 and
     3 compatibility.
 
     Args:
-        obj (obj): The object to check.
+        obj (:obj:`object`): The object to check.
 
     Returns:
-        bool: True if obj is a unicode encoded string, False otherwise.
+        :obj:`bool`: `True` if **obj** is a Unicode encoded string, `False`
+        otherwise.
     """
 
     return isinstance(obj, six.text_type)
@@ -49,40 +51,37 @@ def force_unicode(s, encoding='utf-8'):
     """Convert a given string into a Unicode (decoded) string if it isn't
     already.
 
-    Arguments:
-        s {str} -- String object to convert.
-
-    Keyword Arguments:
-        encoding {str} -- The encoding of s if it is encoded
-            (default: {'utf-8'}).
+    Args:
+        s (:obj:`str`): String object to convert.
+        encoding (:obj:`str`, optional): The encoding of **s** if it is
+            encoded. Defaults to 'utf-8'.
 
     Returns:
-        {str} -- A Unicode (decoded) version of s.
+        :obj:`str`: A Unicode (decoded) version of **s**.
     """
 
     if isinstance(s, six.text_type):
         return s
-    else:
-        return s.decode(encoding)
+
+    return s.decode(encoding)
 
 
 def force_encoding(s, encoding='utf-8'):
     """Convert a given string into an encoded string if it isn't already.
 
-    Arguments:
-        s {str} -- String object to convert.
+    Args:
+        s (:obj:`str`): String object to convert.
 
-    Keyword Arguments:
-        encoding {str} -- The encoding s should be encoded into. Note that if s
-            is already encoded, it is returned as is, even though it is in a
-            differnet encoding than what is passed to this parameter.
-            (default: {'utf-8'})
+        encoding (:obj:`str`): The encoding **s** should be encoded into.
+            Note that if **s** is already encoded, it is returned as is,
+            even though it is in a differnet encoding than what is passed to
+            this parameter. Defaults to 'utf-8'.
 
     Returns:
-        {str} -- An encoded version of s.
+        :obj:`str`: An encoded version of **s**.
     """
 
     if isinstance(s, six.binary_type):
         return s
-    else:
-        return s.encode(encoding)
+
+    return s.encode(encoding)

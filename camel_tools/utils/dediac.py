@@ -23,7 +23,8 @@
 # SOFTWARE.
 
 """This submodule contains functions for dediacritizing Arabic text in
-different encodings.
+different encodings. See :doc:`/reference/encoding_schemes` for more
+information on encodings.
 """
 
 from __future__ import absolute_import
@@ -53,20 +54,65 @@ _DIAC_RE_AR = re.compile(r'[' +
 
 
 def dediac_bw(s):
+    """Dediacritize Buckwalter encoded string.
+
+    Args:
+        s (:obj:`str`): String to dediacritize.
+
+    Returns:
+        :obj:`str`: Dediacritized string.
+    """
+
     return _DIAC_RE_BW.sub(u'', s)
 
 
 def dediac_safebw(s):
+    """Dediacritize Safe Buckwalter encoded string.
+
+    Args:
+        s (:obj:`str`): String to dediacritize.
+
+    Returns:
+        :obj:`str`: Dediacritized string.
+    """
+
     return _DIAC_RE_SAFEBW.sub(u'', s)
 
 
 def dediac_xmlbw(s):
+    """Dediacritize XML Buckwalter encoded string.
+
+    Args:
+        s (:obj:`str`): String to dediacritize.
+
+    Returns:
+        :obj:`str`: Dediacritized string.
+    """
+
     return _DIAC_RE_XMLBW.sub(u'', s)
 
 
 def dediac_hsb(s):
+    """Dediacritize Habash-Soudi-Buckwalter encoded string.
+
+    Args:
+        s (:obj:`str`): String to dediacritize.
+
+    Returns:
+        :obj:`str`: Dediacritized string.
+    """
+
     return _DIAC_RE_HSB.sub(u'', s)
 
 
 def dediac_ar(s):
+    """Dediacritize Unicode Arabic string.
+
+    Args:
+        s (:obj:`str`): String to dediacritize.
+
+    Returns:
+        :obj:`str`: Dediacritized string.
+    """
+
     return _DIAC_RE_AR.sub(u'', s)

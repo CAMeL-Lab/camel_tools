@@ -27,7 +27,7 @@
 
 
 class CalimaStarError(Exception):
-    """Base error class for all CALIMA Star errors.
+    """Base class for all CALIMA Star errors.
     """
 
     def __init__(self, msg):
@@ -40,7 +40,7 @@ class CalimaStarError(Exception):
 # Database Errors
 
 class DatabaseError(CalimaStarError):
-    """Class for errors thrown by Database component.
+    """Base class for errors thrown by Database component.
     """
 
     def __init__(self, msg):
@@ -77,7 +77,7 @@ class AnalyzerError(CalimaStarError):
 # Generator Errors
 
 class GeneratorError(CalimaStarError):
-    """Class for errors thrown by Generator component.
+    """Base class for errors thrown by Generator component.
     """
 
     def __init__(self, msg):
@@ -104,7 +104,7 @@ class InvalidGeneratorFeatureValue(GeneratorError):
 # Reinflector Errors
 
 class ReinflectorError(CalimaStarError):
-    """Class for errors thrown by Reinflector component.
+    """Base class for errors thrown by Reinflector component.
     """
 
     def __init__(self, msg):

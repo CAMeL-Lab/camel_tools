@@ -38,21 +38,21 @@ from camel_tools.calima_star.utils import merge_features
 
 
 class CalimaStarGenerator(object):
-    """CALIMA Star generator class.
+    """CALIMA Star generator component.
+
+    Args:
+        db (:obj:`~camel_tools.calima_star.database.CalimaStarDB`): Database to
+            use for generation. Must be opened in generation or reinflection
+            mode.
+
+    Raises:
+        :obj:`~camel_tools.calima_star.errors.GeneratorError`: If **db** is not
+            an instance of
+            :obj:`~camel_tools.calima_star.database.CalimaStarDB` or if **db**
+            does not support generation.
     """
 
     def __init__(self, db):
-        """Class constructor.
-
-        Arguments:
-            db {CalimaStarDB} -- Database to use for generation. Must be opened
-                in generation or reinflection mode.
-
-        Raises:
-            GeneratorError -- If database is not an instance of CalimaStarDB or
-                if DB does not support generation.
-        """
-
         if not isinstance(db, CalimaStarDB):
             raise GeneratorError('DB is not an instance of CalimaStarDB')
         if not db.flags.generation:
@@ -63,18 +63,24 @@ class CalimaStarGenerator(object):
     def generate(self, lemma, feats):
         """Generate analyses for a given lemma and a given set of features.
 
-        Arguments:
-            lemma {str} -- Lemma to generate from.
-            feats {dict} -- Dictionary of features. Must contain 'pos' feature.
-
-        Raises:
-            InvalidGeneratorFeature -- If a feature is given that is not
-                defined in database.
-            InvalidGeneratorFeatureValue -- If an invalid value is given to a
-                feature or if 'pos' feature is not defined.
+        Args:
+            lemma (:obj:`str`): Lemma to generate from.
+            feats (:obj:`dict`): Dictionary of features. Must contain 'pos'
+                feature.
+                See :doc:`/reference/calima_star_features` for more information
+                on features and their values.
 
         Returns:
-            list -- List of generated analyses.
+            :obj:`list` of :obj:`dict`: List of generated analyses.
+            See :doc:`/reference/calima_star_features` for more information on
+            features and their values.
+
+        Raises:
+            :obj:`~camel_tools.calima_star.errors.InvalidGeneratorFeature`: If
+                a feature is given that is not defined in database.
+            :obj:`~camel_tools.calima_star.errors.InvalidGeneratorFeatureValue`:
+                If an invalid value is given to a feature or if 'pos' feature
+                is not defined.
         """
 
         if lemma not in self._db.lemma_hash:

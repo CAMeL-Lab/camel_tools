@@ -166,7 +166,7 @@ below while working on your changes:
 
 ## Issues
 
-Not all contributions have to be in code.
+Not all contributions have to do with code.
 If you would like to report a bug, suggest enhancements, or request a new
 feature, please use the
 [issues page](https://github.com/owo/CAMeL_Tools/issues) to do so.

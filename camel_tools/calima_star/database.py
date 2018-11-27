@@ -44,24 +44,23 @@ CalimaStarDBFlags = namedtuple('CalimaStarDBFlags', ['analysis', 'generation',
 
 class CalimaStarDB:
     """Class providing indexes from a given CALIMA Star database file.
+
+    Args:
+        fpath (:obj:`str`): File path to database.
+        flags (:obj:`str`): Flag string (similar to opening files) indicates
+            what components the database will be used for. 'a' indicates
+            analysis, 'g' indicates generation, and 'r' indicates indicates
+            reinflection. 'r' is equivalent to 'rg' since the reinflector
+            uses both analyzer and generator components internally.
+            Defaults to 'a'.
+
+    Raises:
+        :obj:`~camel_tools.calima_star.errors.InvalidDatabaseFlagError`: When
+            an invalid flag value is given.
     """
 
     def __init__(self, fpath, flags='a'):
         """Class constructor.
-
-        Arguments:
-            fpath {str} -- File path to database.
-
-        Keyword Arguments:
-            flags {str} -- Flag string (similar to opening files) indicates
-                what components the database will be used for. 'a' indicates
-                analysis, 'g' indicates generation, and 'r' indicates indicates
-                reinflection. 'r' is equivalent to 'rg' since the reinflector
-                uses both analyzer and generator components internally.
-                (default: 'a')
-
-        Raises:
-            InvalidDatabaseFlagError -- When an invalid flag value is given.
         """
 
         self._withAnalysis = False

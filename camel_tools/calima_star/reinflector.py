@@ -54,21 +54,21 @@ _LEMMA_SPLIT_RE = re.compile(r'-|_')
 
 
 class CalimaStarReinflector(object):
-    """CALIMA Star reinflector class.
+    """CALIMA Star reinflector component.
+
+    Arguments:
+        db (:obj:`~camel_tools.calima_star.database.CalimaStarDB`): Database to
+            use for generation. Must be opened in reinflection mode or both
+            analysis and generation modes.
+
+    Raises:
+        :obj:`~camel_tools.calima_star.errors.ReinflectorError`: If **db** is
+            not an instance of
+            :obj:`~camel_tools.calima_star.database.CalimaStarDB` or if **db**
+            does not support reinflection.
     """
 
     def __init__(self, db):
-        """Class constructor.
-
-        Arguments:
-            db {CalimaStarDB} -- database to use for generation. Must be opened
-                in reinflection mode or both analysis and generation modes.
-
-        Raises:
-            ReinflectorError -- If database is not an instance of CalimaStarDB
-                or if DB does not support reinflection.
-        """
-
         if not isinstance(db, CalimaStarDB):
             raise ReinflectorError('DB is not an instance of CalimaStarDB')
         if not db.flags.generation:
@@ -84,17 +84,22 @@ class CalimaStarReinflector(object):
         features.
 
         Arguments:
-            word {str} -- Word to reinflect.
-            feats {dict} -- Dictionary of features.
-
-        Raises:
-            InvalidReinflectorFeature -- If a feature is given that is not
-                defined in database.
-            InvalidReinflectorFeatureValue -- If an invalid value is given to a
-                feature or if 'pos' feature is not defined.
+            word (:obj:`str`): Word to reinflect.
+            feats (:obj:`dict`): Dictionary of features.
+                See :doc:`/reference/calima_star_features` for more information
+                on features and their values.
 
         Returns:
-            list -- List of generated analyses.
+            :obj:`list` of :obj:`dict`: List of generated analyses.
+            See :doc:`/reference/calima_star_features` for more information on
+            features and their values.
+
+        Raises:
+            :obj:`~camel_tools.calima_star.errors.InvalidReinflectorFeature`:
+                If a feature is given that is not defined in database.
+            :obj:`~camel_tools.calima_star.errors.InvalidReinflectorFeatureValue`:
+                If an invalid value is given to a feature or if 'pos' feature
+                is not defined.
         """
 
         analyses = self._analyzer.analyze(word)
