@@ -53,8 +53,10 @@ from __future__ import print_function, absolute_import
 import sys
 
 from docopt import docopt
+import six
 
 import camel_tools as camelt
+from camel_tools.utils.stringutils import force_encoding, force_unicode
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.transliterate import Transliterator
 
@@ -152,9 +154,16 @@ def main():  # pragma: no cover
         # Transliterate lines
         try:
             for line in fin:
-                fout.write(
-                    trans.transliterate(line, strip_markers, ignore_markers)
-                )
+                line = force_unicode(line)
+
+                if six.PY3:
+                    fout.write(
+                        trans.transliterate(line, strip_markers,
+                                            ignore_markers))
+                else:
+                    fout.write(
+                        force_encoding(trans.transliterate(line, strip_markers,
+                                                           ignore_markers)))
             fout.flush()
 
         # If everything worked so far, this shouldn't happen

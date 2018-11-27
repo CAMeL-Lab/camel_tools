@@ -78,6 +78,7 @@ setup(
     maintainer='Ossama W. Obeid',
     maintainer_email='oobeid@nyu.edu',
     packages=['camel_tools',
+              'camel_tools.cli',
               'camel_tools.utils',
               'camel_tools.calima_star'],
     package_data={
