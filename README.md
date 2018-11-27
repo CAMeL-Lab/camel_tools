@@ -1,5 +1,8 @@
 # CAMeL Tools
 
+[![Documentation Status](https://readthedocs.org/projects/camel-tools/badge/?version=latest)](https://camel-tools.readthedocs.io/en/latest/?badge=latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ![alt text](camel_logo.png "CAMeL logo")
 
 ## Introduction
