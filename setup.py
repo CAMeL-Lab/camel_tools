@@ -78,7 +78,6 @@ setup(
     maintainer='Ossama W. Obeid',
     maintainer_email='oobeid@nyu.edu',
     packages=['camel_tools',
-              'camel_tools.transliterate',
               'camel_tools.utils',
               'camel_tools.calima_star'],
     package_data={
@@ -88,11 +87,11 @@ setup(
     entry_points={
         'console_scripts': [
             ('camel_transliterate='
-             'camel_tools.transliterate.camel_transliterate:main'),
+             'camel_tools.cli.camel_transliterate:main'),
             ('camel_arclean='
-             'camel_tools.arclean.camel_arclean:main'),
+             'camel_tools.cli.camel_arclean:main'),
             ('camel_calima_star='
-             'camel_tools.calima_star.camel_calima_star:main'),
+             'camel_tools.cli.camel_calima_star:main'),
         ],
     },
     url='https://github.com/owo/CAMeL_Tools',

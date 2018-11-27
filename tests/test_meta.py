@@ -32,9 +32,9 @@ from __future__ import absolute_import, print_function
 import os
 
 import camel_tools as camelt
-from camel_tools.calima_star import camel_calima_star
-from camel_tools.transliterate import camel_transliterate
-from camel_tools.arclean import camel_arclean
+from camel_tools.cli import camel_calima_star
+from camel_tools.cli import camel_transliterate
+from camel_tools.cli import camel_arclean
 
 
 VERSION_PATH = os.path.join(os.path.dirname(camelt.__file__), 'VERSION')
