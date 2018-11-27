@@ -39,28 +39,27 @@ _WHITESPACE_RE = re.compile(r'\s')
 
 
 class Transliterator(object):
-    """A class for transliterating text using a CharMapper. This class adds the
-    extra utility of marking individual tokens to not be transliterated. It
-    assumes that tokens are whitespace seperated.
+    """A class for transliterating text using a
+    :obj:`~camel_tools.utils.charmap.CharMapper`. This class adds the extra
+    utility of marking individual tokens to not be transliterated. It assumes
+    that tokens are whitespace seperated.
+
+    Args:
+        mapper (:obj:`~camel_tools.utils.charmap.CharMapper`): The
+            :obj:`~camel_tools.utils.charmap.CharMapper` instance to be used
+            for transliteration.
+        marker (:obj:`str`, optional): A string that is prefixed to all
+            tokens that shouldn't be transliterated. Should not contain any
+            whitespace characters. Defaults to  '@@IGNORE@@'.
+
+    Raises:
+        :obj:`TypeError`: If mapper is not a
+            :obj:`~camel_tools.utils.charmap.CharMapper` instance or marker is
+            not a string.
+        :obj:`ValueError`: If marker contains whitespace or is an empty string.
     """
 
     def __init__(self, mapper, marker='@@IGNORE@@'):
-        """Initializes Transliterator with a CharMapper instance to be used for
-        transliteration and a marker to mark tokens not to be transliterated.
-
-         Args:
-            mapper (CharMapper): The CharMapper instance to be used for
-                transliteration.
-            marker (str): A string that is prefixed to all tokens that
-                shouldn't be ransliterated. The default value is '@@IGNORE@@'.
-                Should not contain any whitespace characters.
-
-        Raises:
-            TypeError: If mapper is not a CharMapper instance or marker is not
-                a string.
-            ValueError: If marker contains whitespace or is an empty string.
-        """
-
         self._mapper = mapper
 
         if not isinstance(mapper, CharMapper):
@@ -81,27 +80,28 @@ class Transliterator(object):
             re.UNICODE | re.MULTILINE
         )
 
-    def transliterate(self, _string, strip_markers=False, ignore_markers=False):
+    def transliterate(self, s, strip_markers=False, ignore_markers=False):
         """Transliterate a given string.
 
         Args:
-            _string (str): The string to transliterate.
-            strip_markers (bool): Output is stripped of markers if True,
-                otherwise markers are kept in the output. Set to False by
-                default.
-            ignore_markers (bool): If set to True, all text, including marked
-                tokens are transliterated as well excluding the markers. Set to
-                False by default. If you would like to transliterate the
-                markers as well, use the CharMapper directly instead.
+            s (:obj:`str`): The string to transliterate.
+            strip_markers (:obj:`bool`, optional): Output is stripped of
+                markers if `True`, otherwise markers are kept in the output.
+                Defaults to `False`.
+            ignore_markers (:obj:`bool`, optional): If set to `True`, all text,
+                including marked tokens are transliterated as well excluding
+                the markers. If you would like to transliterate the markers as
+                well, use :obj:`~camel_tools.utils.charmap.CharMapper`
+                directly instead. Defaults to `False`.
 
         Returns:
-            str: The transliteration of _string with the exception of marked
-                words.
+            :obj:`str`: The transliteration of **s** with the exception of
+            marked words.
         """
 
         buff = deque()
 
-        splits = self._markerre.split(_string)
+        splits = self._markerre.split(s)
         for spl in splits:
             if spl.startswith(self._marker):
                 if ignore_markers:

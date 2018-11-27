@@ -35,13 +35,14 @@ with open(VERSION_FILE) as fh:
 
 
 CLASSIFIERS = [
-    'Development Status :: 1 - Planning',
+    'Development Status :: 4 - Beta',
     'Environment :: Console',
-    'Natural Language :: Arabic',
     'Intended Audience :: Developers',
     'Intended Audience :: Education',
     'Intended Audience :: Information Technology',
     'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: MIT License',
+    'Natural Language :: Arabic',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.7',
@@ -49,6 +50,7 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
     'Topic :: Scientific/Engineering',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
     'Topic :: Scientific/Engineering :: Information Analysis',
@@ -94,7 +96,7 @@ setup(
         ],
     },
     url='https://github.com/owo/CAMeL_Tools',
-    license='UNLICENSED',
+    license='MIT',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,

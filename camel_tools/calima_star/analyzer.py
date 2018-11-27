@@ -53,15 +53,6 @@ _IS_AR_RE = re.compile(r'^[' + re.escape(u''.join(AR_CHARSET)) + r']+$')
 # Identify No Analysis marker
 _NOAN_RE = re.compile(r'NOAN')
 
-_DEFAULT_NORMALIZE_MAP = CharMapper({
-    u'إ': u'ا',
-    u'أ': u'ا',
-    u'آ': u'ا',
-    u'ٱ': u'ا',
-    u'ى': u'ي',
-    u'ة': u'ه'
-})
-
 # features which should be concatinated when generating analysis
 _CONCAT_FEATS = ['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6', 'ud',
                  'd3seg', 'atbseg', 'd2seg', 'd1seg', 'd1tok', 'd2tok',
@@ -72,6 +63,27 @@ _CONCAT_FEATS = ['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6', 'ud',
 _OVERWRITE_FEATS = ['lex', 'pos', 'prc3', 'prc2', 'prc1', 'prc0', 'per', 'asp',
                     'vox', 'mod', 'gen', 'num', 'stt',
                     'cas', 'enc0', 'rat', 'form_gen', 'form_num']
+
+DEFAULT_NORMALIZE_MAP = CharMapper({
+    u'إ': u'ا',
+    u'أ': u'ا',
+    u'آ': u'ا',
+    u'ٱ': u'ا',
+    u'ى': u'ي',
+    u'ة': u'ه'
+})
+""":obj:`~camel_tools.utils.charmap.CharMapper`: The default character map used
+for normalization by :obj:`CalimaStarAnalyzer`.
+
+Does the following conversions:
+
+- 'إ' to 'ا'
+- 'أ' to 'ا'
+- 'آ' to 'ا'
+- 'ٱ' to 'ا'
+- 'ى' to 'ي'
+- 'ة' to 'ه'
+"""
 
 
 def _is_digit(word):
@@ -101,30 +113,28 @@ def _segments_gen(word, max_prefix=1, max_suffix=1):
 
 
 class CalimaStarAnalyzer:
-    """CALIMA Star analyzer class.
+    """CALIMA Star analyzer component.
+
+    Args:
+        db (:obj:`~camel_tools.calima_star.database.CalimaStarDB`): Database to
+            use for analysis. Must be opened in analysis or reinflection mode.
+        backoff (:obj:`str`, optional): Backoff mode. Can be one of the
+            following: 'NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL', or
+            'ADD_PROP'. Defaults to 'NONE'.
+        norm_map (:obj:`~camel_tools.utils.charmap.CharMapper`, optional):
+            Character map for normalizing input words. Defaults to
+            :const:`DEFAULT_NORMALIZE_MAP`.
+
+    Raises:
+        :obj:`~camel_tools.calima_star.errors.AnalyzerError`: If database is
+            not an instance of
+            (:obj:`~camel_tools.calima_star.database.CalimaStarDB`):, if **db**
+            does not support analysis, or if **backoff** is not a valid backoff
+            mode.
     """
 
     def __init__(self, db, backoff='NONE',
-                 normalization_map=_DEFAULT_NORMALIZE_MAP):
-        """Class constructor.
-
-        Arguments:
-            db {CalimaStarDB} -- Database to use for analysis. Must be opened
-                in analysis or reinflection mode.
-
-        Keyword Arguments:
-            backoff {str} -- Backoff mode. Can be one of the following:
-                'NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL', 'ADD_PROP'.
-                (default: 'NONE')
-            normalization_map {CharMapper} -- character map for normalizing
-                input words.
-
-        Raises:
-            AnalyzerError -- If database is not an instance of CalimaStarDB,
-                if DB does not support analysis, or if backoff mode is not
-                valid.
-        """
-
+                 norm_map=DEFAULT_NORMALIZE_MAP):
         if not isinstance(db, CalimaStarDB):
             raise AnalyzerError('DB is not an instance of CalimaStarDB')
         if not db.flags.analysis:
@@ -133,7 +143,7 @@ class CalimaStarAnalyzer:
         self._db = db
 
         self._backoff = backoff
-        self._normalization_map = _DEFAULT_NORMALIZE_MAP
+        self._norm_map = DEFAULT_NORMALIZE_MAP
 
         if backoff == 'NONE':
             self._backoff_condition = None
@@ -155,9 +165,9 @@ class CalimaStarAnalyzer:
                 repr(backoff)))
 
     def _normalize(self, word):
-        if self._normalization_map is None:
+        if self._norm_map is None:
             return word
-        return self._normalization_map.map_string(word)
+        return self._norm_map.map_string(word)
 
     def _combined_analyses(self,
                            word_dediac,
@@ -240,11 +250,13 @@ class CalimaStarAnalyzer:
     def analyze(self, word):
         """Analyze a given word.
 
-        Arguments:
-            word {str} -- Word to analyze.
+        Args:
+            word (:py:obj:`str`): Word to analyze.
 
         Returns:
-            list -- The list of analyses for a given word.
+            :obj:`list` of :obj:`dict`: The list of analyses for **word**.
+            See :doc:`/reference/calima_star_features` for more information on
+            features and their values.
         """
 
         word = word.strip()

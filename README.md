@@ -4,15 +4,22 @@
 
 ## Introduction
 
-A suite of morphological analysis and disambiguation tools for Arabic developed
-by the
+CAMeL Tools is a suite of morphological analysis and disambiguation tools for
+Arabic developed by the
 [CAMeL Lab](https://nyuad.nyu.edu/en/research/faculty-research/camel-lab.html)
 at [New York University Abu Dhabi](http://nyuad.nyu.edu/).
 
 ## Installation
 
-At the moment, CAMeL Tools can only be installed from source by following the
-instructions below.
+You will need Python 2.7 or Python 3.4 and above.
+
+### Using pip
+
+```bash
+pip install camel_tools
+```
+
+### From Source
 
 ```bash
 # Download the repo
@@ -23,39 +30,26 @@ cd camel_tools
 pip install .
 ```
 
-## Usage
+## Documentation
 
-CAMeL Tools are a set of command line interface (CLI) tools as well as a set
-of Python libraries. This section will help you get started with both.
+You can find the [full online documentation here](/#) for both the
+command-line tools and the Python API.
 
-### CLI Tools
+Alternatively, you can build your own local copy of the documentation as
+follows:
 
-This section will list all the CLI tools that come bundled with CAMeL Tools and
-will explain their usage.
+```bash
+# Install dependencies
+pip install sphinx recommonmark sphinx-rtd-theme
 
-#### camel_transliterate
+# Go to docs subdirectory
+cd docs
 
-The `camel_transliterate` tool allows you to transliterate text from one form
-to another.
+# Build HTML docs
+make html
+```
 
-[See here](./docs/cli/camel_transliterate.md) for more information.
-
-#### camel_arclean
-
-The `camel_arclean` utility cleans Arabic text.
-
-[See here](./docs/cli/camel_arclean.md) for more information.
-
-#### camel_calima_star
-
-The `camel_calima_star` utility is a command line interface to the CALIMA Star
-morphological analyzer, generator, and reinflector.
-
-[See here](./docs/cli/camel_calima_star.md) for more information.
-
-### Python API
-
-Coming soon...
+This should compile all the HTML documentation in to `docs/build`.
 
 ## LICENSE
 

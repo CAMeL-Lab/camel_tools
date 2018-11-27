@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Contains the CharMapper class (for mapping characters in a unicode string to
+"""Contains the CharMapper class (for mapping characters in a Unicode string to
 other strings) and custom exceptions raised by CharMapper.
 """
 
@@ -41,7 +41,7 @@ from .stringutils import isunicode
 
 class InvalidCharMapKeyError(ValueError):
     """Exception raised when an invalid key is found in a charmap used to
-    initialize CharMapper.
+    initialize :obj:`CharMapper`.
     """
 
     def __init__(self, key, message):
@@ -60,8 +60,9 @@ class InvalidCharMapKeyError(ValueError):
 
 class BuiltinCharMapNotFoundError(ValueError):
     """Exception raised when a specified map name passed to
-    CharMapper.builtin_mapper is not in the list of builtin maps.
+    :func:`CharMapper.builtin_mapper` is not in the list of builtin maps.
     """
+
     def __init__(self, map_name, message):
         super(BuiltinCharMapNotFoundError, self).__init__(message)
         self.map_name = map_name
@@ -77,10 +78,35 @@ class BuiltinCharMapNotFoundError(ValueError):
 
 
 class CharMapper(object):
-    """A class for mapping characters in a unicode string to other strings.
+    """A class for mapping characters in a Unicode string to other strings.
+
+    Args:
+        charmap (:obj:`dict`): A dictionary or any other dictionary-like
+            obeject (implementing collections.Mapping) mapping characters
+            or range of characters to a string. Keys in the dictionary
+            should be Unicode strings of length 1 or 3. Strings of length 1
+            indicate a single character to be mapped, while strings of
+            length 3 indicate a range. Range strings should have the format
+            'a-b' where is the starting character in the range and 'b' is
+            the last character in the range (inclusive). 'b' should have a
+            strictly larger ordinal number than 'a'. Dictionary values
+            should be either strings or `None`, where `None` indicates that
+            characters are mapped to themselves. Use an empty string to
+            indicate deletion.
+        default (:obj:`str`, optional): The default value to map characters
+            not in **charmap** to. `None` indicates that characters map to
+            themselves. Defaults to `None`.
+
+    Raises:
+        :obj:`InvalidCharMapKeyError`: If a key in charmap is not a Unicode
+            string containing either a single character or a valid
+            character range.
+        :obj:`TypeError`: If default or a value for a key in charmap is
+            neither `None` nor a Unicode string, or if **charmap** is not a
+            dictionary-like object.
     """
 
-    BUILTIN_CHARMAPS = (
+    BUILTIN_CHARMAPS = frozenset((
         'ar2bw',
         'ar2safebw',
         'ar2xmlbw',
@@ -102,7 +128,7 @@ class CharMapper(object):
         'hsb2safebw',
         'hsb2xmlbw',
         'arclean',
-    )
+    ))
 
     @staticmethod
     def _expand_char_map(charmap):
@@ -110,14 +136,14 @@ class CharMapper(object):
         expanded and given their own dictionary entry.
 
         Args:
-            charmap (dict): The character map to be expanded.
+            charmap (:obj:`dict`): The character map to be expanded.
 
         Raises:
-            InvalidCharMapKeyError: If a key in charmap is not a unicode string
-                containing either a single character or a valid character
-                range.
-            TypeError: If a value for a key in charmap is neither None nor a
-                unicode string.
+            :obj:`InvalidCharMapKeyError`: If a key in **charmap** is not a
+                Unicode string containing either a single character or a valid
+                character range.
+            :obj:`TypeError`: If a value for a key in **charmap** is neither
+                `None` nor a Unicode string.
         """
 
         # TODO: Implement a space efficient character map data structure
@@ -134,7 +160,7 @@ class CharMapper(object):
             if len(key) == 1:
                 if charmap[key] is not None and not isunicode(charmap[key]):
                     raise TypeError(
-                        ('Expected a unicode string or None value for key '
+                        ('Expected a Unicode string or None value for key '
                          'value, got {} instead.').format(type(charmap[key])))
                 else:
                     new_map[key] = charmap[key]
@@ -151,7 +177,7 @@ class CharMapper(object):
                     if (charmap[key] is not None
                             and not isunicode(charmap[key])):
                         raise TypeError(
-                            ('Expected a unicode string or None value for key '
+                            ('Expected a Unicode string or None value for key '
                              'value, got {} instead.').format(
                                  type(charmap[key]))
                         )
@@ -166,33 +192,7 @@ class CharMapper(object):
         return new_map
 
     def __init__(self, charmap, default=None):
-        """Initializes CharMapper with a give character map and a default
-        value for unmapped characters.
-
-        Args:
-            charmap (dict): A dictionary or any other dictionary-lik obeject
-                (implementing collections.Mapping) mapping characters or range
-                of characters to a string. Keys in the dictionary should be
-                unicode strings of length 1 or 3. Strings of length 1 indicate
-                a single character to be mapped, while strings of length 3
-                indicate a range. Range strings should have the format 'a-b'
-                where is the starting character in the range and 'b' is the
-                last character in the range (inclusive). 'b' should have a
-                strictly larger ordinal number than 'a'. Dictionary values
-                should be either strings or None, where None indicates that
-                characters are mapped to themselves. Use an empty string to
-                indicate deletion.
-            default (:obj:`str`, optional): The default value to map characters
-                not in charmap to. None indicates that characters map to
-                themselves. Set to None by default.
-
-        Raises:
-            InvalidCharMapKeyError: If a key in charmap is not a unicode string
-                containing either a single character or a valid character
-                range.
-            TypeError: If default or a value for a key in charmap is neither
-                None nor a unicode string, or if charmap is not a
-                dictionary-like object.
+        """Class constructor.
         """
 
         if isinstance(charmap, Mapping):
@@ -206,51 +206,34 @@ class CharMapper(object):
             self._default = default
         else:
             raise TypeError(
-                ('Expected a unicode string or None value for default, got {} '
+                ('Expected a Unicode string or None value for default, got {} '
                  'instead.').format(type(default)))
 
     @staticmethod
     def mapper_from_json(fpath):
-        """Creates a CharMapper instance from a json file.
-
-        Json files should have the following format:
-
-            {
-                "default": ...,
-
-                "charmap": {
-                    ...
-                }
-            }
-
-        "default" and "charmap" follow the same rules as described in
-        CharMapper.__init__ with json keyword 'null' used instead of None.
-
-        If "default" is not specified, it will default to None.
-        If "charmap" is not specified, it will default to an empty dictionary.
+        """Creates a :obj:`CharMapper` instance from a JSON file.
 
         Args:
-            fpath (str): Path to json file.
+            fpath (:obj:`str`): Path to JSON file.
 
         Returns:
-            CharMapper: A new CharMapper instance generated from given json
-                file.
+            :obj:`CharMapper`: A new :obj:`CharMapper` instance generated from
+            given JSON file.
 
         Raises:
-            InvalidCharMapKeyError: If a key in charmap is not a unicode string
-                containing either a single character or a valid character
-                range.
-            TypeError: If default or a value for a key in charmap is neither
-                None nor a unicode string, or if charmap is not a
-                dictionary-like object.
-            FileNotFoundError: If file at fpath doesn't exist.
-            JSONDecodeError: If fpath is not a valid JSON file.
+            :obj:`InvalidCharMapKeyError`: If a key in charmap is not a Unicode
+                string containing either a single character or a valid
+                character range.
+            :obj:`TypeError`: If default or a value for a key in charmap is
+                neither `None` nor a Unicode string.
+            :obj:`FileNotFoundError`: If file at `fpath` doesn't exist.
+            :obj:`JSONDecodeError`: If `fpath` is not a valid JSON file.
         """
 
         with open(fpath, 'r') as infile:
             jsonstr = infile.read()
 
-            # With Python 2, we need to force the JSON string to unicode
+            # With Python 2, we need to force the JSON string to Unicode
             if six.PY2:  # pragma: no coverage
                 jsonstr = unicode(jsonstr)  # pylint: disable=E0602
 
@@ -263,77 +246,18 @@ class CharMapper(object):
 
     @staticmethod
     def builtin_mapper(map_name):
-        """Creates a CharMapper instance from built-in mappings.
-
-        List of built-in mappings:
-
-        ------------------- Arabic Transliteration -------------------
-
-                'ar2bw': Transliterates Arabic text to Buckwalter scheme.
-            'ar2safebw': Transliterates Arabic text to Safe Buckwalter scheme.
-             'ar2xmlbw': Transliterates Arabic text to XML Buckwalter scheme.
-               'ar2hsb': Transliterates Arabic text to  Habash-Soudi-Buckwalter
-                         scheme.
-                'bw2ar': Transliterates Buckwalter scheme text to Arabic.
-            'bw2safebw': Transliterates Buckwalter scheme text to Safe
-                         Buckwalter scheme.
-             'bw2xmlbw': Transliterates Buckwalter scheme text to XML
-                         Buckwalter scheme.
-               'bw2hsb': Transliterates Buckwalter scheme text to
-                         Habash-Soudi-Buckwalter scheme.
-            'safebw2ar': Transliterates Safe Buckwalter scheme text to Arabic.
-            'safebw2bw': Transliterates Safe Buckwalter scheme text to
-                         Buckwalter scheme.
-         'safebw2xmlbw': Transliterates Safe Buckwalter scheme text to XML
-                         Buckwalter scheme.
-           'safebw2hsb': Transliterates Safe Buckwalter scheme text to
-                         Habash-Soudi-Buckwalter scheme.
-             'xmlbw2ar': Transliterates XML Buckwalter Scheme text to Arabic.
-             'xmlbw2bw': Transliterates XML Buckwalter Scheme text to
-                         Buckwalter scheme.
-         'xmlbw2safebw': Transliterates XML Buckwalter Scheme text to Safe
-                         Buckwalter scheme.
-            'xmlbw2hsb': Transliterates XML Buckwalter Scheme text to
-                         Habash-Soudi-Buckwalter scheme.
-               'hsb2ar': Transliterates Habash-Soudi-Buckwalter scheme text to
-                         Arabic.
-               'hsb2bw': Transliterates Habash-Soudi-Buckwalter scheme text to
-                         Buckwalter scheme.
-           'hsb2safebw': Transliterates Habash-Soudi-Buckwalter scheme text to
-                         Safe Buckwalter scheme..
-            'hsb2xmlbw': Transliterates Habash-Soudi-Buckwalter scheme text to
-                         XML Buckwalter scheme..
-
-        -------------------------- Utility --------------------------
-
-              'arclean': Cleans Arabic text by:
-                           - Deleting characters that are not in Arabic, ASCII,
-                             or Latin-1.
-                           - Converting all spacing characters to an ASCII
-                             space character.
-                           - Converting Indic digits into Arabic digits.
-                           - Converting extended Arabic letters into basic
-                             Arabic letters.
-                           - Converting 1-char presentation froms into simple
-                             basic forms.
-                         .
+        """Creates a :obj:`CharMapper` instance from built-in mappings.
 
         Args:
-            map_name (str): Name of built-in map.
+            map_name (:obj:`str`): Name of built-in map.
 
         Returns:
-            CharMapper: A new CharMapper instance of built-in map.
+            :obj:`CharMapper`: A new :obj:`CharMapper` instance of built-in
+            map.
 
         Raises:
-            InvalidCharMapKeyError: If a key in charmap is not a unicode string
-                containing either a single character or a valid character
-                range.
-            TypeError: If default or a value for a key in charmap is neither
-                None nor a unicode string, or if charmap is not a
-                dictionary-like object.
-            JSONDecodeError: If fpath is not a valid JSON file.
-            BuiltinCharMapNotFound: If map_name is not in the list of built-in
-                maps.
+            :obj:`BuiltinCharMapNotFound`: If `map_name` is not in the list of
+                built-in maps.
         """
 
         if map_name not in CharMapper.BUILTIN_CHARMAPS:
@@ -356,28 +280,28 @@ class CharMapper(object):
 
         return CharMapper.mapper_from_json(map_path)
 
-    def map_string(self, _string):
+    def map_string(self, s):
         """Maps each character in a given string to its corresponding value in
         the charmap.
 
         Args:
-            _string (str): A unicode string to be mapped.
+            s (:obj:`str`): A Unicode string to be mapped.
 
         Returns:
-            str: A new unicode string with the charmap applied.
+            :obj:`str`: A new Unicode string with the charmap applied.
 
         Raises:
-            TypeError: If s is not a unicode string.
+            :obj:`TypeError`: If s is not a Unicode string.
         """
 
-        if not isunicode(_string):
+        if not isunicode(s):
             raise TypeError((
-                'Expected unicode string as input, got {} instead.'
-            ).format(type(_string)))
+                'Expected Unicode string as input, got {} instead.'
+            ).format(type(s)))
 
         buff = deque()
 
-        for char in _string:
+        for char in s:
             transliteration = self._charmap.get(char, self._default)
             if transliteration is None:
                 buff.append(char)
