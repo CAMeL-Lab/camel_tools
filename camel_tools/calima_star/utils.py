@@ -57,16 +57,31 @@ _REWRITE_DIAC_RE_5 = re.compile(u'\\+')
 _REWRITE_DIAC_RE_6 = re.compile(u'\u0651+')
 
 # Sun letters
-_REWRITE_CAPHI_RE_1 = re.compile(u'^((w\\_a\\_|f\\_a\\_|2\\_a\\_)?'
-                                 u'(b\\_i\\_|k\\_a\\_|l\\_i\\_)?l)\\+'
-                                 u'(t\\_|th\\_|d\\_|th\\.\\_|r\\_|z\\_|s\\_|sh\\_|'
-                                 u's\\.\\_|d\\.\\_|t\\.\\_|dh\\.\\_|l\\_|n\\_|dh\\_)')
+_REWRITE_CAPHI_RE_1 = re.compile(u'(l-)\\+(t\\_|th\\_|d\\_|th\\.\\_|r\\_|z\\_|'
+                                 u's\\_|sh\\_|s\\.\\_|d\\.\\_|t\\.\\_|'
+                                 u'dh\\.\\_|l\\_|n\\_|dh\\_)')
 # Replace shadda
-_REWRITE_CAPHI_RE_2 = re.compile(u'(\\S)\\+~')
+_REWRITE_CAPHI_RE_2 = re.compile(u'(\\S)[-]*\\+~')
+# Replace ending i_y with ii if suffix is not a vowel
+_REWRITE_CAPHI_RE_3 = re.compile(u'i\\_y-\\+([^iau]+|$)')
+# Replacing ending u_w with uu if suffix is not a vowel
+_REWRITE_CAPHI_RE_4 = re.compile(u'u\\_w-\\+([^iau]+|$)')
+# Remove hamza wasl if preceeded by a vowel
+_REWRITE_CAPHI_RE_5 = re.compile(u'([iua])\\+-2_[iua]')
+# Remove hamza wasl if preceeded by a non-vowel
+_REWRITE_CAPHI_RE_6 = re.compile(u'(.+)\\+-2_([iua])')
+# Handle _u+w_ cases followed by non-vowels (eg. 2_u+w_l_ii)
+_REWRITE_CAPHI_RE_7 = re.compile(u'u\\+w(_+[^ioua])')
+# Handle stems followed that end with taa marboutah
+_REWRITE_CAPHI_RE_8 = re.compile(u'p-\\+([iua])')
+# Compress alef madda followed by fatha followed by short vowels
+_REWRITE_CAPHI_RE_9 = re.compile(u'aa\\+a[_]*')
 # Remove '+'s
-_REWRITE_CAPHI_RE_3 = re.compile(u'\\+')
-# Remove initial and tailing underscores
-_REWRITE_CAPHI_RE_4 = re.compile(u'(^\\_|\\_$)')
+_REWRITE_CAPHI_RE_10 = re.compile(u'[\\+-]')
+# Remove multiple '_'
+_REWRITE_CAPHI_RE_11 = re.compile(u'_+')
+# Remove initial and tailing underscores tailing taa marboutah
+_REWRITE_CAPHI_RE_12 = re.compile(u'((^\\_+)|(\\_p?\\_*$))')
 
 # Normalize tanwyn
 _NORMALIZE_TANWYN_FA_RE = re.compile(u'\u064b\u0627')
@@ -97,10 +112,18 @@ def rewrite_diac(word):
 
 
 def rewrite_caphi(word):
-    word = _REWRITE_CAPHI_RE_1.sub(u'\\2\\3\\4\\4', word)
+    word = _REWRITE_CAPHI_RE_1.sub(u'\\2\\2', word)
     word = _REWRITE_CAPHI_RE_2.sub(u'\\1_\\1', word)
-    word = _REWRITE_CAPHI_RE_3.sub(u'_', word)
-    word = _REWRITE_CAPHI_RE_4.sub(u'', word)
+    word = _REWRITE_CAPHI_RE_3.sub(u'ii_\\1', word)
+    word = _REWRITE_CAPHI_RE_4.sub(u'uu_\\1', word)
+    word = _REWRITE_CAPHI_RE_5.sub(u'\\1', word)
+    word = _REWRITE_CAPHI_RE_6.sub(u'\\1_\\2', word)
+    word = _REWRITE_CAPHI_RE_7.sub(u'uu\\1', word)
+    word = _REWRITE_CAPHI_RE_8.sub(u't_\\1', word)
+    word = _REWRITE_CAPHI_RE_9.sub(u'aa_', word)
+    word = _REWRITE_CAPHI_RE_10.sub(u'_', word)
+    word = _REWRITE_CAPHI_RE_11.sub(u'_', word)
+    word = _REWRITE_CAPHI_RE_12.sub(u'', word)
     return word
 
 
