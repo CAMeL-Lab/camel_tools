@@ -34,64 +34,73 @@ _CONCAT_FEATS_NONE = ['d3tok', 'd3seg', 'atbseg', 'd2seg', 'd1seg', 'd1tok',
                       'd2tok', 'atbtok']  # FIXME: DON'T DO THIS!!!!!
 
 # Sun letters
-_REWRITE_DIAC_RE_1 = re.compile(r'^((وَ|فَ)?(بِ|كَ)?ال)\+?([تثدذرزسشصضطظلن])')
+_REWRITE_DIAC_RE_1 = re.compile(u'^((\u0648\u064e|\u0641\u064e)?'
+                                u'(\u0628\u0650|\u0643\u064e)?\u0627\u0644)'
+                                u'\\+?'
+                                u'([\u062a\u062b\u062f\u0630\u0631\u0632\u0633'
+                                u'\u0634\u0635\u0636\u0637\u0638\u0644'
+                                u'\u0646])')
 # Sun letters
-_REWRITE_DIAC_RE_2 = re.compile(r'^((وَ|فَ)?لِل)\+?([تثدذرزسشصضطظلن])')
+_REWRITE_DIAC_RE_2 = re.compile(u'^((\u0648\u064e|\u0641\u064e)?'
+                                u'\u0644\u0650\u0644)\\+?'
+                                u'([\u062a\u062b\u062f\u0630\u0631\u0632\u0633'
+                                u'\u0634\u0635\u0636\u0637\u0638\u0644'
+                                u'\u0646])')
 # Fatha after Alif
-_REWRITE_DIAC_RE_3 = re.compile(r'ا\+?َ([ةت])')
+_REWRITE_DIAC_RE_3 = re.compile(u'\u0627\\+?\u064e([\u0629\u062a])')
 # Hamza Wasl
-_REWRITE_DIAC_RE_4 = re.compile(r'ٱ')
+_REWRITE_DIAC_RE_4 = re.compile(u'\u0671')
 # Remove '+'s
-_REWRITE_DIAC_RE_5 = re.compile(r'\+')
+_REWRITE_DIAC_RE_5 = re.compile(u'\\+')
 # Fix Multiple Shadda's
 # FIXME: Remove after DB fix
-_REWRITE_DIAC_RE_6 = re.compile(r'ّ+')
+_REWRITE_DIAC_RE_6 = re.compile(u'\u0651+')
 
 # Sun letters
-_REWRITE_CAPHI_RE_1 = re.compile(r'^((w\_a\_|f\_a\_|2\_a\_)?'
-                                 r'(b\_i\_|k\_a\_|l\_i\_)?l)\+'
-                                 r'(t\_|th\_|d\_|th\.\_|r\_|z\_|s\_|sh\_|'
-                                 r's\.\_|d\.\_|t\.\_|dh\.\_|l\_|n\_|dh\_)')
+_REWRITE_CAPHI_RE_1 = re.compile(u'^((w\\_a\\_|f\\_a\\_|2\\_a\\_)?'
+                                 u'(b\\_i\\_|k\\_a\\_|l\\_i\\_)?l)\\+'
+                                 u'(t\\_|th\\_|d\\_|th\\.\\_|r\\_|z\\_|s\\_|sh\\_|'
+                                 u's\\.\\_|d\\.\\_|t\\.\\_|dh\\.\\_|l\\_|n\\_|dh\\_)')
 # Replace shadda
-_REWRITE_CAPHI_RE_2 = re.compile(r'(\S)\+~')
+_REWRITE_CAPHI_RE_2 = re.compile(u'(\\S)\\+~')
 # Remove '+'s
-_REWRITE_CAPHI_RE_3 = re.compile(r'\+')
+_REWRITE_CAPHI_RE_3 = re.compile(u'\\+')
 # Remove initial and tailing underscores
-_REWRITE_CAPHI_RE_4 = re.compile(r'(^\_|\_$)')
+_REWRITE_CAPHI_RE_4 = re.compile(u'(^\\_|\\_$)')
 
 # Normalize tanwyn
-_NORMALIZE_TANWYN_FA_RE = re.compile(r'ًا')
-_NORMALIZE_TANWYN_FY_RE = re.compile(r'ًى')
-_NORMALIZE_TANWYN_AF_RE = re.compile(r'اً')
-_NORMALIZE_TANWYN_YF_RE = re.compile(r'ىً')
+_NORMALIZE_TANWYN_FA_RE = re.compile(u'\u064b\u0627')
+_NORMALIZE_TANWYN_FY_RE = re.compile(u'\u064b\u0649')
+_NORMALIZE_TANWYN_AF_RE = re.compile(u'\u0627\u064b')
+_NORMALIZE_TANWYN_YF_RE = re.compile(u'\u0649\u064b')
 
 
 def normalize_tanwyn(word, mode='AF'):
     if mode == 'FA':
-        word = _NORMALIZE_TANWYN_FA_RE.sub(u'ًا', word)
-        word = _NORMALIZE_TANWYN_FY_RE.sub(u'ًى', word)
+        word = _NORMALIZE_TANWYN_FA_RE.sub(u'\u064b\u0627', word)
+        word = _NORMALIZE_TANWYN_FY_RE.sub(u'\u064b\u0649', word)
     else:
-        word = _NORMALIZE_TANWYN_AF_RE.sub(u'اً', word)
-        word = _NORMALIZE_TANWYN_YF_RE.sub(u'ىً', word)
+        word = _NORMALIZE_TANWYN_AF_RE.sub(u'\u0627\u064b', word)
+        word = _NORMALIZE_TANWYN_YF_RE.sub(u'\u0649\u064b', word)
     return word
 
 
 def rewrite_diac(word):
-    word = _REWRITE_DIAC_RE_1.sub(r'\1\4ّ', word)
-    word = _REWRITE_DIAC_RE_2.sub(r'\1\3ّ', word)
-    word = _REWRITE_DIAC_RE_3.sub(r'ا\1', word)
-    word = _REWRITE_DIAC_RE_4.sub(r'ا', word)
-    word = _REWRITE_DIAC_RE_5.sub(r'', word)
-    word = _REWRITE_DIAC_RE_6.sub(r'ّ', word)
+    word = _REWRITE_DIAC_RE_1.sub(u'\\1\\4\u0651', word)
+    word = _REWRITE_DIAC_RE_2.sub(u'\\1\\3\u0651', word)
+    word = _REWRITE_DIAC_RE_3.sub(u'\u0627\\1', word)
+    word = _REWRITE_DIAC_RE_4.sub(u'\u0627', word)
+    word = _REWRITE_DIAC_RE_5.sub(u'', word)
+    word = _REWRITE_DIAC_RE_6.sub(u'\u0651', word)
 
     return word
 
 
 def rewrite_caphi(word):
-    word = _REWRITE_CAPHI_RE_1.sub(r'\2\3\4\4', word)
-    word = _REWRITE_CAPHI_RE_2.sub(r'\1_\1', word)
-    word = _REWRITE_CAPHI_RE_3.sub(r'_', word)
-    word = _REWRITE_CAPHI_RE_4.sub(r'', word)
+    word = _REWRITE_CAPHI_RE_1.sub(u'\\2\\3\\4\\4', word)
+    word = _REWRITE_CAPHI_RE_2.sub(u'\\1_\\1', word)
+    word = _REWRITE_CAPHI_RE_3.sub(u'_', word)
+    word = _REWRITE_CAPHI_RE_4.sub(u'', word)
     return word
 
 

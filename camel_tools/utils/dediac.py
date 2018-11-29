@@ -36,21 +36,21 @@ from camel_tools.utils.charsets import SAFEBW_DIAC_CHARSET, XMLBW_DIAC_CHARSET
 from camel_tools.utils.charsets import HSB_DIAC_CHARSET
 
 
-_DIAC_RE_BW = re.compile(r'[' +
+_DIAC_RE_BW = re.compile(u'[' +
                          re.escape(u''.join(BW_DIAC_CHARSET)) +
-                         r']')
-_DIAC_RE_SAFEBW = re.compile(r'[' +
+                         u']')
+_DIAC_RE_SAFEBW = re.compile(u'[' +
                              re.escape(u''.join(SAFEBW_DIAC_CHARSET)) +
-                             r']')
-_DIAC_RE_XMLBW = re.compile(r'[' +
+                             u']')
+_DIAC_RE_XMLBW = re.compile(u'[' +
                             re.escape(u''.join(XMLBW_DIAC_CHARSET)) +
-                            r']')
-_DIAC_RE_HSB = re.compile(r'[' +
+                            u']')
+_DIAC_RE_HSB = re.compile(u'[' +
                           re.escape(u''.join(HSB_DIAC_CHARSET)) +
-                          r']')
-_DIAC_RE_AR = re.compile(r'[' +
+                          u']')
+_DIAC_RE_AR = re.compile(u'[' +
                          re.escape(u''.join(AR_DIAC_CHARSET)) +
-                         r']')
+                         u']')
 
 
 def dediac_bw(s):
