@@ -50,7 +50,7 @@ _SPECIFIED_FEATS = frozenset(['form_gen', 'form_num'])
 _CLITIC_IGNORED_FEATS = frozenset(['stt', 'cas', 'mod'])
 _FILTER_FEATS = frozenset(['pos', 'lex'])
 
-_LEMMA_SPLIT_RE = re.compile(r'-|_')
+_LEMMA_SPLIT_RE = re.compile(u'-|_')
 
 
 class CalimaStarReinflector(object):

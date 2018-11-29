@@ -44,14 +44,14 @@ from camel_tools.utils.dediac import dediac_ar
 
 _ALL_PUNC = u''.join(UNICODE_PUNCT_SYMBOL_CHARSET)
 
-_DIAC_RE = re.compile(r'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + r']')
-_IS_DIGIT_RE = re.compile(r'^[0-9٠-٩]+$')
-_IS_PUNC_RE = re.compile(r'^[' + re.escape(_ALL_PUNC) + r']+$')
-_HAS_PUNC_RE = re.compile(r'[' + re.escape(_ALL_PUNC) + r']+')
-_IS_AR_RE = re.compile(r'^[' + re.escape(u''.join(AR_CHARSET)) + r']+$')
+_DIAC_RE = re.compile(u'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + u']')
+_IS_DIGIT_RE = re.compile(u'^[0-9\u0660-\u0669]+$')
+_IS_PUNC_RE = re.compile(u'^[' + re.escape(_ALL_PUNC) + u']+$')
+_HAS_PUNC_RE = re.compile(u'[' + re.escape(_ALL_PUNC) + u']+')
+_IS_AR_RE = re.compile(u'^[' + re.escape(u''.join(AR_CHARSET)) + u']+$')
 
 # Identify No Analysis marker
-_NOAN_RE = re.compile(r'NOAN')
+_NOAN_RE = re.compile(u'NOAN')
 
 # features which should be concatinated when generating analysis
 _CONCAT_FEATS = ['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6', 'ud',
@@ -65,12 +65,12 @@ _OVERWRITE_FEATS = ['lex', 'pos', 'prc3', 'prc2', 'prc1', 'prc0', 'per', 'asp',
                     'cas', 'enc0', 'rat', 'form_gen', 'form_num']
 
 DEFAULT_NORMALIZE_MAP = CharMapper({
-    u'إ': u'ا',
-    u'أ': u'ا',
-    u'آ': u'ا',
-    u'ٱ': u'ا',
-    u'ى': u'ي',
-    u'ة': u'ه'
+    u'\u0625': u'\u0627',
+    u'\u0623': u'\u0627',
+    u'\u0622': u'\u0627',
+    u'\u0671': u'\u0627',
+    u'\u0649': u'\u064a',
+    u'\u0629': u'\u0647'
 })
 """:obj:`~camel_tools.utils.charmap.CharMapper`: The default character map used
 for normalization by :obj:`CalimaStarAnalyzer`.
