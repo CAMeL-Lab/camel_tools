@@ -1,4 +1,4 @@
-include README.md LICENSE MANIFEST.in camel_logo.png
+include README.rst LICENSE MANIFEST.in camel_logo.png
 include setup.py
 include camel_tools/VERSION
 include camel_tools/utils/*.py
