@@ -21,8 +21,8 @@
 # SOFTWARE.
 
 """
-A suite of morphological analysis and disambiguation tools for Arabic developed
-by the CAMeL Lab at New York University Abu Dhabi.
+A suite of Arabic natural language processing tools developed by the CAMeL Lab
+at New York University Abu Dhabi.
 """
 
 from __future__ import print_function, absolute_import
