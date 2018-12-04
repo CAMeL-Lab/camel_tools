@@ -10,13 +10,13 @@ CAMeL Tools
 
 .. image:: https://img.shields.io/github/license/mashape/apistatus.svg
    :target: https://opensource.org/licenses/MIT
-   :alt: GitHub
+   :alt: MIT License
 
-
+|
 
 .. image:: camel_logo.png
    :target: camel_logo.png
-   :alt: alt text
+   :alt: CAMeL Lab Logo
 
 
 Introduction
