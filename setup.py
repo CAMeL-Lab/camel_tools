@@ -23,7 +23,6 @@
 # SOFTWARE.
 
 import os
-import codecs
 from setuptools import setup
 
 
@@ -58,11 +57,12 @@ CLASSIFIERS = [
     'Topic :: Text Processing :: Linguistic',
 ]
 
-DESCRIPTION = ('A suite of morphological analysis and disambiguation tools '
-               'for Arabic developed by the CAMeL Lab at New York University '
-               'Abu Dhabi.')
+DESCRIPTION = ('A suite of Arabic natural language processing tools developed '
+               'by the CAMeL Lab at New York University Abu Dhabi.')
 
-LONG_DESCRIPTION = codecs.open('README.md', 'r', encoding='utf-8').read()
+README_FILE = os.path.join(os.path.dirname(__file__), 'README.md')
+with open(README_FILE, 'r') as fh:
+    LONG_DESCRIPTION = fh.read().strip()
 
 INSTALL_REQUIRES = [
     'future',

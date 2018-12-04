@@ -4,8 +4,8 @@ Overview
 About
 -----
 
-CAMeL Tools is suite of morphological analysis and disambiguation tools for
-Arabic developed by the
+CAMeL Tools is a suite of Arabic natural language processing tools developed by
+the
 `CAMeL Lab <https://nyuad.nyu.edu/en/research/faculty-research/camel-lab.html>`_
 at `New York University Abu Dhabi <http://nyuad.nyu.edu/>`_.
 

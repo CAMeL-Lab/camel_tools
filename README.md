@@ -1,14 +1,14 @@
 # CAMeL Tools
 
 [![Documentation Status](https://readthedocs.org/projects/camel-tools/badge/?version=latest)](https://camel-tools.readthedocs.io/en/latest/?badge=latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
 ![alt text](camel_logo.png "CAMeL logo")
 
 ## Introduction
 
-CAMeL Tools is a suite of morphological analysis and disambiguation tools for
-Arabic developed by the
+CAMeL Tools is  suite of Arabic natural language processing tools developed by
+the
 [CAMeL Lab](https://nyuad.nyu.edu/en/research/faculty-research/camel-lab.html)
 at [New York University Abu Dhabi](http://nyuad.nyu.edu/).
 
@@ -53,7 +53,7 @@ cd docs
 make html
 ```
 
-This should compile all the HTML documentation in to `docs/build`.
+This should compile all the HTML documentation in to `docs/build/html`.
 
 ## LICENSE
 
