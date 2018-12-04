@@ -147,24 +147,25 @@ The output for the above example would be:
 Generate Mode
 -------------
 
-In generate mode, ``camel_calima_star`` generates all the possible inflections of
-a given lemma, part-of-speech and any desired subset set of morphological
+In generate mode, ``camel_calima_star`` generates all the possible inflections
+of a given lemma, part-of-speech and any desired subset set of morphological
 features.
 
 **Input:**
-
-The input should be provided one line per lemma of space seperate feature-value
-pairs which themselves are colon seperated
-(ie. \ ``feature_1:value_1 feature_2:value_2 ...``\ ).
-Note that the ``lemma`` and ``pos`` features should always be specified
-in generation mode, however, the features can be specified in any order.
+The input should be provided one line per word starting witht the lemma to
+generate followed by space seperated feature-value pairs which themselves are
+colon seperated (ie. \ ``lemma feature_1:value_1 feature_2:value_2 ...``\ ).
+The ``pos`` feature should **always** be specified.
+Note that, while each line should begin with lemma, the feature-value pairs can
+be specified in any order.
+See :doc:`/reference/calima_star_features` for more information.
 
 Example:
 
 .. code-block:: none
 
    $ camel_calima_star generate
-   lemma:شارِع pos:noun gen:m num:p
+   شارِع pos:noun gen:m num:p
 
 **Output:**
 
@@ -255,7 +256,7 @@ The output for the above example would be:
    diac:بِشارِعَيْ lex:شارِع_1 bw:بِ/PREP+شارِع/NOUN+َيْ/NSUFF_MASC_DU_GEN_POSS gloss:with/by+street+two_[gen.] pos:noun prc3:0 prc2:0 prc1:bi_prep prc0:0 per:na asp:na vox:na mod:na gen:m num:d stt:c cas:g enc0:0 rat:i source:lex form_gen:m form_num:d catib6:PRT+NOM+ ud:ADP+NOUN+ d3seg:بِ+ـشارِعَيْ atbseg:بِ+ـشارِعَيْ d2seg:بِ+ـشارِعَيْ d1seg:بِشارِعَيْ d1tok:بَِيْd2tok:بِ+ـشارِعَيْ atbtok:بِ+ـشارِعَيْ d3tok:بِ+ـشارِعَيْ root:ش.ر.ع pattern:بِشاعِلَيْ pos_freq:-0.4344233 lex_freq:-3.604671 pos_lex_freq:-3.604671 caphi:b_i_sh_aa_r_i_3_a_y
    diac:بِشارِعَيْ lex:شارِع_1 bw:بِ/PREP+شارِع/NOUN+َيْ/NSUFF_MASC_DU_GEN_POSS gloss:with/by+street+two_[gen.] pos:noun prc3:0 prc2:0 prc1:bi_prep prc0:0 per:na asp:na vox:na mod:na gen:m num:d stt:d cas:g enc0:0 rat:i source:lex form_gen:m form_num:d catib6:PRT+NOM+ ud:ADP+NOUN+ d3seg:بِ+ـشارِعَيْ atbseg:بِ+ـشارِعَيْ d2seg:بِ+ـشارِعَيْ d1seg:بِشارِعَيْ d1tok:بَِيْd2tok:بِ+ـشارِعَيْ atbtok:بِ+ـشارِعَيْ d3tok:بِ+ـشارِعَيْ root:ش.ر.ع pattern:بِشاعِلَيْ pos_freq:-0.4344233 lex_freq:-3.604671 pos_lex_freq:-3.604671 caphi:b_i_sh_aa_r_i_3_a_y
    diac:بِشارِعَيْنِ lex:شارِع_1 bw:بِ/PREP+شارِع/NOUN+َيْنِ/NSUFF_MASC_DU_ACC gloss:with/by+street+two_[acc.] pos:noun prc3:0 prc2:0 prc1:bi_prep prc0:0 per:na asp:na vox:na mod:na gen:m num:d stt:i cas:a enc0:0 rat:i source:lex form_gen:m form_num:d catib6:PRT+NOM+ ud:ADP+NOUN+ d3seg:بِ+ـشارِعَيْنِ atbseg:بِ+ـشارِعَيْنِ d2seg:بِ+ـشارِعَيْنِ d1seg:بِشارِعَيْنِ d1tok:بَِيْنِ d2tok:بِ+ـشارِعَيْنِ atbtok:بِ+ـشارِعَيْنِ d3tok:بِ+ـشارِعَيْنِ root:ش.ر.ع pattern:بِشاعِلَيْنِ pos_freq:-0.4344233 lex_freq:-3.604671 pos_lex_freq:-3.604671 caphi:b_i_sh_aa_r_i_3_a_y_n_i
-   
+
 
 .. _calima_star_databases:
 

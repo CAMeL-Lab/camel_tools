@@ -156,18 +156,20 @@ def _parse_generator_line(line):
     feats = {}
 
     tokens = line.strip().split()
-    for token in tokens:
+
+    if len(tokens) < 1:
+        return None
+
+    lemma = tokens[0]
+
+    for token in tokens[1:]:
         subtokens = token.split(':')
         if len(subtokens) < 2:
             return None
         else:
             feat = subtokens[0]
             val = ':'.join(subtokens[1:])
-
-            if feat == 'lex' or feat == 'lemma':
-                lemma = val
-            else:
-                feats[feat] = val
+            feats[feat] = val
 
     return (lemma, feats)
 
@@ -393,7 +395,6 @@ def main():  # pragma: no cover
         # Load DB
         try:
             dbname = arguments.get('--db', _DEFAULT_DB)
-            print(dbname)
             if dbname in _BUILTIN_DBS:
                 db = CalimaStarDB.builtin_db(dbname, dbflags)
             else:
