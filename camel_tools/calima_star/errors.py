@@ -47,6 +47,16 @@ class DatabaseError(CalimaStarError):
         CalimaStarError.__init__(self, msg)
 
 
+class InvalidBuiltinDatabaseName(DatabaseError):
+    """Error thrown when an invalid builtin database name is given.
+    """
+
+    def __init__(self, dbname):
+        DatabaseError.__init__(self,
+                               'Invalid builtin database with name {}'.format(
+                                repr(dbname)))
+
+
 class InvalidDatabaseFlagError(DatabaseError):
     """Error thrown while parsing a database file.
     """

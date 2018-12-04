@@ -1,9 +1,10 @@
-include README.md MANIFEST.in camel_logo.png
+include README.md LICENSE MANIFEST.in camel_logo.png
 include setup.py
 include camel_tools/VERSION
-include camel_tools/utils/charmaps/*.json
-include camel_tools/transliterate/*.py
-include camel_tools/arclean/*.py
 include camel_tools/utils/*.py
+include camel_tools/utils/charmaps/*.json
+include camel_tools/arclean/*.py
+include camel_tools/calima_star/*.py
+include camel_tools/calima_star/databases/*.db
 include tests/*.py
 global-exclude *~

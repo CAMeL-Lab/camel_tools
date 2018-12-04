@@ -28,12 +28,23 @@
 from __future__ import absolute_import
 
 from collections import namedtuple
+import os.path
 import re
 
 from camel_tools.utils.stringutils import force_unicode
 from camel_tools.calima_star.errors import InvalidDatabaseFlagError
+from camel_tools.calima_star.errors import InvalidBuiltinDatabaseName
 from camel_tools.calima_star.errors import DatabaseParseError
 
+DBListing = namedtuple('DBListing', ['name', 'version'])
+
+_DATABASES_DIR = os.path.join(os.path.dirname(__file__), 'databases')
+_DATABASES = {
+    'calima-msa': {
+        'path': os.path.join(_DATABASES_DIR, 'calima-msa-1.0.db'),
+        'version': '1.0'
+    }
+}
 
 _LEMMA_SPLIT_RE = re.compile(r'-|_')
 
@@ -58,6 +69,45 @@ class CalimaStarDB:
         :obj:`~camel_tools.calima_star.errors.InvalidDatabaseFlagError`: When
             an invalid flag value is given.
     """
+
+    @staticmethod
+    def list_builtin_dbs():
+        """Returns a list of builtin databases in the form of named tuples
+        (:obj:`DBListing`) containing a property `name` that can be passed to
+        :meth:`builtin_db` and a property `version` indicating the
+        version of the provided database.
+
+        Returns:
+            :obj:`list` of :obj:`DBListing`: List of builtin databases.
+        """
+
+        return [DBListing(db, _DATABASES[db]['version']) for db in _DATABASES]
+
+    @staticmethod
+    def builtin_db(dbname='calima-msa', flags='a'):
+        """Create a :obj:`CalimaStarDB` instance from one of the builtin
+        databases provided.
+
+        Args:
+            dbname (:obj:`str`, optional): Name of builtin database.
+                You can use :meth:`list_builtin_dbs` to get a list of
+                builtin databases or see :ref:`calima_star_databases`.
+                Defaults to 'calima-msa'.
+            flags (:obj:`str`, optional): Flag string to be passed to
+                :obj:`CalimaStarDB` constructor. Defaults to 'a'.
+
+        Returns:
+            :obj:`CalimaStarDB`: Instance of builtin database with given flags.
+
+        Raises:
+            :obj:`~camel_tools.calima_star.errors.InvalidBuiltinDatabaseName`:
+                When an invalid value for **dbname** is provided.
+        """
+
+        if dbname not in _DATABASES:
+            raise InvalidBuiltinDatabaseName(dbname)
+
+        return CalimaStarDB(_DATABASES[dbname]['path'], flags)
 
     def __init__(self, fpath, flags='a'):
         """Class constructor.
