@@ -27,17 +27,18 @@
 
 Usage:
     camel_calima_star analyze
-                      (-d DATABASE | --db=DATABASE)
+                      [-d DATABASE | --db=DATABASE]
                       [-b BACKOFF | --backoff BACKOFF]
                       [-c | --cache]
                       [-o OUTPUT | --output=OUTPUT] [FILE]
     camel_calima_star generate
-                      (-d DATABASE | --db=DATABASE)
+                      [-d DATABASE | --db=DATABASE]
                       [-b BACKOFF | --backoff BACKOFF]
                       [-o OUTPUT | --output=OUTPUT] [FILE]
     camel_calima_star reinflect
-                      (-d DATABASE | --db=DATABASE)
+                      [-d DATABASE | --db=DATABASE]
                       [-o OUTPUT | --output=OUTPUT] [FILE]
+    camel_calima_star (-l | --list)
     camel_calima_star (-v | --version)
     camel_calima_star (-h | --help)
 
@@ -49,9 +50,13 @@ Options:
                                 following values: NONE, REINFLECT. Defaults to
                                 NONE if not specified.
   -c --cache                    Cache computed analyses (only in analyze mode).
-  -d DATABASE --db=DATABASE     CalimaStar database to use.
+  -d DATABASE --db=DATABASE     CalimaStar database to use. DATABASE could be
+                                the name of a builtin database or a path to a
+                                database file [default: calima-msa].
   -o OUTPUT --output=OUTPUT     Output file. If not specified, output will be
                                 printed to stdout.
+  -l --list                     List builtin databases with their respective
+                                versions.
   -h --help                     Show this screen.
   -v --version                  Show version.
 """
@@ -82,6 +87,8 @@ __version__ = camelt.__version__
 _ANALYSIS_BACKOFFS = frozenset(('NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
                                 'ADD_PROP'))
 _GENARATION_BACKOFFS = frozenset(('NONE', 'REINFLECT'))
+_BUILTIN_DBS = frozenset([db.name for db in CalimaStarDB.list_builtin_dbs()])
+_DEFAULT_DB = 'calima-msa'
 
 _DIAC_RE = re.compile(r'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + r']')
 
@@ -119,6 +126,11 @@ def _open_files(finpath, foutpath):
             sys.exit(1)
 
     return fin, fout
+
+
+def _list_dbs():
+    for db in sorted(CalimaStarDB.list_builtin_dbs()):
+        sys.stdout.write('{}\t{}\n'.format(db.name, db.version))
 
 
 def _serialize_analyses(fout, word, analyses, order, generation=False):
@@ -346,6 +358,10 @@ def main():  # pragma: no cover
         version = ('CAMeL Tools v{}'.format(__version__))
         arguments = docopt(__doc__, version=version)
 
+        if arguments.get('--list', False):
+            _list_dbs()
+            sys.exit(1)
+
         analyze = arguments.get('analyze', False)
         generate = arguments.get('generate', False)
         reinflect = arguments.get('reinflect', False)
@@ -376,7 +392,12 @@ def main():  # pragma: no cover
 
         # Load DB
         try:
-            db = CalimaStarDB(arguments['--db'], dbflags)
+            dbname = arguments.get('--db', _DEFAULT_DB)
+            print(dbname)
+            if dbname in _BUILTIN_DBS:
+                db = CalimaStarDB.builtin_db(dbname, dbflags)
+            else:
+                db = CalimaStarDB(dbname, dbflags)
         except DatabaseError:
             sys.stderr.write('Error: Couldn\'t parse database.\n')
             sys.exit(1)

@@ -15,6 +15,9 @@ Database Errors
 .. autoclass:: camel_tools.calima_star.errors.DatabaseError
    :members:
 
+.. autoclass:: camel_tools.calima_star.errors.InvalidBuiltinDatabaseName
+   :members:
+
 .. autoclass:: camel_tools.calima_star.errors.InvalidDatabaseFlagError
    :members:
 
