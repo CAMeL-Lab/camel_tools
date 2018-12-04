@@ -30,7 +30,7 @@ from __future__ import absolute_import, print_function
 
 import six
 
-from camel_tools.utils import isunicode
+from camel_tools.utils.stringutils import isunicode
 
 
 class TestIsUnicodeString(object):
