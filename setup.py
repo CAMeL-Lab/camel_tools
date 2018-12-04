@@ -34,7 +34,7 @@ with open(VERSION_FILE) as fh:
 
 
 CLASSIFIERS = [
-    'Development Status :: 4 - Beta',
+    'Development Status :: 3 - Alpha',
     'Environment :: Console',
     'Intended Audience :: Developers',
     'Intended Audience :: Education',
