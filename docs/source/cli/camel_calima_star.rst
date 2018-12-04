@@ -269,8 +269,8 @@ box.
 Below is a list of databases that can be passed to ``-d`` or ``--db``:
 
 .. note::
-   While we currently only provide one builtin database at the moment, more
-   will be added over time.
+   While we currently only provide one builtin database, more will be added over
+   time.
 
 * **calima-msa** Database for analyzing Modern Standard Arabic.
 
