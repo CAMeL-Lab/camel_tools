@@ -60,7 +60,7 @@ CLASSIFIERS = [
 DESCRIPTION = ('A suite of Arabic natural language processing tools developed '
                'by the CAMeL Lab at New York University Abu Dhabi.')
 
-README_FILE = os.path.join(os.path.dirname(__file__), 'README.md')
+README_FILE = os.path.join(os.path.dirname(__file__), 'README.rst')
 with open(README_FILE, 'r') as fh:
     LONG_DESCRIPTION = fh.read().strip()
 
