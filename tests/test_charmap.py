@@ -32,9 +32,9 @@ from collections import Mapping
 
 import pytest
 
-from camel_tools.utils import CharMapper
-from camel_tools.utils import InvalidCharMapKeyError
-from camel_tools.utils import BuiltinCharMapNotFoundError
+from camel_tools.utils.charmap import CharMapper
+from camel_tools.utils.charmap import InvalidCharMapKeyError
+from camel_tools.utils.charmap import BuiltinCharMapNotFoundError
 
 
 # A valid map used for testing CharMapper.map_string
