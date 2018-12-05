@@ -1,11 +1,20 @@
 CAMeL Tools
 ===========
 
+
+.. image:: https://img.shields.io/pypi/v/camel-tools.svg
+   :target: https://pypi.org/project/camel-tools
+   :alt: PyPI Version
+
+.. image:: https://img.shields.io/pypi/pyversions/camel-tools.svg
+   :target: https://pypi.org/project/camel-tools
+   :alt: PyPI Python Version
+
 .. image:: https://readthedocs.org/projects/camel-tools/badge/?version=latest
    :target: https://camel-tools.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. image:: https://img.shields.io/github/license/mashape/apistatus.svg
+.. image:: https://img.shields.io/pypi/l/camel-tools.svg
    :target: https://opensource.org/licenses/MIT
    :alt: MIT License
 
