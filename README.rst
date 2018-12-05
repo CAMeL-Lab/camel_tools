@@ -78,13 +78,15 @@ LICENSE
 -------
 
 CAMeL Tools is available under the MIT license.
-See the `LICENSE file <./LICENSE>`_ for more info.
+See the `LICENSE file <https://github.com/owo/camel_tools/blob/master/LICENSE>`_
+for more info.
 
 Contribute
 ----------
 
 If you would like to contribute to CAMeL Tools, please read the
-`CONTRIBUTE.md <./CONTRIBUTING.md>`_ file.
+`CONTRIBUTE.md <https://github.com/owo/camel_tools/blob/master/CONTRIBUTING.md>`_
+file.
 
 Contributors
 ------------
