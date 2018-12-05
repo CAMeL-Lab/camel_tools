@@ -272,7 +272,7 @@ Below is a list of databases that can be passed to ``-d`` or ``--db``:
    While we currently only provide one builtin database, more will be added over
    time.
 
-* **calima-msa** Database for analyzing Modern Standard Arabic.
+* **calima-msa** Database for analyzing Modern Standard Arabic. [#fn1]_
 
 If no database is specified, **calima-msa** is used.
 
@@ -280,3 +280,11 @@ You can always check what builtin databases are provided in your current
 ``camel_tools`` installation by running ``camel_calima_star --list``.
 Alternatively, you can pass in a path to a database of your chosing instead of
 one of the above listed databases.
+
+
+.. rubric:: Footnotes
+
+.. [#fn1] **calima-msa** is based on the `almor-msa-r31.db` database that ships
+   with MADAMIRA. See the `calima-msa <https://github.com/owo/calima-msa>`_
+   GitHub repository for more information. Version 1.0 of **calima-msa** is
+   included in this release.
