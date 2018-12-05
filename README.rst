@@ -1,12 +1,9 @@
-
 CAMeL Tools
 ===========
-
 
 .. image:: https://readthedocs.org/projects/camel-tools/badge/?version=latest
    :target: https://camel-tools.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-
 
 .. image:: https://img.shields.io/github/license/mashape/apistatus.svg
    :target: https://opensource.org/licenses/MIT
@@ -17,7 +14,6 @@ CAMeL Tools
 .. image:: camel_logo.png
    :target: camel_logo.png
    :alt: CAMeL Lab Logo
-
 
 Introduction
 ------------
@@ -85,12 +81,11 @@ Contribute
 ----------
 
 If you would like to contribute to CAMeL Tools, please read the
-`CONTRIBUTE.md <https://github.com/owo/camel_tools/blob/master/CONTRIBUTING.md>`_
+`CONTRIBUTE.md <https://github.com/owo/camel_tools/blob/master/CONTRIBUTING.rst>`_
 file.
 
 Contributors
 ------------
-
 
 * `Ossama Obeid <https://github.com/owo>`_
 * `Go Inoue <https://github.com/go-inoue>`_
