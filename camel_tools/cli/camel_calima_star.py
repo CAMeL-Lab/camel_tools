@@ -201,13 +201,14 @@ def _analyze(db, fin, fout, backoff, cache):
     analyzer = CalimaStarAnalyzer(db, backoff)
     memoize_table = {} if cache else None
 
-    line = force_unicode(fin.readline()).strip()
+    line = force_unicode(fin.readline())
 
     while line:
         if len(line) == 0:
-            line = force_unicode(fin.readline()).strip()
+            line = force_unicode(fin.readline())
             continue
 
+        line = line.strip()
         tokens = _tokenize(line)
 
         for token in tokens:
@@ -233,19 +234,21 @@ def _analyze(db, fin, fout, backoff, cache):
 
                 fout.write('\n\n')
 
-        line = force_unicode(fin.readline()).strip()
+        line = force_unicode(fin.readline())
 
 
 def _generate(db, fin, fout, backoff):
     generator = CalimaStarGenerator(db)
     reinflector = CalimaStarReinflector(db) if backoff == 'REINFLECT' else None
 
-    line = force_unicode(fin.readline()).strip()
+    line = force_unicode(fin.readline())
     line_num = 1
 
     while line:
+        line = line.strip()
+
         if len(line) == 0:
-            line = force_unicode(fin.readline()).strip()
+            line = force_unicode(fin.readline())
             line_num += 1
             continue
 
@@ -301,19 +304,21 @@ def _generate(db, fin, fout, backoff):
                         sys.stderr.write('Error: {}. [{}]\n'.format(error.msg,
                                                                     line_num))
 
-        line = force_encoding(fin.readline()).strip()
+        line = force_encoding(fin.readline())
         line_num += 1
 
 
 def _reinflect(db, fin, fout):
     reinflector = CalimaStarReinflector(db)
 
-    line = force_unicode(fin.readline()).strip()
+    line = force_unicode(fin.readline())
     line_num = 1
 
     while line:
+        line = line.strip()
+
         if len(line) == 0:
-            line = force_unicode(fin.readline()).strip()
+            line = force_unicode(fin.readline())
             line_num += 1
             continue
 
@@ -351,7 +356,7 @@ def _reinflect(db, fin, fout):
                     sys.stderr.write('Error: {}. [{}]\n'.format(error.msg,
                                                                 line_num))
 
-        line = force_unicode(fin.readline()).strip()
+        line = force_unicode(fin.readline())
         line_num += 1
 
 
