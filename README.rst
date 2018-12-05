@@ -81,7 +81,7 @@ Contribute
 ----------
 
 If you would like to contribute to CAMeL Tools, please read the
-`CONTRIBUTE.md <https://github.com/owo/camel_tools/blob/master/CONTRIBUTING.rst>`_
+`CONTRIBUTE.rst <https://github.com/owo/camel_tools/blob/master/CONTRIBUTING.rst>`_
 file.
 
 Contributors
