@@ -38,3 +38,13 @@ Examples
    # or the following since reinflection requires both analysis and generation
    # indexes.
    db = CalimaStarDB('/path/to/database', 'ag')
+
+
+   # We can also initialize a builtin database using the same flags as above
+   db = CalimaStarDB.builtin_db('calima-msa', 'a')
+
+   # or if we want to use the default builtin database (ie. 'calima-msa')
+   db = CalimaStarDB.builtin_db(flags='g')
+
+   # or just the following if we want the default database in analysis mode
+   db = CalimaStarDB.builtin_db()
