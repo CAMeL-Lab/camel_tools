@@ -285,6 +285,7 @@ one of the above listed databases.
 .. rubric:: Footnotes
 
 .. [#fn1] **calima-msa** is based on the `almor-msa-r31.db` database that ships
-   with MADAMIRA. See the `calima-msa <https://github.com/owo/calima-msa>`_
+   with MADAMIRA. See the `calima-msa
+   <https://github.com/CAMeL-Lab/calima-msa>`_
    GitHub repository for more information. Version 1.0 of **calima-msa** is
    included in this release.

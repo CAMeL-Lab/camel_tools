@@ -19,7 +19,7 @@ From Source
 .. code-block:: bash
 
    # Download the repo
-   git clone https://github.com/owo/camel_tools.git
+   git clone https://github.com/CAMeL-Lab/camel_tools.git
    cd camel_tools
 
    # Install CAMeL Tools and all dependencies

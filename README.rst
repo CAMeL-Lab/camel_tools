@@ -50,7 +50,7 @@ From Source
 .. code-block:: bash
 
    # Download the repo
-   git clone https://github.com/owo/camel_tools.git
+   git clone https://github.com/CAMeL-Lab/camel_tools.git
    cd camel_tools
 
    # Install CAMeL Tools and all dependencies
@@ -83,14 +83,16 @@ LICENSE
 -------
 
 CAMeL Tools is available under the MIT license.
-See the `LICENSE file <https://github.com/owo/camel_tools/blob/master/LICENSE>`_
+See the `LICENSE file
+<https://github.com/CAMeL-Lab/camel_tools/blob/master/LICENSE>`_
 for more info.
 
 Contribute
 ----------
 
 If you would like to contribute to CAMeL Tools, please read the
-`CONTRIBUTE.rst <https://github.com/owo/camel_tools/blob/master/CONTRIBUTING.rst>`_
+`CONTRIBUTE.rst
+<https://github.com/CAMeL-Lab/camel_tools/blob/master/CONTRIBUTING.rst>`_
 file.
 
 Contributors

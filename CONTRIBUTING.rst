@@ -180,7 +180,7 @@ Issues
 Not all contributions have to do with code.
 If you would like to report a bug, suggest enhancements, or request a new
 feature, please use the
-`issues page <https://github.com/owo/CAMeL_Tools/issues>`_ to do so.
+`issues page <https://github.com/CAMeL-Lab/CAMeL_Tools/issues>`_ to do so.
 
 Please adhere to the following rules when posting a new issue:
 
