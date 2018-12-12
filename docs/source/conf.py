@@ -29,7 +29,7 @@ author = 'Ossama W. Obeid'
 # The short X.Y version
 version = '0.1.dev'
 # The full version, including alpha/beta/rc tags
-release = '0.1.dev0'
+release = '0.1.dev1'
 
 
 # -- General configuration ---------------------------------------------------
