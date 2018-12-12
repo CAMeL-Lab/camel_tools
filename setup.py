@@ -96,7 +96,7 @@ setup(
              'camel_tools.cli.camel_calima_star:main'),
         ],
     },
-    url='https://github.com/owo/CAMeL_Tools',
+    url='https://github.com/CAMeL-Lab/CAMeL_Tools',
     license='MIT',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
