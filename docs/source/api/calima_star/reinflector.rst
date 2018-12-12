@@ -21,7 +21,7 @@ Examples
    db = CalimaStarDB('path/to/database', 'r')
 
    # Create reinflector instance
-   generator = CalimStarGenerator(db)
+   reinflector = CalimStarGenerator(db)
 
    # Specify word and features to generate for
    word = ''
