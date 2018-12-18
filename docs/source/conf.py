@@ -27,9 +27,9 @@ copyright = '2018, New York University Abu Dhabi'
 author = 'Ossama W. Obeid'
 
 # The short X.Y version
-version = '0.1.dev'
+version = '0.2'
 # The full version, including alpha/beta/rc tags
-release = '0.1.dev1'
+release = '0.2.0-dev'
 
 
 # -- General configuration ---------------------------------------------------
