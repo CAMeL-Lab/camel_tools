@@ -19,7 +19,7 @@ Examples
 
 .. code-block:: python
 
-   from camel_tools.calima_star.database import CalimStarDB
+   from camel_tools.calima_star.database import CalimaStarDB
 
    # Initialize database for analysis
    db = CalimaStarDB('/path/to/database', 'a')
@@ -41,9 +41,9 @@ Examples
 
 
    # We can also initialize a builtin database using the same flags as above
-   db = CalimaStarDB.builtin_db('calima-msa', 'a')
+   db = CalimaStarDB.builtin_db('almor-msa', 'a')
 
-   # or if we want to use the default builtin database (ie. 'calima-msa')
+   # or if we want to use the default builtin database (ie. 'almor-msa')
    db = CalimaStarDB.builtin_db(flags='g')
 
    # or just the following if we want the default database in analysis mode

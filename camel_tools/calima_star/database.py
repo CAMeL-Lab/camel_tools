@@ -40,9 +40,9 @@ DBListing = namedtuple('DBListing', ['name', 'version'])
 
 _DATABASES_DIR = os.path.join(os.path.dirname(__file__), 'databases')
 _DATABASES = {
-    'calima-msa': {
-        'path': os.path.join(_DATABASES_DIR, 'calima-msa-1.0.db'),
-        'version': '1.0'
+    'almor-msa': {
+        'path': os.path.join(_DATABASES_DIR, 'almor-msa', 'almor-msa-r13.db'),
+        'version': 'r13'
     }
 }
 
@@ -84,7 +84,7 @@ class CalimaStarDB:
         return [DBListing(db, _DATABASES[db]['version']) for db in _DATABASES]
 
     @staticmethod
-    def builtin_db(dbname='calima-msa', flags='a'):
+    def builtin_db(dbname='almor-msa', flags='a'):
         """Create a :obj:`CalimaStarDB` instance from one of the builtin
         databases provided.
 
@@ -92,7 +92,7 @@ class CalimaStarDB:
             dbname (:obj:`str`, optional): Name of builtin database.
                 You can use :meth:`list_builtin_dbs` to get a list of
                 builtin databases or see :ref:`calima_star_databases`.
-                Defaults to 'calima-msa'.
+                Defaults to 'almor-msa'.
             flags (:obj:`str`, optional): Flag string to be passed to
                 :obj:`CalimaStarDB` constructor. Defaults to 'a'.
 

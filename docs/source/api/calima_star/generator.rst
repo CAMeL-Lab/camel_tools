@@ -14,14 +14,14 @@ Examples
 
 .. code-block:: python
 
-   from camel_tools.calima_star.database import CalimStarDB
-   from camel_tools.calima_star.generator import CalimStarGenerator
+   from camel_tools.calima_star.database import CalimaStarDB
+   from camel_tools.calima_star.generator import CalimaStarGenerator
 
    # Initialize database in generation mode
    db = CalimaStarDB('path/to/database', 'g')
 
    # Create generator instance
-   generator = CalimStarGenerator(db)
+   generator = CalimaStarGenerator(db)
 
    # Specify lemma and features to generate for
    lemma = ''
