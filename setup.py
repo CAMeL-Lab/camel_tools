@@ -83,7 +83,7 @@ setup(
               'camel_tools.calima_star'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
-        'camel_tools.calima_star': ['databases/*.db']
+        'camel_tools.calima_star': ['databases/*/*.db', 'databases/*/LICENSE']
     },
     include_package_data=True,
     entry_points={

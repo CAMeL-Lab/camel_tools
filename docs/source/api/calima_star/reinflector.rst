@@ -14,14 +14,14 @@ Examples
 
 .. code-block:: python
 
-   from camel_tools.calima_star.database import CalimStarDB
-   from camel_tools.calima_star.reinflector import CalimStarReinflector
+   from camel_tools.calima_star.database import CalimaStarDB
+   from camel_tools.calima_star.reinflector import CalimaStarReinflector
 
    # Initialize database in reinflection mode
    db = CalimaStarDB('path/to/database', 'r')
 
    # Create reinflector instance
-   reinflector = CalimStarGenerator(db)
+   reinflector = CalimaStarGenerator(db)
 
    # Specify word and features to generate for
    word = ''

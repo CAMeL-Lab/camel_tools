@@ -18,20 +18,20 @@ Examples
 
 .. code-block:: python
 
-   from camel_tools.calima_star.database import CalimStarDB
-   from camel_tools.calima_star.analyzer import CalimStarAnalyzer
+   from camel_tools.calima_star.database import CalimaStarDB
+   from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
 
    db = CalimaStarDB('path/to/database', 'a')
 
    # Create analyzer with no backoff
-   analyzer = CalimStarAnalyzer(db)
+   analyzer = CalimaStarAnalyzer(db)
 
 
    # Create analyzer with NOAN_ALL backoff
-   analyzer = CalimStarAnalyzer(db, 'NOAN_ALL')
+   analyzer = CalimaStarAnalyzer(db, 'NOAN_ALL')
 
    # or
-   analyzer = CalimStarAnalyzer(db, backoff='NOAN_ALL')
+   analyzer = CalimaStarAnalyzer(db, backoff='NOAN_ALL')
 
 
    # To analyze a word, we can use the analyze() method
