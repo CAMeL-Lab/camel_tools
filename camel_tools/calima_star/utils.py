@@ -29,9 +29,11 @@ import copy
 import re
 
 # features which should be concatinated when generating analysis
-_CONCAT_FEATS = ['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6', 'ud']
-_CONCAT_FEATS_NONE = ['d3tok', 'd3seg', 'atbseg', 'd2seg', 'd1seg', 'd1tok',
-                      'd2tok', 'atbtok']  # FIXME: DON'T DO THIS!!!!!
+_CONCAT_FEATS = frozenset(['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6',
+                           'ud'])
+_CONCAT_FEATS_NONE = frozenset(['d3tok', 'd3seg', 'atbseg', 'd2seg', 'd1seg',
+                                'd1tok', 'd2tok', 'atbtok'])
+_FREQ_FEATS = frozenset(['pos_freq', 'lex_freq', 'pos_lex_freq'])
 
 # Sun letters
 _REWRITE_DIAC_RE_1 = re.compile(u'^((\u0648\u064e|\u0641\u064e)?'
@@ -167,5 +169,8 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
         result['pattern'] = u'{}{}{}'.format(prefix_feats.get('diac', ''),
                                              stem_feats['pattern'],
                                              suffix_feats.get('diac', ''))
+
+    for freq_feat in _FREQ_FEATS:
+        result[freq_feat] = float(result.get(freq_feat, -99.0))
 
     return result
