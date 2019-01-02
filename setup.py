@@ -80,7 +80,8 @@ setup(
     packages=['camel_tools',
               'camel_tools.cli',
               'camel_tools.utils',
-              'camel_tools.calima_star'],
+              'camel_tools.calima_star',
+              'camel_tools.disambig'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
         'camel_tools.calima_star': ['databases/*/*.db', 'databases/*/LICENSE']

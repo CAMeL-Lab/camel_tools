@@ -352,3 +352,6 @@ class CalimaStarAnalyzer:
         result = list(analyses)
 
         return result
+
+    def analyze_words(self, words):
+        return list(map(lambda w: (w, self.analyze(w)), words))
