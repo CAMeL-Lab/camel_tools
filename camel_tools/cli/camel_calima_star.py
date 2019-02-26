@@ -28,12 +28,12 @@
 Usage:
     camel_calima_star analyze
                       [-d DATABASE | --db=DATABASE]
-                      [-b BACKOFF | --backoff BACKOFF]
+                      [-b BACKOFF | --backoff=BACKOFF]
                       [-c | --cache]
                       [-o OUTPUT | --output=OUTPUT] [FILE]
     camel_calima_star generate
                       [-d DATABASE | --db=DATABASE]
-                      [-b BACKOFF | --backoff BACKOFF]
+                      [-b BACKOFF | --backoff=BACKOFF]
                       [-o OUTPUT | --output=OUTPUT] [FILE]
     camel_calima_star reinflect
                       [-d DATABASE | --db=DATABASE]
@@ -43,22 +43,24 @@ Usage:
     camel_calima_star (-h | --help)
 
 Options:
-  -b BACKOFF --backoff BACKOFF  Backoff mode for analyzer and generator. In
-                                analyze mode, it can have the following
-                                values: NONE, NOAN_ALL, NOAN_PROP, ADD_ALL,
-                                ADD_PROP. In generate mode it can have the
-                                following values: NONE, REINFLECT. Defaults to
-                                NONE if not specified.
-  -c --cache                    Cache computed analyses (only in analyze mode).
-  -d DATABASE --db=DATABASE     CalimaStar database to use. DATABASE could be
-                                the name of a builtin database or a path to a
-                                database file [default: almor-msa].
-  -o OUTPUT --output=OUTPUT     Output file. If not specified, output will be
-                                printed to stdout.
-  -l --list                     List builtin databases with their respective
-                                versions.
-  -h --help                     Show this screen.
-  -v --version                  Show version.
+  -b BACKOFF --backoff=BACKOFF
+        Backoff mode for analyzer and generator. In analyze mode, it can have
+        the following values: NONE, NOAN_ALL, NOAN_PROP, ADD_ALL, ADD_PROP.
+        In generate mode it can have the following values: NONE, REINFLECT.
+        [default: NONE]
+  -c --cache
+        Cache computed analyses (only in analyze mode).
+  -d DATABASE --db=DATABASE
+        CalimaStar database to use. DATABASE could be the name of a builtin
+        database or a path to a database file. [default: almor-msa]
+  -o OUTPUT --output=OUTPUT
+        Output file. If not specified, output will be printed to stdout.
+  -l --list
+        List builtin databases with their respective versions.
+  -h --help
+        Show this screen.
+  -v --version
+        Show version.
 """
 
 from __future__ import absolute_import

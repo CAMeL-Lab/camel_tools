@@ -36,16 +36,23 @@ Usage:
     camel_transliterate (-h | --help)
 
 Options:
-  -s SCHEME --scheme          Scheme used for transliteration.
-  -o OUTPUT --output=OUTPUT   Output file. If not specified, output will be
-                              printed to stdout.
-  -m MARKER --marker=MARKER   Marker used to prefix tokens not to be
-                              transliterated. Set to '@@IGNORE@@' by default.
-  -I --ignore-markers         Transliterate marked words as well.
-  -S --strip-markers          Remove markers in output.
-  -l --list                   Show a list of available transliteration schemes.
-  -h --help                   Show this screen.
-  -v --version                Show version.
+  -s SCHEME --scheme
+        Scheme used for transliteration.
+  -o OUTPUT --output=OUTPUT
+        Output file. If not specified, output will be printed to stdout.
+  -m MARKER --marker=MARKER
+        Marker used to prefix tokens not to be transliterated.
+        [deafualt: @@IGNORE@@]
+  -I --ignore-markers
+        Transliterate marked words as well.
+  -S --strip-markers
+        Remove markers in output.
+  -l --list
+        Show a list of available transliteration schemes.
+  -h --help
+        Show this screen.
+  -v --version
+        Show version.
 """
 
 from __future__ import print_function, absolute_import

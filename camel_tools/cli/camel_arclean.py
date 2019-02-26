@@ -31,10 +31,12 @@ Usage:
     camel_arclean (-h | --help)
 
 Options:
-  -o OUTPUT --output=OUTPUT   Output file. If not specified, output will be
-                              printed to stdout.
-  -h --help                   Show this screen.
-  -v --version                Show version.
+  -o OUTPUT --output=OUTPUT
+        Output file. If not specified, output will be printed to stdout.
+  -h --help
+        Show this screen.
+  -v --version
+        Show version.
 """
 
 from __future__ import print_function, absolute_import
