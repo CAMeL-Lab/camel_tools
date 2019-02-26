@@ -40,15 +40,14 @@ def simple_disambig(analyses, top=1):
     pos-lex frequencies.
 
     Args:
-        analyses (list of tuple(str, list of dict)): List of word-analyses
-            pairs (such as those returned by
-            :meth:`CalimaStarAnalyzer.analyze_words`.)
-        top (int, optional): The number of top analyses to return.
+        analyses (:obj:`list` of :obj:`tuple` of \
+        (:obj:`str`, :obj:`list` of :obj:`dict`)): List of word-analyses pairs.
+        top (:obj:`int`, optional): The number of top analyses to return.
             Defaults to 1.
 
     Returns:
-        list of tuple(str, dict): List of word-analyses pairs with the top
-        most frquent analyses.
+        :obj:`list` of :obj:`tuple` of (:obj:`str`, :obj:`dict`):
+        List of word-analyses pairs with the top most frquent analyses.
     '''
 
     if analyses is None:

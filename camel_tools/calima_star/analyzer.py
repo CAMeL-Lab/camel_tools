@@ -223,7 +223,8 @@ class CalimaStarAnalyzer:
                 for suffix_cat, suffix_feats in suffix_analyses:
                     if ((suffix_cat not in
                          self._db.stem_suffix_compat[stem_cat]) or
-                        (suffix_cat not in
+                        (prefix_cat not in self._db.prefix_suffix_compat or
+                         suffix_cat not in
                          self._db.prefix_suffix_compat[prefix_cat])):
                         continue
 
@@ -354,4 +355,16 @@ class CalimaStarAnalyzer:
         return result
 
     def analyze_words(self, words):
+        '''Analyze a list of words.
+
+        Args:
+            words (:py:obj:`list` of :py:obj:`str`): List of words to analyze.
+
+        Returns:
+            :obj:`list` of :obj:`list` of :obj:`dict`: The list of analyses for
+            each word in **words**.
+            See :doc:`/reference/calima_star_features` for more information on
+            features and their values.
+        '''
+
         return list(map(lambda w: (w, self.analyze(w)), words))
