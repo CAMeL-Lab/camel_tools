@@ -27,6 +27,7 @@
 
 Usage:
     camel_calima_star analyze
+                      [-D DISAMBIG | --disambig=DISAMBIG]
                       [-d DATABASE | --db=DATABASE]
                       [-b BACKOFF | --backoff=BACKOFF]
                       [-c | --cache]
@@ -50,6 +51,9 @@ Options:
         [default: NONE]
   -c --cache
         Cache computed analyses (only in analyze mode).
+  -D DISAMBIG --disambig=DISAMBIG
+        Disambiguate analyses using pos-lex frequency showing only the top
+        DISAMBIG analyses. DISAMBIG should be non-zero positive integer.
   -d DATABASE --db=DATABASE
         CalimaStar database to use. DATABASE could be the name of a builtin
         database or a path to a database file. [default: almor-msa]
@@ -81,6 +85,7 @@ from camel_tools.calima_star.generator import CalimaStarGenerator
 from camel_tools.calima_star.reinflector import CalimaStarReinflector
 from camel_tools.calima_star.errors import DatabaseError, AnalyzerError
 from camel_tools.calima_star.errors import GeneratorError, CalimaStarError
+from camel_tools.disambig.simple import simple_disambig
 
 
 __version__ = camelt.__version__
@@ -101,6 +106,16 @@ def _tokenize(s):
 
 def _dediac(word):
     return _DIAC_RE.sub('', word)
+
+
+def _to_int(s):
+    s = str(s)
+    try:
+        if not s.isdigit():
+            return None
+        return int(s)
+    except Exception:
+        return None
 
 
 def _open_files(finpath, foutpath):
@@ -200,7 +215,7 @@ def _parse_reinflector_line(line):
     return (word, feats)
 
 
-def _analyze(db, fin, fout, backoff, cache):
+def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
     analyzer = CalimaStarAnalyzer(db, backoff)
     memoize_table = {} if cache else None
 
@@ -224,6 +239,9 @@ def _analyze(db, fin, fout, backoff, cache):
                 fout.write('\n\n')
             else:
                 analyses = analyzer.analyze(token)
+                if num_disambig is not None:
+                    dambg = simple_disambig([(token, analyses)], num_disambig)
+                    analyses = dambg[0][1]
                 serialized = _serialize_analyses(fout, token, analyses,
                                                  db.order)
 
@@ -379,6 +397,16 @@ def main():  # pragma: no cover
         cache = arguments.get('--cache', False)
         backoff = arguments.get('--backoff', 'NONE')
 
+        num_disambig = None
+        if analyze:
+            num_disambig = arguments.get('--disambig', None)
+            if num_disambig is not None:
+                num_disambig = _to_int(num_disambig)
+                if num_disambig is None or num_disambig < 1:
+                    sys.stderr.write('Error: DISAMBIG must be a'
+                                     'non-zero positive integer.\n')
+                    sys.exit(1)
+
         # Make sure we have a valid backoff mode
         if backoff is None:
             backoff = 'NONE'
@@ -417,7 +445,7 @@ def main():  # pragma: no cover
         # Continue execution in requested mode
         if analyze:
             try:
-                _analyze(db, fin, fout, backoff, cache)
+                _analyze(db, fin, fout, backoff, cache, num_disambig)
             except AnalyzerError as error:
                 sys.stderr.write('Error: {}\n'.format(error.msg))
                 sys.exit(1)
