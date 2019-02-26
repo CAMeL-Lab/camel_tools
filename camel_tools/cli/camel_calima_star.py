@@ -144,7 +144,8 @@ def _serialize_analyses(fout, word, analyses, order, generation=False):
         sub_buff = set()
         for a in analyses:
             output = u' '.join([u'{}:{}'.format(force_unicode(f),
-                               force_unicode(a[f])) for f in order if f in a])
+                                                force_unicode(str(a[f])))
+                                for f in order if f in a])
             sub_buff.add(output)
         buff.extend(sub_buff)
 
@@ -447,4 +448,4 @@ def main():  # pragma: no cover
 
 
 if __name__ == '__main__':
-        main()
+    main()
