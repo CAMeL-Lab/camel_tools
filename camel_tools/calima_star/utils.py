@@ -150,7 +150,7 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
     for concat_feat in _CONCAT_FEATS_NONE:
         result[concat_feat] = u'{}{}{}'.format(
             prefix_feats.get(concat_feat, ''),
-            stem_feats.get(concat_feat, ''),
+            stem_feats.get(concat_feat, stem_feats.get('diac', '')),
             suffix_feats.get(concat_feat, ''))
 
     result['stem'] = stem_feats['diac']
