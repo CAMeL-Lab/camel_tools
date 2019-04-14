@@ -45,7 +45,8 @@ from camel_tools.utils.dediac import dediac_ar
 _ALL_PUNC = u''.join(UNICODE_PUNCT_SYMBOL_CHARSET)
 
 _DIAC_RE = re.compile(u'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + u']')
-_IS_DIGIT_RE = re.compile(u'^[0-9\u0660-\u0669]+$')
+_IS_DIGIT_RE = re.compile(u'^.*[0-9\u0660-\u0669]+.*$')
+_IS_STRICT_DIGIT_RE = re.compile(u'^[0-9\u0660-\u0669]+$')
 _IS_PUNC_RE = re.compile(u'^[' + re.escape(_ALL_PUNC) + u']+$')
 _HAS_PUNC_RE = re.compile(u'[' + re.escape(_ALL_PUNC) + u']+')
 _IS_AR_RE = re.compile(u'^[' + re.escape(u''.join(AR_CHARSET)) + u']+$')
@@ -90,6 +91,10 @@ def _is_digit(word):
     return _IS_DIGIT_RE.match(word) is not None
 
 
+def _is_strict_digit(word):
+    return _IS_STRICT_DIGIT_RE.match(word) is not None
+
+
 def _is_punc(word):
     return _IS_PUNC_RE.match(word) is not None
 
@@ -124,6 +129,10 @@ class CalimaStarAnalyzer:
         norm_map (:obj:`~camel_tools.utils.charmap.CharMapper`, optional):
             Character map for normalizing input words. Defaults to
             :const:`DEFAULT_NORMALIZE_MAP`.
+        strict_digit (:obj:`bool`, optional): If set to `True`, then only words
+            completely comprised of digits are considered numbers, otherwise,
+            all words containing a digit are considered numbers. Defaults to
+            `False`.
 
     Raises:
         :obj:`~camel_tools.calima_star.errors.AnalyzerError`: If database is
@@ -134,7 +143,8 @@ class CalimaStarAnalyzer:
     """
 
     def __init__(self, db, backoff='NONE',
-                 norm_map=DEFAULT_NORMALIZE_MAP):
+                 norm_map=DEFAULT_NORMALIZE_MAP,
+                 strict_digit=False):
         if not isinstance(db, CalimaStarDB):
             raise AnalyzerError('DB is not an instance of CalimaStarDB')
         if not db.flags.analysis:
@@ -144,6 +154,7 @@ class CalimaStarAnalyzer:
 
         self._backoff = backoff
         self._norm_map = DEFAULT_NORMALIZE_MAP
+        self._strict_digit = strict_digit
 
         if backoff == 'NONE':
             self._backoff_condition = None
@@ -265,14 +276,19 @@ class CalimaStarAnalyzer:
         if word == '':
             return []
 
-        if _is_digit(word):
+        analyses = collections.deque()
+        word_dediac = dediac_ar(word)
+        word_normal = self._normalize(word_dediac)
+
+        if ((self._strict_digit and _is_strict_digit(word)) or
+                (not self._strict_digit and _is_digit(word))):
             result = copy.copy(self._db.defaults['digit'])
             result['diac'] = word
             result['lex'] = word + '_0'
             result['bw'] = word + '/NOUN_NUM'
             result['gloss'] = word
             result['source'] = 'digit'
-            return [result]
+            analyses.append(result)
         elif _is_punc(word):
             result = copy.copy(self._db.defaults['punc'])
             result['diac'] = word
@@ -280,9 +296,9 @@ class CalimaStarAnalyzer:
             result['bw'] = word + '/PUNC'
             result['gloss'] = word
             result['source'] = 'punc'
-            return [result]
+            analyses.append(result)
         elif _has_punc(word):
-            return []
+            pass
         elif not _is_ar(word):
             result = copy.copy(self._db.defaults['noun'])
             result['diac'] = word
@@ -290,35 +306,30 @@ class CalimaStarAnalyzer:
             result['bw'] = word + '/FOREIGN'
             result['gloss'] = word
             result['source'] = 'foreign'
-            return [result]
+            analyses.append(result)
+        else:
+            segments_gen = _segments_gen(word_normal, self._db.max_prefix_size,
+                                         self._db.max_suffix_size)
 
-        word_dediac = dediac_ar(word)
-        word_normal = self._normalize(word_dediac)
+            for segmentation in segments_gen:
+                prefix = segmentation[0]
+                stem = segmentation[1]
+                suffix = segmentation[2]
 
-        segments_gen = _segments_gen(word_normal, self._db.max_prefix_size,
-                                     self._db.max_suffix_size)
+                prefix_analyses = self._db.prefix_hash.get(prefix, None)
+                suffix_analyses = self._db.suffix_hash.get(suffix, None)
 
-        analyses = collections.deque()
+                if prefix_analyses is None or suffix_analyses is None:
+                    continue
 
-        for segmentation in segments_gen:
-            prefix = segmentation[0]
-            stem = segmentation[1]
-            suffix = segmentation[2]
+                stem_analyses = self._db.stem_hash.get(stem, None)
 
-            prefix_analyses = self._db.prefix_hash.get(prefix, None)
-            suffix_analyses = self._db.suffix_hash.get(suffix, None)
-
-            if prefix_analyses is None or suffix_analyses is None:
-                continue
-
-            stem_analyses = self._db.stem_hash.get(stem, None)
-
-            if stem_analyses is not None:
-                combined = self._combined_analyses(word_dediac,
-                                                   prefix_analyses,
-                                                   stem_analyses,
-                                                   suffix_analyses)
-                analyses.extend(combined)
+                if stem_analyses is not None:
+                    combined = self._combined_analyses(word_dediac,
+                                                       prefix_analyses,
+                                                       stem_analyses,
+                                                       suffix_analyses)
+                    analyses.extend(combined)
 
         if ((self._backoff_condition == 'NOAN' and len(analyses) == 0) or
                 (self._backoff_condition == 'ADD')):
