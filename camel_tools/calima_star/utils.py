@@ -29,8 +29,8 @@ import copy
 import re
 
 # features which should be concatinated when generating analysis
-_CONCAT_FEATS = frozenset(['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6',
-                           'ud'])
+_JOIN_FEATS = frozenset(['gloss', 'bw'])
+_CONCAT_FEATS = frozenset(['diac', 'pattern', 'caphi', 'catib6', 'ud'])
 _CONCAT_FEATS_NONE = frozenset(['d3tok', 'd3seg', 'atbseg', 'd2seg', 'd1seg',
                                 'd1tok', 'd2tok', 'atbtok'])
 _FREQ_FEATS = frozenset(['pos_freq', 'lex_freq', 'pos_lex_freq'])
@@ -140,6 +140,15 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
         prefix_feat_val = prefix_feats.get(stem_feat, '')
         if prefix_feat_val != '-' and prefix_feat_val != '':
             result[stem_feat] = prefix_feat_val
+
+    for join_feat in _JOIN_FEATS:
+        feat_vals = [
+            prefix_feats.get(join_feat, None),
+            stem_feats.get(join_feat, None),
+            suffix_feats.get(join_feat, None)
+        ]
+        result[join_feat] = u'+'.join([fv for fv in feat_vals
+                                       if fv is not None and fv != ''])
 
     for concat_feat in _CONCAT_FEATS:
         result[concat_feat] = u'{}+{}+{}'.format(
