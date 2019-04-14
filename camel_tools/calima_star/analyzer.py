@@ -48,7 +48,7 @@ _DIAC_RE = re.compile(u'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + u']')
 _IS_DIGIT_RE = re.compile(u'^.*[0-9\u0660-\u0669]+.*$')
 _IS_STRICT_DIGIT_RE = re.compile(u'^[0-9\u0660-\u0669]+$')
 _IS_PUNC_RE = re.compile(u'^[' + re.escape(_ALL_PUNC) + u']+$')
-_HAS_PUNC_RE = re.compile(u'[' + re.escape(_ALL_PUNC) + u']+')
+_HAS_PUNC_RE = re.compile(u'[' + re.escape(_ALL_PUNC) + u']')
 _IS_AR_RE = re.compile(u'^[' + re.escape(u''.join(AR_CHARSET)) + u']+$')
 
 # Identify No Analysis marker
@@ -89,7 +89,7 @@ def _is_punc(word):
 
 
 def _has_punc(word):
-    return _HAS_PUNC_RE.match(word) is not None
+    return _HAS_PUNC_RE.search(word) is not None
 
 
 def _is_ar(word):
