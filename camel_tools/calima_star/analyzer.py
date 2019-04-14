@@ -54,17 +54,6 @@ _IS_AR_RE = re.compile(u'^[' + re.escape(u''.join(AR_CHARSET)) + u']+$')
 # Identify No Analysis marker
 _NOAN_RE = re.compile(u'NOAN')
 
-# features which should be concatinated when generating analysis
-_CONCAT_FEATS = ['diac', 'bw', 'gloss', 'pattern', 'caphi', 'catib6', 'ud',
-                 'd3seg', 'atbseg', 'd2seg', 'd1seg', 'd1tok', 'd2tok',
-                 'atbtok', 'd3tok']
-
-# features which will be overwritten in suffix > prefix > stem order when
-# generating analyses
-_OVERWRITE_FEATS = ['lex', 'pos', 'prc3', 'prc2', 'prc1', 'prc0', 'per', 'asp',
-                    'vox', 'mod', 'gen', 'num', 'stt',
-                    'cas', 'enc0', 'rat', 'form_gen', 'form_num']
-
 DEFAULT_NORMALIZE_MAP = CharMapper({
     u'\u0625': u'\u0627',
     u'\u0623': u'\u0627',
