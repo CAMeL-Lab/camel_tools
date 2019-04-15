@@ -209,6 +209,11 @@ class CharMapper(object):
                 ('Expected a Unicode string or None value for default, got {} '
                  'instead.').format(type(default)))
 
+    def __call__(self, s):
+        """Alias for :func:`CharMapper.map_string`.
+        """
+        return self.map_string(s)
+
     @staticmethod
     def mapper_from_json(fpath):
         """Creates a :obj:`CharMapper` instance from a JSON file.

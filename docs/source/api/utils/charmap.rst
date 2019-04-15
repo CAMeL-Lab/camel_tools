@@ -9,6 +9,7 @@ Classes
 
 .. autoclass:: camel_tools.utils.charmap.CharMapper
    :members:
+   :special-members: __call__
 
 .. autoclass:: camel_tools.utils.charmap.InvalidCharMapKeyError
 
