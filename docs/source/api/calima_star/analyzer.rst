@@ -10,6 +10,9 @@ Globals
 Classes
 -------
 
+.. autoclass:: camel_tools.calima_star.analyzer.AnalyzedWord
+   :members:
+
 .. autoclass:: camel_tools.calima_star.analyzer.CalimaStarAnalyzer
    :members:
 

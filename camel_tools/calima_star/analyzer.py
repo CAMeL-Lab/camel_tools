@@ -27,7 +27,7 @@
 
 from __future__ import absolute_import
 
-import collections
+from collections import deque, namedtuple
 import copy
 import itertools
 import re
@@ -74,6 +74,18 @@ Does the following conversions:
 - 'ى' to 'ي'
 - 'ة' to 'ه'
 """
+
+
+class AnalyzedWord(namedtuple('AnalyzedWord', ['word', 'analyses'])):
+    """A named tuple containing a word and its analyses.
+
+    Attributes:
+        word (:obj:`str`): The analyzed word.
+
+        analyses (:obj:`list` of :obj:`dict`): List of analyses for **word**.
+            See :doc:`/reference/calima_star_features` for more information on
+            features and their values.
+    """
 
 
 def _is_digit(word):
@@ -174,7 +186,7 @@ class CalimaStarAnalyzer:
                            prefix_analyses,
                            stem_analyses,
                            suffix_analyses):
-        combined = collections.deque()
+        combined = deque()
 
         for p in itertools.product(prefix_analyses, stem_analyses):
             prefix_cat = p[0][0]
@@ -211,7 +223,7 @@ class CalimaStarAnalyzer:
                                    prefix_analyses,
                                    stem_analyses,
                                    suffix_analyses):
-        combined = collections.deque()
+        combined = deque()
 
         for p in itertools.product(prefix_analyses, stem_analyses):
             prefix_cat = p[0][0]
@@ -265,7 +277,7 @@ class CalimaStarAnalyzer:
         if word == '':
             return []
 
-        analyses = collections.deque()
+        analyses = deque()
         word_dediac = dediac_ar(word)
         word_normal = self._normalize(word_dediac)
 
@@ -361,10 +373,8 @@ class CalimaStarAnalyzer:
             words (:py:obj:`list` of :py:obj:`str`): List of words to analyze.
 
         Returns:
-            :obj:`list` of :obj:`list` of :obj:`dict`: The list of analyses for
-            each word in **words**.
-            See :doc:`/reference/calima_star_features` for more information on
-            features and their values.
+            :obj:`list` of :obj:`AnalyzedWord`: The list of analyses for each
+            word in **words**.
         '''
 
-        return list(map(lambda w: (w, self.analyze(w)), words))
+        return list(map(lambda w: AnalyzedWord(w, self.analyze(w)), words))
