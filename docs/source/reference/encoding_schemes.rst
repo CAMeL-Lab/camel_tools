@@ -106,9 +106,9 @@ and Habash-Soudi-Buckwalter (HSB) transliteration schemes.
      - d
    * - \\u0630
      - ذ
-     - *
+     - \*
      - V
-     - *
+     - \*
      - ð
    * - \\u0631
      - ر
