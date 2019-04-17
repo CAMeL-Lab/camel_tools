@@ -23,6 +23,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 """The CALIMA Star morphological analyzer, generator, and reinflector.
 
 Usage:
@@ -67,6 +68,7 @@ Options:
         Show version.
 """
 
+
 from __future__ import absolute_import
 
 import collections
@@ -85,7 +87,7 @@ from camel_tools.calima_star.generator import CalimaStarGenerator
 from camel_tools.calima_star.reinflector import CalimaStarReinflector
 from camel_tools.calima_star.errors import DatabaseError, AnalyzerError
 from camel_tools.calima_star.errors import GeneratorError, CalimaStarError
-from camel_tools.disambig.simple import simple_disambig
+from camel_tools.disambig.simple import SimpleDisambiguator
 
 
 __version__ = camelt.__version__
@@ -217,7 +219,11 @@ def _parse_reinflector_line(line):
 
 def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
     analyzer = CalimaStarAnalyzer(db, backoff)
+    disambig = None
     memoize_table = {} if cache else None
+
+    if num_disambig is not None:
+        disambig = SimpleDisambiguator(analyzer)
 
     line = force_unicode(fin.readline())
 
@@ -239,9 +245,13 @@ def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
                 fout.write('\n\n')
             else:
                 analyses = analyzer.analyze(token)
+
                 if num_disambig is not None:
-                    dambg = simple_disambig([(token, analyses)], num_disambig)
-                    analyses = dambg[0][1]
+                    dambg = disambig.disambiguate([token], num_disambig)
+                    analyses = [a.analysis for a in dambg[0].analyses]
+                else:
+                    analyses = analyzer.analyze(token)
+
                 serialized = _serialize_analyses(fout, token, analyses,
                                                  db.order)
 
@@ -472,9 +482,9 @@ def main():  # pragma: no cover
     except KeyboardInterrupt:
         sys.stderr.write('Exiting...\n')
         sys.exit(1)
-    except Exception:
-        sys.stderr.write('Error: An unknown error occurred.\n')
-        sys.exit(1)
+    # except Exception:
+    #     sys.stderr.write('Error: An unknown error occurred.\n')
+    #     sys.exit(1)
 
 
 if __name__ == '__main__':

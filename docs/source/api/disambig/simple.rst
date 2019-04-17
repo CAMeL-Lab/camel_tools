@@ -1,7 +1,10 @@
 camel_tools.disambig.simple
 ===========================
 
-Functions
----------
+.. automodule:: camel_tools.disambig.simple
 
-.. autofunction:: camel_tools.disambig.simple.simple_disambig
+Classes
+-------
+
+.. autoclass:: camel_tools.disambig.simple.SimpleDisambiguator
+   :members:

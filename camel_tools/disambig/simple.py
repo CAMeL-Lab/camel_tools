@@ -23,41 +23,52 @@
 # SOFTWARE.
 
 
-"""Contains a simple disambiguator function that ranks analyses based on their
+"""Contains a simple disambiguator class that ranks analyses based on their
 POS-Lex frequency.
 """
 
 
 from collections import deque
 
+from camel_tools.disambig.common import ScoredAnalysis, DisambiguatedWord
+from camel_tools.disambig.common import Disambiguator
 
-def _POS_LEX_SORT_KEY(analysis):
-    return analysis.get('pos_lex_freq', -99.0)
+
+def _get_pos_lex_freq(analysis):
+    freq = analysis.get('pos_lex_freq', -99.0)
+    if freq is None:
+        return -99
+    return freq
 
 
-def simple_disambig(analyses, top=1):
-    '''A simple disambiguation function that ranks analyses based on their
+class SimpleDisambiguator(Disambiguator):
+    '''A simple disambiguator function that ranks analyses based on their
     pos-lex frequencies.
 
     Args:
-        analyses (:obj:`list` of :obj:`tuple` of \
-        (:obj:`str`, :obj:`list` of :obj:`dict`)): List of word-analyses pairs.
-        top (:obj:`int`, optional): The number of top analyses to return.
-            Defaults to 1.
-
-    Returns:
-        :obj:`list` of :obj:`tuple` of (:obj:`str`, :obj:`dict`):
-        List of word-analyses pairs with the top most frquent analyses.
+        analyzer (:obj:`~camel_tools.calima_star.analazer.CalimaStarAnalyzer`):
+            Morphological analyzer used to generate the pos-lex frequencies.
     '''
 
-    if analyses is None:
-        return None
+    def __init__(self, analyzer):
+        self._analyzer = analyzer
 
-    top = max(1, int(top))
-    result = deque()
+    def disambiguate(self, sentence, top=1):
+        analyzed_words = self._analyzer.analyze_words(sentence)
+        result = deque()
 
-    for word, analysis in analyses:
-        sorted_analyses = sorted(analysis, key=_POS_LEX_SORT_KEY, reverse=True)
-        result.append((word, sorted_analyses[0:top]))
+        for word, analyses in analyzed_words:
+            probabilities = [10 ** _get_pos_lex_freq(a) for a in analyses]
+            max_prob = max(probabilities)
 
-    return list(result)
+            scored_analyses = [ScoredAnalysis(p / max_prob, a)
+                               for a, p in zip(analyses, probabilities)]
+
+            scored_analyses.sort(key=lambda w: w.score, reverse=True)
+
+            if top < 1:
+                result.append(DisambiguatedWord(word, scored_analyses))
+            else:
+                result.append(DisambiguatedWord(word, scored_analyses[0:top]))
+
+        return list(result)

@@ -20,6 +20,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""This sub-module contains classes and functions for morphological
-disambiguation.
+"""This module contains classes and functions for morphological disambiguation.
 """
