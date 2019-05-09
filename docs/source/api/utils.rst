@@ -9,4 +9,5 @@ camel_tools.utils
    utils/charmap
    utils/transliterate
    utils/dediac
+   utils/normalize
    utils/stringutils
