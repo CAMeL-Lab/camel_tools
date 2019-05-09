@@ -22,8 +22,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 """The morphological analyzer component of CALIMA Star.
 """
+
 
 from __future__ import absolute_import
 
@@ -31,6 +33,9 @@ from collections import deque, namedtuple
 import copy
 import itertools
 import re
+from threading import RLock
+
+from cachetools import LFUCache, cached
 
 from camel_tools.utils.charsets import UNICODE_PUNCT_SYMBOL_CHARSET
 from camel_tools.utils.charsets import AR_CHARSET, AR_DIAC_CHARSET
@@ -60,12 +65,13 @@ DEFAULT_NORMALIZE_MAP = CharMapper({
     u'\u0622': u'\u0627',
     u'\u0671': u'\u0627',
     u'\u0649': u'\u064a',
-    u'\u0629': u'\u0647'
+    u'\u0629': u'\u0647',
+    u'\u0640': u''
 })
 """:obj:`~camel_tools.utils.charmap.CharMapper`: The default character map used
 for normalization by :obj:`CalimaStarAnalyzer`.
 
-Does the following conversions:
+Removes the tatweel/kashida character and does the following conversions:
 
 - 'إ' to 'ا'
 - 'أ' to 'ا'
@@ -74,6 +80,10 @@ Does the following conversions:
 - 'ى' to 'ي'
 - 'ة' to 'ه'
 """
+
+
+_BACKOFF_TYPES = frozenset(['NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
+                            'ADD_PROP'])
 
 
 class AnalyzedWord(namedtuple('AnalyzedWord', ['word', 'analyses'])):
@@ -134,18 +144,22 @@ class CalimaStarAnalyzer:
             completely comprised of digits are considered numbers, otherwise,
             all words containing a digit are considered numbers. Defaults to
             `False`.
+        cache_size (:obj:`int`, optional): If greater than zero, then the
+            analyzer will cache the analyses for the **cache_Size** most
+            frequent words, otherwise no analyses will be cached.
 
     Raises:
         :obj:`~camel_tools.calima_star.errors.AnalyzerError`: If database is
             not an instance of
-            (:obj:`~camel_tools.calima_star.database.CalimaStarDB`):, if **db**
+            (:obj:`~camel_tools.calima_star.database.CalimaStarDB`), if **db**
             does not support analysis, or if **backoff** is not a valid backoff
             mode.
     """
 
     def __init__(self, db, backoff='NONE',
                  norm_map=DEFAULT_NORMALIZE_MAP,
-                 strict_digit=False):
+                 strict_digit=False,
+                 cache_size=0):
         if not isinstance(db, CalimaStarDB):
             raise AnalyzerError('DB is not an instance of CalimaStarDB')
         if not db.flags.analysis:
@@ -157,24 +171,26 @@ class CalimaStarAnalyzer:
         self._norm_map = DEFAULT_NORMALIZE_MAP
         self._strict_digit = strict_digit
 
-        if backoff == 'NONE':
-            self._backoff_condition = None
-            self._backoff_action = None
-        elif backoff == 'NOAN_ALL':
-            self._backoff_condition = 'NOAN'
-            self._backoff_action = 'ALL'
-        elif backoff == 'NOAN_PROP':
-            self._backoff_condition = 'NOAN'
-            self._backoff_action = 'PROP'
-        elif backoff == 'ADD_ALL':
-            self._backoff_condition = 'ADD'
-            self._backoff_action = 'ALL'
-        elif backoff == 'ADD_PROP':
-            self._backoff_condition = 'ADD'
-            self._backoff_action = 'PROP'
+        if backoff in _BACKOFF_TYPES:
+            if backoff == 'NONE':
+                self._backoff_condition = None
+                self._backoff_action = None
+            else:
+                backoff_toks = backoff.split('_')
+                self._backoff_condition = backoff_toks[0]
+                self._backoff_action = backoff_toks[1]
         else:
             raise AnalyzerError('Invalid backoff mode {}'.format(
                 repr(backoff)))
+
+        if isinstance(cache_size, int):
+            if cache_size > 0:
+                cache = LFUCache(cache_size)
+                self.analyze = cached(cache, lock=RLock())(self.analyze)
+
+        else:
+            raise AnalyzerError('Invalid cache size {}'.format(
+                                repr(cache_size)))
 
     def _normalize(self, word):
         if self._norm_map is None:

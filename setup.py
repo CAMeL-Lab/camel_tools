@@ -67,7 +67,8 @@ with open(README_FILE, 'r') as fh:
 INSTALL_REQUIRES = [
     'future',
     'six',
-    'docopt'
+    'docopt',
+    'cachetools'
 ]
 
 setup(
@@ -81,7 +82,8 @@ setup(
               'camel_tools.cli',
               'camel_tools.utils',
               'camel_tools.calima_star',
-              'camel_tools.disambig'],
+              'camel_tools.disambig',
+              'camel_tools.tokenizers'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
         'camel_tools.calima_star': ['databases/*/*.db', 'databases/*/LICENSE']

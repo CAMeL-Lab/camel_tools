@@ -218,9 +218,11 @@ def _parse_reinflector_line(line):
 
 
 def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
-    analyzer = CalimaStarAnalyzer(db, backoff)
+    if cache:
+        analyzer = CalimaStarAnalyzer(db, backoff, cache_size=1024)
+    else:
+        analyzer = CalimaStarAnalyzer(db, backoff)
     disambig = None
-    memoize_table = {} if cache else None
 
     if num_disambig is not None:
         disambig = SimpleDisambiguator(analyzer)
@@ -236,14 +238,6 @@ def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
         tokens = _tokenize(line)
 
         for token in tokens:
-            if cache and token in memoize_table:
-                if six.PY3:
-                    fout.write(memoize_table[token])
-                else:
-                    fout.write(force_encoding(memoize_table[token]))
-
-                fout.write('\n\n')
-            else:
                 analyses = analyzer.analyze(token)
 
                 if num_disambig is not None:
@@ -254,9 +248,6 @@ def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
 
                 serialized = _serialize_analyses(fout, token, analyses,
                                                  db.order)
-
-                if cache:
-                    memoize_table[token] = serialized
 
                 if six.PY3:
                     fout.write(serialized)
@@ -482,9 +473,9 @@ def main():  # pragma: no cover
     except KeyboardInterrupt:
         sys.stderr.write('Exiting...\n')
         sys.exit(1)
-    # except Exception:
-    #     sys.stderr.write('Error: An unknown error occurred.\n')
-    #     sys.exit(1)
+    except Exception:
+        sys.stderr.write('Error: An unknown error occurred.\n')
+        sys.exit(1)
 
 
 if __name__ == '__main__':
