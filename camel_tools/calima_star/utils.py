@@ -176,7 +176,8 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
 
     if 'pattern' in db.compute_feats:
         result['pattern'] = u'{}{}{}'.format(prefix_feats.get('diac', ''),
-                                             stem_feats['pattern'],
+                                             stem_feats.get('pattern',
+                                             stem_feats.get('diac', '')),
                                              suffix_feats.get('diac', ''))
 
     for freq_feat in _FREQ_FEATS:
