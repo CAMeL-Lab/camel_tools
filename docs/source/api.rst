@@ -16,3 +16,4 @@ Python API Reference
    api/utils
    api/calima_star
    api/disambig
+   api/tokenizers
