@@ -58,6 +58,10 @@ class SimpleDisambiguator(Disambiguator):
         result = deque()
 
         for word, analyses in analyzed_words:
+            if len(analyses) == 0:
+                result.append(DisambiguatedWord(word, []))
+                continue
+
             probabilities = [10 ** _get_pos_lex_freq(a) for a in analyses]
             max_prob = max(probabilities)
 
