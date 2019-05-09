@@ -77,4 +77,24 @@ class Disambiguator(ABC):
         List of disambiguted words in **sentence**.
         """
 
-        raise NotImplementedError
+        return NotImplemented
+
+    @abstractmethod
+    def disambiguate_word(self, sentence, word_ndx, top=1):
+        """Disambiguate a word at a given index in a sentence.
+
+        Args:
+            sentence (:obj:`list` of :obj:`str`): list of words representing a
+                sentence.
+            word_ndx (:obj:`int`): the index of the word in **sentence** to
+                disambiguate.
+            top (:obj:`int`, optional): The number of top analyses to return.
+                If set to zero or less, then all analyses are returned.
+                Defaults to 1.
+
+        Returns:
+        :obj:`~camel_tools.disambig.common.DisambiguatedWord`: The
+        disambiguated word at index **word_ndx** in **sentence**.
+        """
+
+        return NotImplemented

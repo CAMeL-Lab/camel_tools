@@ -8,4 +8,4 @@ camel_tools.disambig
    :caption: Modules:
 
    disambig/common
-   disambig/simple
+   disambig/mle

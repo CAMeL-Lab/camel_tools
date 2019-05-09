@@ -54,7 +54,7 @@ Options:
         Cache computed analyses (only in analyze mode).
   -D DISAMBIG --disambig=DISAMBIG
         Disambiguate analyses using pos-lex frequency showing only the top
-        DISAMBIG analyses. DISAMBIG should be non-zero positive integer.
+        DISAMBIG analyses. DISAMBIG should be a non-zero positive integer.
   -d DATABASE --db=DATABASE
         CalimaStar database to use. DATABASE could be the name of a builtin
         database or a path to a database file. [default: almor-msa]
@@ -87,7 +87,7 @@ from camel_tools.calima_star.generator import CalimaStarGenerator
 from camel_tools.calima_star.reinflector import CalimaStarReinflector
 from camel_tools.calima_star.errors import DatabaseError, AnalyzerError
 from camel_tools.calima_star.errors import GeneratorError, CalimaStarError
-from camel_tools.disambig.simple import SimpleDisambiguator
+from camel_tools.disambig.mle import MLEDisambiguator
 
 
 __version__ = camelt.__version__
@@ -160,13 +160,14 @@ def _serialize_analyses(fout, word, analyses, order, generation=False):
     if len(analyses) == 0:
         buff.append(u'NO_ANALYSIS')
     else:
-        sub_buff = set()
+        sub_buff = collections.OrderedDict()
         for a in analyses:
             output = u' '.join([u'{}:{}'.format(force_unicode(f),
                                                 force_unicode(str(a[f])))
                                 for f in order if f in a])
-            sub_buff.add(output)
-        buff.extend(sub_buff)
+            if output not in sub_buff:
+                sub_buff[output] = True
+        buff.extend(sub_buff.keys())
 
     return u'\n'.join(buff)
 
@@ -225,7 +226,7 @@ def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
     disambig = None
 
     if num_disambig is not None:
-        disambig = SimpleDisambiguator(analyzer)
+        disambig = MLEDisambiguator(analyzer)
 
     line = force_unicode(fin.readline())
 
