@@ -25,19 +25,19 @@ All these features have a closed set of possible values as described below.
   * **na** - Not applicable
   * **u** - Undefined
 
-.. * **form_gen** - Form gender
+* **form_gen** - Form gender
 
-..   * **f** - Feminine
-..   * **m** - Masculine
-..   * **na** - Not applicable
+  * **f** - Feminine
+  * **m** - Masculine
+  * **na** - Not applicable
 
-.. * **form_num** - Form number
+* **form_num** - Form number
 
-..   * **s** - Singular
-..   * **d** - Dual
-..   * **p** - Plural
-..   * **na** - Not applicable
-..   * **u** - Undefined
+  * **s** - Singular
+  * **d** - Dual
+  * **p** - Plural
+  * **na** - Not applicable
+  * **u** - Undefined
 
 * **gen** - Gender
 
@@ -69,6 +69,7 @@ All these features have a closed set of possible values as described below.
   * **na** - Not applicable
 
 * **rat** - Rationality
+
   * **n** - No (irrational)
   * **y** - Yes (rational)
   * **na** - Not applicable
@@ -249,67 +250,40 @@ Lexical Features
 
 * **diac** - Diacritized word
 * **lex** - Lemma
-
-.. * **root** - Traditional Arabic root consonants
-.. * **atbtok** - ATB tokenization
-
-..   * **None** - No tokenization
+* **root** - Traditional Arabic root consonants
+* **atbtok** - ATB tokenization
+* **d3tok** - D3 tokenization
 
 .. * **atbseg** - ATB segmentation
-
-..   * **None** - No segmentation
-
 .. * **d1tok** - D1 tokenization
-
-..   * **None** - No tokenization
-
 .. * **d1seg** - D1 segmentation
-
-..   * **None** - No segmentation
-
 .. * **d2tok** - D2 tokenization
-
-..   * **None** - No tokenization
-
 .. * **d2seg** - D2 segmentation
-
-..   * **None** - No segmentation
-
-.. * **d3tok** - D3 tokenization
-
-..   * **None** - No tokenization
-
 .. * **d3seg** - D3 segmentation
-
-..   * **None** - No segmentation
 
 Other Features
 ^^^^^^^^^^^^^^
 
 * **bw** - Buckwalter POS tag
 
-  * **None** - No Buckwalter POS tag
+* **caphi** - CAPHI phonological representation
 
-.. * **caphi** - CAPHI phonological representation
+  * **None** - No CAPHI representation
+  * CAPHI phonological representation using underscore as a seperatore (instead
+    of white space).
+    `See here <https://sites.google.com/a/nyu.edu/coda/phonology-reference>`_ for
+    more information.
 
-..   * **None** - No CAPHI representation
-..   * CAPHI phonological representation using underscore as a seperatore (instead
-..     of white space).
-..     `See here <https://sites.google.com/a/nyu.edu/coda/phonology-reference>`_ for
-..     more information.
-
-.. * **catib6** - CATiB6 POS tag
-
-..   * **None** - No CATiB6 POS tag
+* **catib6** - CATiB6 POS tag
 
 * **gloss** - Concatinated English gloss
 
   * Semicolon seperated glosses of a word if it is in the lexicon.
   * The word itself if a word is foreign, punctuation, or a digit.
 
-.. * **pattern** - Templatic pattern
+* **pattern** - Templatic pattern
 
-..   * **None** - No templatic pattern
+  * **None** - No templatic pattern
 
 * **source** - Source of generated analysis
 
@@ -320,24 +294,22 @@ Other Features
   * **digit** - Digital number
   * **backoff** - Backoff analysis
 
-.. * **ud** - Universal Dependencies POS tag
+* **ud** - Universal Dependencies POS tag
 
-..   * **None** - No Universal Dependencies POS tag
+* **pos_freq** - Log POS frequency
 
-.. * **pos_freq** - Log POS frequency
+  * **None** - No frequency
+  * The natural log (base 10) of the frequency of the associated **pos** value
+    in the database.
 
-..   * **None** - No frequency
-..   * The natural log of the frequency of the associated **pos** value in the
-..     database.
+* **lex_freq** - Log lemma frequency
 
-.. * **lex_freq** - Log lemma frequency
+  * **None** - No frequency
+  * The natural log (base 10) of the frequency of the associated **lex** value
+    in the database.
 
-..   * **None** - No frequency
-..   * The natural log of the frequency of the associated **lex** value in the
-..     database.
+* **pos_lex_freq** - Log POS-lemma frequency
 
-.. * **pos_lex_freq** - Log POS-lemma frequency
-
-..   * **None** - No frequency
-..   * The natural log of the frequency of the associated **pos**\ -\ **lex** pair
-..     values in the database.
+  * **None** - No frequency
+  * The natural log (base 10) of the frequency of the associated
+    **pos**\ -\ **lex** pair values in the database.
