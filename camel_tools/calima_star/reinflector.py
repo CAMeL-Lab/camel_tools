@@ -45,7 +45,8 @@ _IGNORED_FEATS = frozenset(['diac', 'lex', 'bw', 'gloss', 'source', 'stem',
                             'stemcat', 'lmm', 'dediac', 'caphi', 'catib6',
                             'ud', 'd3seg', 'atbseg', 'd2seg', 'd1seg', 'd1tok',
                             'd2tok', 'atbtok', 'd3tok', 'root', 'pattern',
-                            'freq', 'POS_prob', 'stemgloss'])
+                            'freq', 'pos_freq', 'lex_freq', 'pos_lex_freq',
+                            'stemgloss'])
 _SPECIFIED_FEATS = frozenset(['form_gen', 'form_num'])
 _CLITIC_IGNORED_FEATS = frozenset(['stt', 'cas', 'mod'])
 _FILTER_FEATS = frozenset(['pos', 'lex'])
