@@ -37,6 +37,7 @@ _ALEF_NORMALIZE_XMLBW_RE = re.compile(u'[IO{|]')
 _ALEF_NORMALIZE_HSB_RE = re.compile(u'[\u0102\u00c2\u00c4\u0100]')
 _ALEF_NORMALIZE_AR_RE = re.compile(u'[\u0625\u0623\u0671\u0622]')
 
+
 def normalize_unicode(s, compatibility=True):
     """Normalize Unicode strings into their canonically composed form or
     (i.e. characters that can be written as a combination of unicode characters
