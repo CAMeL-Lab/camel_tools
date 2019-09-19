@@ -142,36 +142,42 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
             result[stem_feat] = prefix_feat_val
 
     for join_feat in _JOIN_FEATS:
-        feat_vals = [
-            prefix_feats.get(join_feat, None),
-            stem_feats.get(join_feat, None),
-            suffix_feats.get(join_feat, None)
-        ]
-        result[join_feat] = u'+'.join([fv for fv in feat_vals
-                                       if fv is not None and fv != ''])
+        if join_feat in db.defines:
+            feat_vals = [
+                prefix_feats.get(join_feat, None),
+                stem_feats.get(join_feat, None),
+                suffix_feats.get(join_feat, None)
+            ]
+            result[join_feat] = u'+'.join([fv for fv in feat_vals
+                                           if fv is not None and fv != ''])
 
     for concat_feat in _CONCAT_FEATS:
-        result[concat_feat] = u'{}+{}+{}'.format(
-            prefix_feats.get(concat_feat, ''),
-            stem_feats.get(concat_feat, ''),
-            suffix_feats.get(concat_feat, ''))
+        if concat_feat in db.defines:
+            result[concat_feat] = u'{}+{}+{}'.format(
+                prefix_feats.get(concat_feat, ''),
+                stem_feats.get(concat_feat, ''),
+                suffix_feats.get(concat_feat, ''))
 
     for concat_feat in _CONCAT_FEATS_NONE:
-        result[concat_feat] = u'{}{}{}'.format(
-            prefix_feats.get(concat_feat, ''),
-            stem_feats.get(concat_feat, stem_feats.get('diac', '')),
-            suffix_feats.get(concat_feat, ''))
+        if concat_feat in db.defines:
+            result[concat_feat] = u'{}{}{}'.format(
+                prefix_feats.get(concat_feat, ''),
+                stem_feats.get(concat_feat, stem_feats.get('diac', '')),
+                suffix_feats.get(concat_feat, ''))
 
     result['stem'] = stem_feats['diac']
     result['stemgloss'] = stem_feats.get('gloss', '')
+
     result['diac'] = normalize_tanwyn(rewrite_diac(result['diac']),
                                       diac_mode)
-    result['caphi'] = rewrite_caphi(result.get('caphi', ''))
 
-    if result['gen'] == '-':
+    if 'caphi' in db.defines:
+        result['caphi'] = rewrite_caphi(result.get('caphi', ''))
+
+    if 'form_gen' in db.defines and result['gen'] == '-':
         result['gen'] = result['form_gen']
 
-    if result['num'] == '-':
+    if 'form_num' in db.defines and result['num'] == '-':
         result['num'] = result['form_num']
 
     if 'pattern' in db.compute_feats:
@@ -181,6 +187,7 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
                                              suffix_feats.get('diac', ''))
 
     for freq_feat in _FREQ_FEATS:
-        result[freq_feat] = float(result.get(freq_feat, -99.0))
+        if freq_feat in db.defines:
+            result[freq_feat] = float(result.get(freq_feat, -99.0))
 
     return result
