@@ -29,14 +29,20 @@
 
 import re
 import unicodedata
-
+from camel_tools.utils.charsets import AR_CHARSET, BW_CHARSET
+from camel_tools.utils.charsets import SAFEBW_CHARSET, XMLBW_CHARSET
+from camel_tools.utils.charsets import HSB_CHARSET
 
 _ALEF_NORMALIZE_BW_RE = re.compile(u'[<>{|]')
 _ALEF_NORMALIZE_SAFEBW_RE = re.compile(u'[IOLM]')
 _ALEF_NORMALIZE_XMLBW_RE = re.compile(u'[IO{|]')
 _ALEF_NORMALIZE_HSB_RE = re.compile(u'[\u0102\u00c2\u00c4\u0100]')
 _ALEF_NORMALIZE_AR_RE = re.compile(u'[\u0625\u0623\u0671\u0622]')
-_ELONGATION_REMOVAL_RE = re.compile(r'(.)\1{2,}')
+_ELONG_AR_RE = re.compile(u'([' + u''.join(AR_CHARSET) + u'])\\1{2,}')
+_ELONG_BW_RE = re.compile(u'([' + u''.join(BW_CHARSET) + u'])\\1{2,}')
+_ELONG_SAFEBW_RE = re.compile(u'([' + u''.join(SAFEBW_CHARSET) + u'])\\1{2,}')
+_ELONG_XMLBW_RE = re.compile(u'([' + u''.join(XMLBW_CHARSET) + u'])\\1{2,}')
+_ELONG_HSB_RE = re.compile(u'([' + u''.join(HSB_CHARSET) + u'])\\1{2,}')
 
 def normalize_unicode(s, compatibility=True):
     """Normalize Unicode strings into their canonically composed form or
@@ -61,7 +67,7 @@ def normalize_unicode(s, compatibility=True):
 
 
 def normalize_alef_maksura_bw(s):
-    """Normalize all occurences of Alef Maksura characters to a Yeh character
+    """Normalize all occurrences of Alef Maksura characters to a Yeh character
     in a Buckwalter encoded string.
 
     Args:
@@ -75,7 +81,7 @@ def normalize_alef_maksura_bw(s):
 
 
 def normalize_alef_maksura_safebw(s):
-    """Normalize all occurences of Alef Maksura characters to a Yeh character
+    """Normalize all occurrences of Alef Maksura characters to a Yeh character
     in a Safe Buckwalter encoded string.
 
     Args:
@@ -89,7 +95,7 @@ def normalize_alef_maksura_safebw(s):
 
 
 def normalize_alef_maksura_xmlbw(s):
-    """Normalize all occurences of Alef Maksura characters to a Yeh character
+    """Normalize all occurrences of Alef Maksura characters to a Yeh character
     in a XML Buckwalter encoded string.
 
     Args:
@@ -103,7 +109,7 @@ def normalize_alef_maksura_xmlbw(s):
 
 
 def normalize_alef_maksura_hsb(s):
-    """Normalize all occurences of Alef Maksura characters to a Yeh character
+    """Normalize all occurrences of Alef Maksura characters to a Yeh character
     in a Habash-Soudi-Buckwalter encoded string.
 
     Args:
@@ -117,7 +123,7 @@ def normalize_alef_maksura_hsb(s):
 
 
 def normalize_alef_maksura_ar(s):
-    """Normalize all occurences of Alef Maksura characters to a Yeh character
+    """Normalize all occurrences of Alef Maksura characters to a Yeh character
     in an Arabic string.
 
     Args:
@@ -131,7 +137,7 @@ def normalize_alef_maksura_ar(s):
 
 
 def normalize_teh_marbuta_bw(s):
-    """Normalize all occurences of Teh Marbuta characters to a Heh character
+    """Normalize all occurrences of Teh Marbuta characters to a Heh character
     in a Buckwalter encoded string.
 
     Args:
@@ -145,7 +151,7 @@ def normalize_teh_marbuta_bw(s):
 
 
 def normalize_teh_marbuta_safebw(s):
-    """Normalize all occurences of Teh Marbuta characters to a Heh character
+    """Normalize all occurrences of Teh Marbuta characters to a Heh character
     in a Safe Buckwalter encoded string.
 
     Args:
@@ -159,7 +165,7 @@ def normalize_teh_marbuta_safebw(s):
 
 
 def normalize_teh_marbuta_xmlbw(s):
-    """Normalize all occurences of Teh Marbuta characters to a Heh character
+    """Normalize all occurrences of Teh Marbuta characters to a Heh character
     in a XML Buckwalter encoded string.
 
     Args:
@@ -173,7 +179,7 @@ def normalize_teh_marbuta_xmlbw(s):
 
 
 def normalize_teh_marbuta_hsb(s):
-    """Normalize all occurences of Teh Marbuta characters to a Heh character
+    """Normalize all occurrences of Teh Marbuta characters to a Heh character
     in a Habash-Soudi-Buckwalter encoded string.
 
     Args:
@@ -187,7 +193,7 @@ def normalize_teh_marbuta_hsb(s):
 
 
 def normalize_teh_marbuta_ar(s):
-    """Normalize all occurences of Teh Marbuta characters to a Heh character
+    """Normalize all occurrences of Teh Marbuta characters to a Heh character
     in an Arabic string.
 
     Args:
@@ -270,9 +276,9 @@ def normalize_alef_ar(s):
     return _ALEF_NORMALIZE_AR_RE.sub(u'\u0627', s)
 
 
-def remove_elongation(s):
-    """Removes the elongated (duplicated) characters from an 
-    Arabic String.
+def remove_elongation_ar(s):
+    """Removes the elongated characters (more than two repeated) 
+    from an Arabic String.
 
     Args:
         s (:obj:`str`): The string to be normalized.
@@ -281,4 +287,60 @@ def remove_elongation(s):
         :obj:`str`: The normalized string.
     """
 
-    return _ELONGATION_REMOVAL_RE.sub(r'\1', s)
+    return _ELONG_AR_RE.sub('\\1', s)
+
+
+def remove_elongation_bw(s):
+    """Removes the elongated characters (more than two repeated) 
+    from a Buckwalter encoded string.
+
+    Args:
+        s (:obj:`str`): The string to be normalized.
+
+    Returns:
+        :obj:`str`: The normalized string.
+    """
+
+    return _ELONG_BW_RE.sub('\\1', s)
+
+
+def remove_elongation_safebw(s):
+    """Removes the elongated characters (more than two repeated) 
+    from a Safe Buckwalter encoded string.
+
+    Args:
+        s (:obj:`str`): The string to be normalized.
+
+    Returns:
+        :obj:`str`: The normalized string.
+    """
+
+    return _ELONG_SAFEBW_RE.sub('\\1', s)
+
+
+def remove_elongation_xmlbw(s):
+    """Removes the elongated characters (more than two repeated) 
+    from an XML Buckwalter encoded string.
+
+    Args:
+        s (:obj:`str`): The string to be normalized.
+
+    Returns:
+        :obj:`str`: The normalized string.
+    """
+
+    return _ELONG_XMLBW_RE.sub('\\1', s)
+
+
+def remove_elongation_hsb(s):
+    """Removes the elongated characters (more than two repeated) 
+    from an Habash-Soudi-Buckwalter encoded string.
+
+    Args:
+        s (:obj:`str`): The string to be normalized.
+
+    Returns:
+        :obj:`str`: The normalized string.
+    """
+
+    return _ELONG_HSB_RE.sub('\\1', s)
