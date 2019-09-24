@@ -276,71 +276,120 @@ def normalize_alef_ar(s):
     return _ALEF_NORMALIZE_AR_RE.sub(u'\u0627', s)
 
 
-def remove_repetitions_ar(s):
-    """Removes the repeated characters (more than two repeated) 
-    from an Arabic string.
+def remove_repetitions_ar(s, policy=1):
+    """Reduces the repeated characters (more than two repeated) 
+    from an Arabic string to one or two characters based on the 
+    optional specified policy.
 
     Args:
         s (:obj:`str`): The string to be normalized.
+        policy (:obj:`int`, optional):
+            The reduction policy. If policy=`1` the repeated characters will
+            be reduced to `1` character. If policy=`2` the repeated characters
+            will be reduced to `2` characters. Defaults to `1`.
 
     Returns:
         :obj:`str`: The normalized string.
     """
 
-    return _ELONG_AR_RE.sub('\\1', s)
+    if policy == 1:
+        return _ELONG_AR_RE.sub(u'\\1', s)
+    elif policy == 2:
+        return _ELONG_AR_RE.sub(u'\\1\\1', s)
+    else:
+        raise ValueError("Policy value should be either 1 or 2!")
 
 
-def remove_repetitions_bw(s):
-    """Removes the repeated characters (more than two repeated) 
-    from a Buckwalter encoded string.
+def remove_repetitions_bw(s, policy=1):
+    """Reduces the repeated characters (more than two repeated) 
+    from a Buckwalter encoded string to one or two characters based on the 
+    optional specified policy.
 
     Args:
         s (:obj:`str`): The string to be normalized.
+        policy (:obj:`int`, optional):
+            The reduction policy. If policy=`1` the repeated characters will
+            be reduced to `1` character. If policy=`2` the repeated characters
+            will be reduced to `2` characters. Defaults to `1`.
 
     Returns:
         :obj:`str`: The normalized string.
     """
 
-    return _ELONG_BW_RE.sub('\\1', s)
+    if policy == 1:
+        return _ELONG_BW_RE.sub(u'\\1', s)
+    elif policy == 2:
+        return _ELONG_BW_RE.sub(u'\\1\\1', s)
+    else:
+        raise ValueError("Policy value should be either 1 or 2!")
 
-
-def remove_repetitions_safebw(s):
-    """Removes the repeated characters (more than two repeated) 
-    from a Safe Buckwalter encoded string.
+def remove_repetitions_safebw(s, policy=1):
+    """Reduces the repeated characters (more than two repeated)
+    from a Safe Buckwalter encoded string to one or two characters based on 
+    the optional specified policy.
 
     Args:
         s (:obj:`str`): The string to be normalized.
+        policy (:obj:`int`, optional):
+            The reduction policy. If policy=`1` the repeated characters will
+            be reduced to `1` character. If policy=`2` the repeated characters
+            will be reduced to `2` characters. Defaults to `1`.
 
     Returns:
         :obj:`str`: The normalized string.
     """
 
-    return _ELONG_SAFEBW_RE.sub('\\1', s)
+    if policy == 1:
+        return _ELONG_SAFEBW_RE.sub(u'\\1', s)
+    elif policy == 2:
+        return _ELONG_SAFEBW_RE.sub(u'\\1\\1', s)
+    else:
+        raise ValueError("Policy value should be either 1 or 2!")
 
 
-def remove_repetitions_xmlbw(s):
-    """Removes the repeated characters (more than two repeated) 
-    from an XML Buckwalter encoded string.
+def remove_repetitions_xmlbw(s, policy=1):
+    """Reduces the repeated characters (more than two repeated) 
+    from an XML Buckwalter encoded string to one or two characters based on 
+    the optional specified policy.
 
     Args:
         s (:obj:`str`): The string to be normalized.
+        policy (:obj:`int`, optional):
+            The reduction policy. If policy=`1` the repeated characters will
+            be reduced to `1` character. If policy=`2` the repeated characters
+            will be reduced to `2` characters. Defaults to `1`.
 
     Returns:
         :obj:`str`: The normalized string.
     """
 
-    return _ELONG_XMLBW_RE.sub('\\1', s)
+    if policy == 1:
+        return _ELONG_XMLBW_RE.sub(u'\\1', s)
+    elif policy == 2:
+        return _ELONG_XMLBW_RE.sub(u'\\1\\1', s)
+    else:
+        raise ValueError("Policy value should be either 1 or 2!")
 
 
-def remove_repetitions_hsb(s):
+def remove_repetitions_hsb(s, policy=1):
     """Removes the repeated characters (more than two repeated) 
-    from an Habash-Soudi-Buckwalter encoded string.
+    from an Habash-Soudi-Buckwalter encoded string to one or two characters 
+    based on the optional specified policy.
 
     Args:
         s (:obj:`str`): The string to be normalized.
+        policy (:obj:`int`, optional):
+            The reduction policy. If policy=`1` the repeated characters will
+            be reduced to `1` character. If policy=`2` the repeated characters
+            will be reduced to `2` characters. Defaults to `1`.
 
     Returns:
         :obj:`str`: The normalized string.
     """
 
-    return _ELONG_HSB_RE.sub('\\1', s)
+    if policy == 1:
+        return _ELONG_HSB_RE.sub(u'\\1', s)
+    elif policy == 2:
+        return _ELONG_HSB_RE.sub(u'\\1\\1', s)
+    else:
+        raise ValueError("Policy value should be either 1 or 2!")
