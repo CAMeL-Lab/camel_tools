@@ -276,9 +276,9 @@ def normalize_alef_ar(s):
     return _ALEF_NORMALIZE_AR_RE.sub(u'\u0627', s)
 
 
-def remove_elongation_ar(s):
-    """Removes the elongated characters (more than two repeated) 
-    from an Arabic String.
+def remove_repetitions_ar(s):
+    """Removes the repeated characters (more than two repeated) 
+    from an Arabic string.
 
     Args:
         s (:obj:`str`): The string to be normalized.
@@ -290,8 +290,8 @@ def remove_elongation_ar(s):
     return _ELONG_AR_RE.sub('\\1', s)
 
 
-def remove_elongation_bw(s):
-    """Removes the elongated characters (more than two repeated) 
+def remove_repetitions_bw(s):
+    """Removes the repeated characters (more than two repeated) 
     from a Buckwalter encoded string.
 
     Args:
@@ -304,8 +304,8 @@ def remove_elongation_bw(s):
     return _ELONG_BW_RE.sub('\\1', s)
 
 
-def remove_elongation_safebw(s):
-    """Removes the elongated characters (more than two repeated) 
+def remove_repetitions_safebw(s):
+    """Removes the repeated characters (more than two repeated) 
     from a Safe Buckwalter encoded string.
 
     Args:
@@ -318,8 +318,8 @@ def remove_elongation_safebw(s):
     return _ELONG_SAFEBW_RE.sub('\\1', s)
 
 
-def remove_elongation_xmlbw(s):
-    """Removes the elongated characters (more than two repeated) 
+def remove_repetitions_xmlbw(s):
+    """Removes the repeated characters (more than two repeated) 
     from an XML Buckwalter encoded string.
 
     Args:
@@ -332,8 +332,8 @@ def remove_elongation_xmlbw(s):
     return _ELONG_XMLBW_RE.sub('\\1', s)
 
 
-def remove_elongation_hsb(s):
-    """Removes the elongated characters (more than two repeated) 
+def remove_repetitions_hsb(s):
+    """Removes the repeated characters (more than two repeated) 
     from an Habash-Soudi-Buckwalter encoded string.
 
     Args:
