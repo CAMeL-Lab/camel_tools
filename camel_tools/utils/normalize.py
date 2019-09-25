@@ -38,11 +38,11 @@ _ALEF_NORMALIZE_SAFEBW_RE = re.compile(u'[IOLM]')
 _ALEF_NORMALIZE_XMLBW_RE = re.compile(u'[IO{|]')
 _ALEF_NORMALIZE_HSB_RE = re.compile(u'[\u0102\u00c2\u00c4\u0100]')
 _ALEF_NORMALIZE_AR_RE = re.compile(u'[\u0625\u0623\u0671\u0622]')
-_ELONG_AR_RE = re.compile(u'([' + u''.join(AR_CHARSET) + u'])\\1{2,}')
-_ELONG_BW_RE = re.compile(u'([' + u''.join(BW_CHARSET) + u'])\\1{2,}')
-_ELONG_SAFEBW_RE = re.compile(u'([' + u''.join(SAFEBW_CHARSET) + u'])\\1{2,}')
-_ELONG_XMLBW_RE = re.compile(u'([' + u''.join(XMLBW_CHARSET) + u'])\\1{2,}')
-_ELONG_HSB_RE = re.compile(u'([' + u''.join(HSB_CHARSET) + u'])\\1{2,}')
+_REPET_AR_RE = re.compile(u'([' + u''.join(AR_CHARSET) + u'])\\1{2,}')
+_REPET_BW_RE = re.compile(u'([' + u''.join(BW_CHARSET) + u'])\\1{2,}')
+_REPET_SAFEBW_RE = re.compile(u'([' + u''.join(SAFEBW_CHARSET) + u'])\\1{2,}')
+_REPET_XMLBW_RE = re.compile(u'([' + u''.join(XMLBW_CHARSET) + u'])\\1{2,}')
+_REPET_HSB_RE = re.compile(u'([' + u''.join(HSB_CHARSET) + u'])\\1{2,}')
 
 def normalize_unicode(s, compatibility=True):
     """Normalize Unicode strings into their canonically composed form or
@@ -293,11 +293,11 @@ def remove_repetitions_ar(s, policy=1):
     """
 
     if policy == 1:
-        return _ELONG_AR_RE.sub(u'\\1', s)
+        return _REPET_AR_RE.sub(u'\\1', s)
     elif policy == 2:
-        return _ELONG_AR_RE.sub(u'\\1\\1', s)
+        return _REPET_AR_RE.sub(u'\\1\\1', s)
     else:
-        raise ValueError("Policy value should be either 1 or 2!")
+        raise ValueError("Policy value should be either 1 or 2.")
 
 
 def remove_repetitions_bw(s, policy=1):
@@ -317,11 +317,11 @@ def remove_repetitions_bw(s, policy=1):
     """
 
     if policy == 1:
-        return _ELONG_BW_RE.sub(u'\\1', s)
+        return _REPET_BW_RE.sub(u'\\1', s)
     elif policy == 2:
-        return _ELONG_BW_RE.sub(u'\\1\\1', s)
+        return _REPET_BW_RE.sub(u'\\1\\1', s)
     else:
-        raise ValueError("Policy value should be either 1 or 2!")
+        raise ValueError("Policy value should be either 1 or 2.")
 
 def remove_repetitions_safebw(s, policy=1):
     """Reduces the repeated characters (more than two repeated)
@@ -340,11 +340,11 @@ def remove_repetitions_safebw(s, policy=1):
     """
 
     if policy == 1:
-        return _ELONG_SAFEBW_RE.sub(u'\\1', s)
+        return _REPET_SAFEBW_RE.sub(u'\\1', s)
     elif policy == 2:
-        return _ELONG_SAFEBW_RE.sub(u'\\1\\1', s)
+        return _REPET_SAFEBW_RE.sub(u'\\1\\1', s)
     else:
-        raise ValueError("Policy value should be either 1 or 2!")
+        raise ValueError("Policy value should be either 1 or 2.")
 
 
 def remove_repetitions_xmlbw(s, policy=1):
@@ -364,11 +364,11 @@ def remove_repetitions_xmlbw(s, policy=1):
     """
 
     if policy == 1:
-        return _ELONG_XMLBW_RE.sub(u'\\1', s)
+        return _REPET_XMLBW_RE.sub(u'\\1', s)
     elif policy == 2:
-        return _ELONG_XMLBW_RE.sub(u'\\1\\1', s)
+        return _REPET_XMLBW_RE.sub(u'\\1\\1', s)
     else:
-        raise ValueError("Policy value should be either 1 or 2!")
+        raise ValueError("Policy value should be either 1 or 2.")
 
 
 def remove_repetitions_hsb(s, policy=1):
@@ -388,8 +388,8 @@ def remove_repetitions_hsb(s, policy=1):
     """
 
     if policy == 1:
-        return _ELONG_HSB_RE.sub(u'\\1', s)
+        return _REPET_HSB_RE.sub(u'\\1', s)
     elif policy == 2:
-        return _ELONG_HSB_RE.sub(u'\\1\\1', s)
+        return _REPET_HSB_RE.sub(u'\\1\\1', s)
     else:
-        raise ValueError("Policy value should be either 1 or 2!")
+        raise ValueError("Policy value should be either 1 or 2.")
