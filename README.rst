@@ -100,3 +100,4 @@ Contributors
 
 * `Ossama Obeid <https://github.com/owo>`_
 * `Go Inoue <https://github.com/go-inoue>`_
+* `Bashar Alhafni <https://github.com/balhafni>`_
