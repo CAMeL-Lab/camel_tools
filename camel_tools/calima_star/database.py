@@ -189,9 +189,7 @@ class CalimaStarDB:
             feat = subtoks[0]
             val = ':'.join(subtoks[1:])
 
-            if val == 'na':
-                continue
-            elif val == '*':
+            if val == '*':
                 res[feat] = None
             else:
                 res[feat] = val

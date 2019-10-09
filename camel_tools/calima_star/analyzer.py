@@ -59,6 +59,11 @@ _IS_AR_RE = re.compile(u'^[' + re.escape(u''.join(AR_CHARSET)) + u']+$')
 # Identify No Analysis marker
 _NOAN_RE = re.compile(u'NOAN')
 
+_COPY_FEATS = frozenset(['gloss', 'atbtok', 'atbseg', 'd1tok', 'd1seg',
+                         'd2tok', 'd2seg', 'd3tok', 'd3seg'])
+
+_UNDEFINED_LEX_FEATS = frozenset(['root', 'pattern', 'caphi'])
+
 DEFAULT_NORMALIZE_MAP = CharMapper({
     u'\u0625': u'\u0627',
     u'\u0623': u'\u0627',
@@ -301,29 +306,94 @@ class CalimaStarAnalyzer:
                 (not self._strict_digit and _is_digit(word))):
             result = copy.copy(self._db.defaults['digit'])
             result['diac'] = word
+            result['stem'] = word
+            result['stemgloss'] = word
+            result['stemcat'] = None
             result['lex'] = word + '_0'
             result['bw'] = word + '/NOUN_NUM'
-            result['gloss'] = word
             result['source'] = 'digit'
+
+            for feat in _COPY_FEATS:
+                if feat in self._db.defines:
+                    result[feat] = word
+
+            for feat in _UNDEFINED_LEX_FEATS:
+                if feat in self._db.defines:
+                    result[feat] = 'DIGIT'
+
+            if 'catib6' in self._db.defines:
+                result['catib6'] = 'NOM'
+            if 'ud' in self._db.defines:
+                result['ud'] = 'NUM'
+
+            result['pos_freq'] = -99.0
+            result['lex_freq'] = -99.0
+            result['pos_lex_freq'] = -99.0
+
             analyses.append(result)
+
         elif _is_punc(word):
             result = copy.copy(self._db.defaults['punc'])
             result['diac'] = word
+            result['stem'] = word
+            result['stemgloss'] = word
+            result['stemcat'] = None
             result['lex'] = word + '_0'
             result['bw'] = word + '/PUNC'
-            result['gloss'] = word
             result['source'] = 'punc'
+
+            for feat in _COPY_FEATS:
+                if feat in self._db.defines:
+                    result[feat] = word
+
+            for feat in _UNDEFINED_LEX_FEATS:
+                if feat in self._db.defines:
+                    result[feat] = 'PUNC'
+
+            if 'catib6' in self._db.defines:
+                result['catib6'] = 'PNX'
+            if 'ud' in self._db.defines:
+                result['ud'] = 'PUNCT'
+
+            result['pos_freq'] = -99.0
+            result['lex_freq'] = -99.0
+            result['pos_lex_freq'] = -99.0
+
             analyses.append(result)
+
         elif _has_punc(word):
             pass
+
         elif not _is_ar(word):
             result = copy.copy(self._db.defaults['noun'])
             result['diac'] = word
+            result['stem'] = word
+            result['stemgloss'] = word
+            result['stemcat'] = None
             result['lex'] = word + '_0'
             result['bw'] = word + '/FOREIGN'
-            result['gloss'] = word
             result['source'] = 'foreign'
+
+            for feat in _COPY_FEATS:
+                if feat in self._db.defines:
+                    result[feat] = word
+
+            for feat in _UNDEFINED_LEX_FEATS:
+                if feat in self._db.defines:
+                    result[feat] = 'FOREIGN'
+
+            if 'catib6' in self._db.defines:
+                result['catib6'] = 'FOREIGN'
+
+            if 'ud' in self._db.defines:
+                result['ud'] = 'X'
+
+            result['pos_freq'] = -99.0
+            result['lex_freq'] = -99.0
+            result['pos_lex_freq'] = -99.0
+
             analyses.append(result)
+
         else:
             segments_gen = _segments_gen(word_normal, self._db.max_prefix_size,
                                          self._db.max_suffix_size)
