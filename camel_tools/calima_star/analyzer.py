@@ -265,9 +265,12 @@ class CalimaStarAnalyzer:
                             'NOUN_PROP' not in stem_feats['bw']):
                         continue
 
-                    stem_feats['bw'] = _NOAN_RE.sub(stem, stem_feats['bw'])
-                    stem_feats['diac'] = _NOAN_RE.sub(stem, stem_feats['diac'])
-                    stem_feats['lex'] = _NOAN_RE.sub(stem, stem_feats['lex'])
+                    stem_feats['bw'] = _NOAN_RE.sub(re.escape(stem),
+                                                    stem_feats['bw'])
+                    stem_feats['diac'] = _NOAN_RE.sub(re.escape(stem),
+                                                      stem_feats['diac'])
+                    stem_feats['lex'] = _NOAN_RE.sub(re.escape(stem),
+                                                     stem_feats['lex'])
 
                     merged = merge_features(self._db, prefix_feats, stem_feats,
                                             suffix_feats)
@@ -330,7 +333,7 @@ class CalimaStarAnalyzer:
             result['lex_freq'] = -99.0
             result['pos_lex_freq'] = -99.0
 
-            analyses.append(result)
+            return [result]
 
         elif _is_punc(word):
             result = copy.copy(self._db.defaults['punc'])
@@ -359,7 +362,7 @@ class CalimaStarAnalyzer:
             result['lex_freq'] = -99.0
             result['pos_lex_freq'] = -99.0
 
-            analyses.append(result)
+            return [result]
 
         elif _has_punc(word):
             pass
@@ -392,7 +395,7 @@ class CalimaStarAnalyzer:
             result['lex_freq'] = -99.0
             result['pos_lex_freq'] = -99.0
 
-            analyses.append(result)
+            return [result]
 
         else:
             segments_gen = _segments_gen(word_normal, self._db.max_prefix_size,
