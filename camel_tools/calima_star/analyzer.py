@@ -231,7 +231,7 @@ class CalimaStarAnalyzer:
                     merged['stemcat'] = stem_cat
 
                     merged_dediac = dediac_ar(merged['diac'])
-                    if word_dediac != merged_dediac:
+                    if word_dediac.replace(u'\u0640', '') != merged_dediac:
                         merged['source'] = 'spvar'
 
                     combined.append(merged)
