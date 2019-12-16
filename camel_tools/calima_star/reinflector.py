@@ -50,6 +50,8 @@ _IGNORED_FEATS = frozenset(['diac', 'lex', 'bw', 'gloss', 'source', 'stem',
 _SPECIFIED_FEATS = frozenset(['form_gen', 'form_num'])
 _CLITIC_IGNORED_FEATS = frozenset(['stt', 'cas', 'mod'])
 _FILTER_FEATS = frozenset(['pos', 'lex'])
+_ANY_FEATS = frozenset(['per', 'gen', 'num', 'cas', 'stt', 'vox', 'mod',
+                        'asp'])
 
 _LEMMA_SPLIT_RE = re.compile(u'-|_')
 
@@ -111,9 +113,11 @@ class CalimaStarReinflector(object):
         for feat in feats:
             if feat not in self._db.defines:
                 raise InvalidReinflectorFeature(feat)
-            elif (self._db.defines[feat] is not None and
-                  feats[feat] not in self._db.defines[feat]):
-                raise InvalidReinflectorFeatureValue(feat, feats[feat])
+            elif self._db.defines[feat] is not None:
+                if feat in _ANY_FEATS and feats[feat] == 'ANY':
+                    continue
+                elif feats[feat] not in self._db.defines[feat]:
+                    raise InvalidReinflectorFeatureValue(feat, feats[feat])
 
         has_clitics = False
         for feat in _CLITIC_FEATS:
@@ -147,7 +151,9 @@ class CalimaStarReinflector(object):
                     continue
                 else:
                     if feat in feats:
-                        if analysis[feat] != 'na':
+                        if feats[feat] == 'ANY':
+                            continue
+                        elif analysis[feat] != 'na':
                             generate_feats[feat] = feats[feat]
                         else:
                             is_valid = False
