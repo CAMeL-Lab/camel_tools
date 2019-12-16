@@ -28,26 +28,25 @@
 import copy
 import re
 
-# features which should be concatinated when generating analysis
+# eatures which should be concatinated when generating analysis
 _JOIN_FEATS = frozenset(['gloss', 'bw'])
 _CONCAT_FEATS = frozenset(['diac', 'pattern', 'caphi', 'catib6', 'ud'])
 _CONCAT_FEATS_NONE = frozenset(['d3tok', 'd3seg', 'atbseg', 'd2seg', 'd1seg',
                                 'd1tok', 'd2tok', 'atbtok'])
 _FREQ_FEATS = frozenset(['pos_freq', 'lex_freq', 'pos_lex_freq'])
 
-# Sun letters
-_REWRITE_DIAC_RE_1 = re.compile(u'^((\u0648\u064e|\u0641\u064e)?'
-                                u'(\u0628\u0650|\u0643\u064e)?\u0627\u0644)'
-                                u'\\+?'
-                                u'([\u062a\u062b\u062f\u0630\u0631\u0632\u0633'
-                                u'\u0634\u0635\u0636\u0637\u0638\u0644'
+# Tokenization schemes to which Sun letters and Fatha after Alif rewrite
+# rules apply
+_TOK_SCHEMES_1 = frozenset(['d1tok', 'd2tok', 'atbtok'])
+# Tokenization schemes to which only the Fatha after Alif rewrite rule apply
+_TOK_SCHEMES_2 = frozenset(['d3tok'])
+
+# Sun letters with definite article
+_REWRITE_DIAC_RE_1 = re.compile(u'#\\+*([\u062a\u062b\u062f\u0630\u0631\u0632'
+                                u'\u0633\u0634\u0635\u0636\u0637\u0638\u0644'
                                 u'\u0646])')
-# Sun letters
-_REWRITE_DIAC_RE_2 = re.compile(u'^((\u0648\u064e|\u0641\u064e)?'
-                                u'\u0644\u0650\u0644)\\+?'
-                                u'([\u062a\u062b\u062f\u0630\u0631\u0632\u0633'
-                                u'\u0634\u0635\u0636\u0637\u0638\u0644'
-                                u'\u0646])')
+# Moon letters with definite article
+_REWRITE_DIAC_RE_2 = re.compile(u'#\\+*')
 # Fatha after Alif
 _REWRITE_DIAC_RE_3 = re.compile(u'\u0627\\+?\u064e([\u0629\u062a])')
 # Hamza Wasl
@@ -103,8 +102,8 @@ def normalize_tanwyn(word, mode='AF'):
 
 
 def rewrite_diac(word):
-    word = _REWRITE_DIAC_RE_1.sub(u'\\1\\4\u0651', word)
-    word = _REWRITE_DIAC_RE_2.sub(u'\\1\\3\u0651', word)
+    word = _REWRITE_DIAC_RE_1.sub(u'\\1\u0651', word)
+    word = _REWRITE_DIAC_RE_2.sub(u'', word)
     word = _REWRITE_DIAC_RE_3.sub(u'\u0627\\1', word)
     word = _REWRITE_DIAC_RE_4.sub(u'\u0627', word)
     word = _REWRITE_DIAC_RE_5.sub(u'', word)
@@ -126,6 +125,21 @@ def rewrite_caphi(word):
     word = _REWRITE_CAPHI_RE_10.sub(u'_', word)
     word = _REWRITE_CAPHI_RE_11.sub(u'_', word)
     word = _REWRITE_CAPHI_RE_12.sub(u'', word)
+
+    return word
+
+
+def rewrite_tok_1(word):
+    word = _REWRITE_DIAC_RE_1.sub(u'\\1\u0651', word)
+    word = _REWRITE_DIAC_RE_2.sub(u'', word)
+    word = _REWRITE_DIAC_RE_3.sub(u'\u0627\\1', word)
+
+    return word
+
+
+def rewrite_tok_2(word):
+    word = _REWRITE_DIAC_RE_3.sub(u'\u0627\\1', word)
+
     return word
 
 
@@ -170,6 +184,14 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
 
     result['diac'] = normalize_tanwyn(rewrite_diac(result['diac']),
                                       diac_mode)
+
+    for feat in _TOK_SCHEMES_1:
+        if feat in db.defines:
+            result[feat] = rewrite_tok_1(result.get(feat, ''))
+
+    for feat in _TOK_SCHEMES_2:
+        if feat in db.defines:
+            result[feat] = rewrite_tok_2(result.get(feat, ''))
 
     if 'caphi' in db.defines:
         result['caphi'] = rewrite_caphi(result.get('caphi', ''))
