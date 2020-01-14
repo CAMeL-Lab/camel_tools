@@ -28,7 +28,8 @@ other strings) and custom exceptions raised by CharMapper.
 
 from __future__ import absolute_import
 
-from collections import deque, Mapping
+from collections import deque
+from collections.abc import Mapping
 import os
 import json
 
