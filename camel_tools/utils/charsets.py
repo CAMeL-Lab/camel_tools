@@ -39,6 +39,19 @@ UNICODE_SYMBOL_CHARSET = frozenset(
         unichr(x))[0] == 'S'])
 UNICODE_PUNCT_SYMBOL_CHARSET = UNICODE_PUNCT_CHARSET | UNICODE_SYMBOL_CHARSET
 
+UNICODE_LETTER_CHARSET = frozenset(
+    [unichr(x) for x in range(65536) if unicodedata.category(
+        unichr(x))[0] == 'L'])
+UNICODE_MARK_CHARSET = frozenset(
+    [unichr(x) for x in range(65536) if unicodedata.category(
+        unichr(x))[0] == 'M'])
+UNICODE_NUMBER_CHARSET = frozenset(
+    [unichr(x) for x in range(65536) if unicodedata.category(
+        unichr(x))[0] == 'N'])
+UNICODE_LETTER_MARK_NUMBER_CHARSET = (UNICODE_LETTER_CHARSET |
+                                      UNICODE_MARK_CHARSET |
+                                      UNICODE_NUMBER_CHARSET)
+
 AR_LETTERS_CHARSET = frozenset(u'\u0621\u0622\u0623\u0624\u0625\u0626\u0627'
                                u'\u0628\u0629\u062a\u062b\u062c\u062d\u062e'
                                u'\u062f\u0630\u0631\u0632\u0633\u0634\u0635'
