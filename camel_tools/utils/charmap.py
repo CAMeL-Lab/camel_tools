@@ -236,7 +236,7 @@ class CharMapper(object):
             :obj:`JSONDecodeError`: If `fpath` is not a valid JSON file.
         """
 
-        with open(fpath, 'r') as infile:
+        with open(fpath, 'r', encoding='utf-8') as infile:
             jsonstr = infile.read()
 
             # With Python 2, we need to force the JSON string to Unicode
