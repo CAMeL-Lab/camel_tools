@@ -265,12 +265,9 @@ class CalimaStarAnalyzer:
                             'NOUN_PROP' not in stem_feats['bw']):
                         continue
 
-                    stem_feats['bw'] = _NOAN_RE.sub(re.escape(stem),
-                                                    stem_feats['bw'])
-                    stem_feats['diac'] = _NOAN_RE.sub(re.escape(stem),
-                                                      stem_feats['diac'])
-                    stem_feats['lex'] = _NOAN_RE.sub(re.escape(stem),
-                                                     stem_feats['lex'])
+                    stem_feats['bw'] = _NOAN_RE.sub(stem, stem_feats['bw'])
+                    stem_feats['diac'] = _NOAN_RE.sub(stem, stem_feats['diac'])
+                    stem_feats['lex'] = _NOAN_RE.sub(stem, stem_feats['lex'])
 
                     merged = merge_features(self._db, prefix_feats, stem_feats,
                                             suffix_feats)
