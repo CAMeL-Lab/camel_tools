@@ -44,6 +44,7 @@ from camel_tools.utils.charmap import CharMapper
 from camel_tools.calima_star.database import CalimaStarDB
 from camel_tools.calima_star.errors import AnalyzerError
 from camel_tools.calima_star.utils import merge_features
+from camel_tools.calima_star.utils import simple_ar_to_caphi
 from camel_tools.utils.dediac import dediac_ar
 
 
@@ -268,6 +269,7 @@ class CalimaStarAnalyzer:
                     stem_feats['bw'] = _NOAN_RE.sub(stem, stem_feats['bw'])
                     stem_feats['diac'] = _NOAN_RE.sub(stem, stem_feats['diac'])
                     stem_feats['lex'] = _NOAN_RE.sub(stem, stem_feats['lex'])
+                    stem_feats['caphi'] = simple_ar_to_caphi(stem)
 
                     merged = merge_features(self._db, prefix_feats, stem_feats,
                                             suffix_feats)
