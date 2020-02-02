@@ -196,6 +196,12 @@ def rewrite_tok_2(word):
     return word
 
 
+def rewrite_pattern(word):
+    word = _REWRITE_DIAC_RE_2.sub(u'', word)
+
+    return word
+
+
 def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
     result = copy.copy(stem_feats)
 
@@ -260,6 +266,7 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
                                              stem_feats.get('pattern',
                                              stem_feats.get('diac', '')),
                                              suffix_feats.get('diac', ''))
+        result['pattern'] = rewrite_pattern(result['pattern'])
 
     for freq_feat in _FREQ_FEATS:
         if freq_feat in db.defines:
