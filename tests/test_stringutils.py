@@ -26,10 +26,6 @@
 Tests for camel_tools.utils.stringutils
 """
 
-from __future__ import absolute_import, print_function
-
-import six
-
 from camel_tools.utils.stringutils import isunicode
 
 
@@ -66,11 +62,7 @@ class TestIsUnicodeString(object):
         but not in Python 2.
         """
 
-        # In Python 3 strings are unicode encoded by default.
-        if six.PY3:
-            assert isunicode('Hello, world!')
-        else:
-            assert not isunicode('Hello, world!')
+        assert isunicode('Hello, world!')
 
     def test_isunicode_unicode(self):
         """Test that a unicode literal is a unicode string.

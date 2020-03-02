@@ -28,7 +28,7 @@ Tests for camel_tools.utils.charmap
 
 from __future__ import absolute_import, print_function
 
-from collections import Mapping
+from collections.abc import Mapping
 
 import pytest
 
@@ -39,14 +39,14 @@ from camel_tools.utils.charmap import BuiltinCharMapNotFoundError
 
 # A valid map used for testing CharMapper.map_string
 VALID_MAP = {
-    u'e': u'u',
-    u'h-m': u'*',
-    u'a-d': u'm',
-    u'٠': u'0',
-    u'١': u'1',
-    u'\u0662': u'2',
-    u'\u0663-\u0665': u'-',
-    u'٦-٩': u'+'
+    'e': 'u',
+    'h-m': '*',
+    'a-d': 'm',
+    '٠': '0',
+    '١': '1',
+    '\u0662': '2',
+    '\u0663-\u0665': '-',
+    '٦-٩': '+'
 }
 
 
@@ -125,36 +125,36 @@ class TestCharMapperInit(object):
         Exception.
         """
 
-        assert CharMapper({}, u'Hello')
+        assert CharMapper({}, 'Hello')
 
     def test_init_charmap_valid1(self):
         """Test that a valid charMap doesn't raise an Exception.
         """
 
-        assert CharMapper({u'a': u'Hello'})
+        assert CharMapper({'a': 'Hello'})
 
     def test_init_charmap_valid2(self):
         """Test that a valid charMap doesn't raise an Exception.
         """
 
-        assert CharMapper({u'a': None})
+        assert CharMapper({'a': None})
 
     def test_init_charmap_valid3(self):
         """Test that a valid charMap doesn't raise an Exception.
         """
 
-        assert CharMapper({u'a-f': u''})
+        assert CharMapper({'a-f': ''})
 
     def test_init_charmap_valid4(self):
         """Test that a valid charMap doesn't raise an Exception.
         """
 
-        assert CharMapper({u'a-f': u'', u'b': None}, u'Hello')
+        assert CharMapper({'a-f': '', 'b': None}, 'Hello')
 
     def test_init_charmap_valid5(self):
         """Test that a valid charMap doesn't raise an Exception.
         """
-        assert CharMapper({u'--a': u''})
+        assert CharMapper({'--a': ''})
 
     def test_init_charmap_invalid1(self):
         """Test that an invalid key (byte string) type in charMap raises a
@@ -162,7 +162,7 @@ class TestCharMapperInit(object):
         """
 
         with pytest.raises(TypeError):
-            CharMapper({b'a': u'Hello'})
+            CharMapper({b'a': 'Hello'})
 
     def test_init_charmap_invalid2(self):
         """Test that an invalid value type (byte string) for a valid key
@@ -170,7 +170,7 @@ class TestCharMapperInit(object):
         """
 
         with pytest.raises(TypeError):
-            CharMapper({u'a': b'Hello'})
+            CharMapper({'a': b'Hello'})
 
     def test_init_charmap_invalid3(self):
         """Test that an invalid value type (byte string) for an invalid key
@@ -179,7 +179,7 @@ class TestCharMapperInit(object):
         """
 
         with pytest.raises(InvalidCharMapKeyError):
-            CharMapper({u'c-a': b'Hello'})
+            CharMapper({'c-a': b'Hello'})
 
     def test_init_charmap_invalid4(self):
         """Test that an invalid value type (byte string) for an invalid key
@@ -188,7 +188,7 @@ class TestCharMapperInit(object):
         """
 
         with pytest.raises(InvalidCharMapKeyError):
-            CharMapper({u'cdsn': b'Hello'})
+            CharMapper({'cdsn': b'Hello'})
 
     def test_init_charmap_invalid5(self):
         """Test that an invalid key (neither a single Unicode character nor a
@@ -196,7 +196,7 @@ class TestCharMapperInit(object):
         """
 
         with pytest.raises(InvalidCharMapKeyError):
-            CharMapper({u'a-': u'Hello'})
+            CharMapper({'a-': 'Hello'})
 
     def test_init_charmap_invalid6(self):
         """Test that an invalid key (neither a single Unicode character nor a
@@ -204,7 +204,7 @@ class TestCharMapperInit(object):
         """
 
         with pytest.raises(InvalidCharMapKeyError):
-            CharMapper({u'a--': u'Hello'})
+            CharMapper({'a--': 'Hello'})
 
     def test_init_charpap_invalid7(self):
         """Test that an invalid key (neither a single Unicode character nor a
@@ -212,7 +212,7 @@ class TestCharMapperInit(object):
         """
 
         with pytest.raises(TypeError):
-            CharMapper({u'--a': b'Hello'})
+            CharMapper({'--a': b'Hello'})
 
 
 class TestCharMapperMapString(object):
@@ -234,7 +234,7 @@ class TestCharMapperMapString(object):
         """
 
         mapper = CharMapper(VALID_MAP)
-        assert mapper.map_string(u'') == u''
+        assert mapper.map_string('') == ''
 
     def test_mapstring_not_unicode(self):
         """Test that a non-unicode string causes the map_string method to raise
@@ -250,13 +250,13 @@ class TestCharMapperMapString(object):
         """
 
         mapper = CharMapper(VALID_MAP)
-        assert mapper.map_string(u'Hello, world!') == u'Hu**o, wor*m!'
+        assert mapper.map_string('Hello, world!') == 'Hu**o, wor*m!'
 
     def test_mapstring_arabic(self):
         """Test that a map_string properly maps an Arabic unicode string.
         """
         mapper = CharMapper(VALID_MAP)
-        assert mapper.map_string(u'٠١٢٣٤٥٦٧٨٩') == u'012---++++'
+        assert mapper.map_string('٠١٢٣٤٥٦٧٨٩') == '012---++++'
 
 
 class TestCharMapperBuiltinMapper(object):

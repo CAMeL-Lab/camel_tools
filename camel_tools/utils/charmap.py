@@ -33,10 +33,6 @@ from collections.abc import Mapping
 import os
 import json
 
-
-from builtins import range  # pylint: disable=W0622
-import six
-
 from .stringutils import isunicode
 
 
@@ -183,7 +179,7 @@ class CharMapper(object):
                                  type(charmap[key]))
                         )
                     for char in range(ord(key[0]), ord(key[2]) + 1):
-                        new_map[six.unichr(char)] = charmap[key]
+                        new_map[chr(char)] = charmap[key]
 
             # Otherwise, we have an invalid map key
             else:
@@ -238,11 +234,6 @@ class CharMapper(object):
 
         with open(fpath, 'r', encoding='utf-8') as infile:
             jsonstr = infile.read()
-
-            # With Python 2, we need to force the JSON string to Unicode
-            if six.PY2:  # pragma: no coverage
-                jsonstr = unicode(jsonstr)  # pylint: disable=E0602
-
             json_dict = json.loads(jsonstr)
 
         return CharMapper(
@@ -314,4 +305,4 @@ class CharMapper(object):
             else:
                 buff.append(transliteration)
 
-        return u''.join(buff)
+        return ''.join(buff)

@@ -4,7 +4,7 @@ Getting Started
 Installation
 ------------
 
-You will need Python 2.7 or Python 3.4 and above.
+You will need Python 3.4 and above.
 
 Using pip
 ^^^^^^^^^
