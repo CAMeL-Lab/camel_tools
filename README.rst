@@ -27,6 +27,8 @@ CAMeL Tools
 Introduction
 ------------
 
+**Note:** Due to the current COVID-19 situation, the 1.0 release of CAMeL Tools has been delayed. If you would like to receive an email notification when the release is ready, please fill out `this form <https://nyuad.nyu.edu/en/research/faculty-research/camel-lab.html>`_.
+
 CAMeL Tools is  suite of Arabic natural language processing tools developed by
 the
 `CAMeL Lab <https://nyuad.nyu.edu/en/research/faculty-research/camel-lab.html>`_
