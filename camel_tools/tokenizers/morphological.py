@@ -28,6 +28,7 @@
 
 
 from collections import deque
+from camel_tools.utils.dediac import dediac_ar
 
 
 _SCHEME_SET = frozenset(['atbtok', 'd3tok'])
@@ -45,12 +46,17 @@ class MorphologicalTokenizer(object):
         split (:obj:`bool`, optional): If set to True, then morphological
             tokens will be split into separate strings, otherwise they will be
             delimited by an underscore. Defaults to False.
+        diac (:obj:`bool`, optional): If set to True, then output tokens will
+            be diacritized, otherwise they will be undiacritized.
+            Defaults to False.
     """
 
-    def __init__(self, disambiguator, scheme='atbtok', split=False):
+    def __init__(self, disambiguator, scheme='atbtok', split=False,
+                 diac=False):
         self._disambiguator = disambiguator
         self._scheme = scheme
         self._split = split
+        self._diacf = lambda w: w if diac else dediac_ar(w)
 
     @classmethod
     def scheme_set(cls):
@@ -83,11 +89,11 @@ class MorphologicalTokenizer(object):
 
                 if tok is None:
                     tok = disambig_word.word
-                    result.append(tok)
+                    result.append(self._diacf(tok))
                 elif self._split:
-                    result.extend(tok.split('_'))
+                    result.extend(self._diacf(t) for t in [tok.split('_')])
                 else:
-                    result.append(tok)
+                    result.append(self._diacf(tok))
 
             else:
                 result.append(disambig_word.word)
