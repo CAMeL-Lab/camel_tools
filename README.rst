@@ -104,3 +104,6 @@ Contributors
 * `Go Inoue <https://github.com/go-inoue>`_
 * `Bashar Alhafni <https://github.com/balhafni>`_
 * `Salam Khalifa <https://github.com/slkh>`_
+* `Dima Taji <https://github.com/dima-taji>`_
+* `Nasser Zalmout <https://github.com/nzal>`_
+* `Nizar Habash <https://github.com/nizarhabash1>`_
