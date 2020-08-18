@@ -1,0 +1,34 @@
+{
+    "components": {
+        "MorphologyDB": {
+            "default": "almor-msa",
+            "datasets": {
+                "almor-msa": {
+                    "path": "morphology_db/almor-msa"
+                }
+            }
+        },
+        "MorphologyDisambigSimple": {
+            "default": "almor-msa",
+            "datasets": {
+                "path": ""
+            }
+        },
+        "DialectID": {
+            "defualt": "default",
+            "datasets": {
+                "default": {
+                    "path": "dialectid/default"
+                }
+            }
+        },
+        "SentimentAnalysis": {
+            "defualt": "default",
+            "datasets": {
+                "default": {
+                    "path": "sentiment_analysis/default"
+                }
+            }
+        }
+    } 
+}
