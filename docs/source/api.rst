@@ -17,3 +17,5 @@ Python API Reference
    api/calima_star
    api/disambig
    api/tokenizers
+   api/dialectid
+   api/sentiment

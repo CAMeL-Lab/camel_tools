@@ -66,7 +66,15 @@ INSTALL_REQUIRES = [
     'future',
     'six',
     'docopt',
-    'cachetools'
+    'cachetools',
+    'numpy',
+    'scipy',
+    'pandas',
+    'scikit-learn',
+    'kenlm @ https://github.com/kpu/kenlm/archive/master.zip',
+    'dill',
+    'torch>=1.3',
+    'transformers==2.5.1',
 ]
 
 setup(

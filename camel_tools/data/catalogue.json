@@ -15,7 +15,7 @@
             }
         },
         "DialectID": {
-            "defualt": "default",
+            "default": "default",
             "datasets": {
                 "default": {
                     "path": "dialectid/default"
@@ -23,10 +23,13 @@
             }
         },
         "SentimentAnalysis": {
-            "defualt": "default",
+            "default": "arabert",
             "datasets": {
-                "default": {
-                    "path": "sentiment_analysis/default"
+                "arabert": {
+                    "path": "sentiment_analysis/arabert"
+                },
+                "mbert": {
+                    "path": "sentiment_analysis/mbert"
                 }
             }
         }

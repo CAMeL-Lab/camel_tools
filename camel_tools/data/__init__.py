@@ -64,7 +64,7 @@ _CT_DATA_PATH = Path(os.environ.get('CAMELTOOLS_DATA', CT_DATA_PATH_DEFAULT))
 
 
 # TODO: Wrap this in a class with static methods and a dict like interface
-def get_dataset_path(component, dataset='default'):
+def get_dataset_path(component, dataset=None):
     """Return the path to given dataset for a specific component. It takes into
     consideration the camel_tools data path. by default it's in
     '~/.camel_tools/data' on Unix systems and
@@ -85,6 +85,10 @@ def get_dataset_path(component, dataset='default'):
     if component not in _CATALOGUE['components']:
         raise DataLookupException('Undefined component {}.'.format(
             repr(component)))
+
+    if dataset is None:
+        dataset = _CATALOGUE['components'][component]['default']
+
     if dataset not in _CATALOGUE['components'][component]['datasets']:
         raise DataLookupException(
             'Undefined dataset {} for component {}.'.format(repr(dataset),
