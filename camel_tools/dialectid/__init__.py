@@ -29,6 +29,7 @@
 
 import collections
 from pathlib import Path
+import sys
 
 import kenlm
 import numpy as np
@@ -131,6 +132,15 @@ class InvalidDataSetError(DialectIdError, ValueError):
     def __init__(self, dataset):
         msg = ('Invalid data set name {}. Valid names are "TEST" and '
                '"VALIDATION"'.format(repr(dataset)))
+        DialectIdError.__init__(self, msg)
+
+
+class PretrainedModelError(DialectIdError):
+    """Error thrown when attempting to load a pretrained model provided with
+    camel-tools.
+    """
+
+    def __init__(self, msg):
         DialectIdError.__init__(self, msg)
 
 
@@ -415,7 +425,23 @@ class DialectIdentifier(object):
 
     @staticmethod
     def pretrained():
-        model_path = Path(_DATA_DIR, 'did_trained.dill')
+        """Load the default pre-trained model provided with camel-tools.
+
+        Raises:
+            :obj:`PretrainedModelError`: When a pre-trained model compatible
+                with the current Python version isn't available.
+
+        Returns:
+            :obj:`DialectIdentifier`: The loaded model.
+        """
+
+        suffix = '{}{}'.format(sys.version_info.major, sys.version_info.minor)
+        model_file_name = 'did_pretrained_{}.dill'.format(suffix)
+        model_path = Path(_DATA_DIR, model_file_name)
+
+        if not model_path.is_file():
+            raise PretrainedModelError(
+                'No pretrained model for current Python version found.')
 
         with open(model_path, 'rb') as model_fp:
             return dill.load(model_fp)
