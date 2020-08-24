@@ -56,7 +56,7 @@ CT_DATA_PATH_DEFAULT = _get_appdatadir()
 CT_DATA_PATH_DEFAULT.mkdir(parents=True, exist_ok=True)
 
 _CATALOGUE_PATH = Path(__file__).parent / 'catalogue.json'
-with open(_CATALOGUE_PATH, 'r', encoding='utf-8') as cat_fp:
+with _CATALOGUE_PATH.open('r', encoding='utf-8') as cat_fp:
     _CATALOGUE = json.load(cat_fp)
 
 

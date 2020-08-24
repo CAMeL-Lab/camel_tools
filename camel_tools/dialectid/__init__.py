@@ -443,7 +443,7 @@ class DialectIdentifier(object):
             raise PretrainedModelError(
                 'No pretrained model for current Python version found.')
 
-        with open(model_path, 'rb') as model_fp:
+        with model_path.open('rb') as model_fp:
             return dill.load(model_fp)
 
 
@@ -456,7 +456,7 @@ def train_default_model():
     model_file_name = 'did_pretrained_{}.dill'.format(suffix)
     model_path = Path(_DATA_DIR, model_file_name)
 
-    with open(model_path, 'wb') as model_fp:
+    with model_path.open('wb') as model_fp:
         dill.dump(did, model_fp)
 
 

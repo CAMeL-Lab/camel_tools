@@ -89,9 +89,13 @@ setup(
               'camel_tools.utils',
               'camel_tools.calima_star',
               'camel_tools.disambig',
-              'camel_tools.tokenizers'],
+              'camel_tools.tokenizers',
+              'camel_tools.data',
+              'camel_tools.sentiment',
+              'camel_tools.dialectid'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
+        'camel_tools.data': ['catalogue.json'],
         'camel_tools.calima_star': ['databases/*/*.db', 'databases/*/LICENSE']
     },
     include_package_data=True,

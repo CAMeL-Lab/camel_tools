@@ -45,9 +45,6 @@ class SentimentAnalyzer:
     """
 
     def __init__(self, model_path):
-        if model_path is None:
-            model_path = _DEFAULT_DATA_PATH
-
         self.model = BertForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = BertTokenizer.from_pretrained(model_path)
         self.labels_map = {i: label for i, label in enumerate(_LABELS)}
