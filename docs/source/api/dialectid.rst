@@ -11,6 +11,14 @@ Classes
    :members:
 .. autoclass:: camel_tools.dialectid.DialectIdentifier
    :members:
+.. autoclass:: camel_tools.dialectid.DialectIdError
+   :members:
+.. autoclass:: camel_tools.dialectid.UntrainedModelError
+   :members:
+.. autoclass:: camel_tools.dialectid.InvalidDataSetError
+   :members:
+.. autoclass:: camel_tools.dialectid.PretrainedModelError
+   :members:
 
 
 Functions
