@@ -451,7 +451,10 @@ def train_default_model():
     print(_DATA_DIR)
     did = DialectIdentifier()
     did.train()
-    model_path = Path(_DATA_DIR, 'did_trained.dill')
+
+    suffix = '{}{}'.format(sys.version_info.major, sys.version_info.minor)
+    model_file_name = 'did_pretrained_{}.dill'.format(suffix)
+    model_path = Path(_DATA_DIR, model_file_name)
 
     with open(model_path, 'wb') as model_fp:
         dill.dump(did, model_fp)
