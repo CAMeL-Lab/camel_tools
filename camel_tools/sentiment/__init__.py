@@ -36,8 +36,6 @@ from camel_tools.data import get_dataset_path
 
 
 _DEFAULT_DATA_PATH = get_dataset_path('SentimentAnalysis')
-_LABELS = ('positive', 'negative', 'neutral')
-
 
 class SentimentAnalyzer:
     """A class for running a fine-tuned sentiment analysis model to predict
@@ -47,7 +45,7 @@ class SentimentAnalyzer:
     def __init__(self, model_path):
         self.model = BertForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = BertTokenizer.from_pretrained(model_path)
-        self.labels_map = {i: label for i, label in enumerate(_LABELS)}
+        self.labels_map = self.model.config.id2label
 
     @staticmethod
     def pretrained(model_name=None):
@@ -75,7 +73,7 @@ class SentimentAnalyzer:
             :obj:`list` of :obj:`str`: List of sentiment labels.
         """
 
-        return list(_LABELS)
+        return list(self.labels_map.values())
 
     def predict_sentence(self, sentence):
         """Predict the sentiment label of a single sentence.
@@ -90,16 +88,12 @@ class SentimentAnalyzer:
         # Add special tokens takes care of adding [CLS], [SEP] tokens
         input_ids = torch.tensor(
             self.tokenizer.encode(sentence, add_special_tokens=True,
-                                  max_length=512)).unsqueeze(0)
-        # input_ids shape: [1, len(input_ids)]
+                                  truncation=True, max_length=512)).unsqueeze(0)
 
-        self.model.eval()
         with torch.no_grad():
             outputs = self.model(input_ids)
-            # outputs is a tuple of (logits, )
 
         predictions = torch_fun.softmax(outputs[0].squeeze(), dim=0)
-        # predictions shape: [config.num_labels]
         max_prediction = torch.argmax(predictions, dim=0)
         predicted_label = self.labels_map[max_prediction.item()]
 
@@ -116,19 +110,10 @@ class SentimentAnalyzer:
             sentences.
         """
 
-        self.model.eval()
         predicted_labels = []
-        with torch.no_grad():
-            for i, sentence in enumerate(sentences):
-                # Add special tokens takes care of adding [CLS], [SEP] tokens
-                input_ids = torch.tensor(
-                    self.tokenizer.encode(sentence, add_special_tokens=True,
-                                          max_length=512)).unsqueeze(0)
-                outputs = self.model(input_ids)
-                predictions = torch_fun.softmax(outputs[0].squeeze(), dim=0)
-                # predictions shape: [config.num_labels]
-                max_prediction = torch.argmax(predictions, dim=0)
-                predicted_label = self.labels_map[max_prediction.item()]
-                predicted_labels.append(predicted_label)
+        for i, sentence in enumerate(sentences):
+            predicted_label = self.predict_sentence(sentence)
+            predicted_labels.append(predicted_label)
 
         return predicted_labels
+
