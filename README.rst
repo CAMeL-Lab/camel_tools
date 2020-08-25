@@ -35,7 +35,7 @@ please fill out
 
 CAMeL Tools is  suite of Arabic natural language processing tools developed by
 the
-`CAMeL Lab <https://nyuad.nyu.edu/en/research/faculty-research/camel-lab.html>`_
+`CAMeL Lab <http://camel-lab.com>`_
 at `New York University Abu Dhabi <http://nyuad.nyu.edu/>`_.
 
 Installation
