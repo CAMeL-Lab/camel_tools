@@ -1,17 +1,19 @@
 {
     "components": {
         "MorphologyDB": {
-            "default": "almor-msa",
+            "default": "almor-msa-ext",
             "datasets": {
-                "almor-msa": {
-                    "path": "morphology_db/almor-msa"
+                "almor-msa-ext": {
+                    "path": "morphology_db/almor-msa-ext"
                 }
             }
         },
-        "MorphologyDisambigSimple": {
-            "default": "almor-msa",
+        "DisambigMLE": {
+            "default": "almor-msa-ext",
             "datasets": {
-                "path": ""
+                "almor-msa-ext": {
+                    "path": "disambig_mle/almor-msa-ext"
+                }
             }
         },
         "DialectID": {

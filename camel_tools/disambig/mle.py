@@ -32,6 +32,16 @@ import json
 from camel_tools.utils.dediac import dediac_ar
 from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
+from camel_tools.calima_star.database import CalimaStarDB
+from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
+from camel_tools.data import get_dataset_path
+
+
+# This may seem redundant now, but it allows for different model/analyzer
+# pairings later.
+_MLE_ANALYZER_MAP = {
+    'almor-msa-ext': 'almor-msa'
+}
 
 
 def _get_pos_lex_freq(analysis):
@@ -64,6 +74,35 @@ class MLEDisambiguator(Disambiguator):
         else:
             self._mle = None
         self._analyzer = analyzer
+
+    @staticmethod
+    def pretrained(model_name=None, analyzer=None):
+        """Load a pre-trained MLE disambiguator provided with CAMeL Tools.
+
+        Args:
+            model_name (:obj:`str`, optional): The name of the pretrained
+                model. If none, the dault model ('almor-msa-ext') is loaded.
+                Defaults to None.
+            analyzer (:obj;`CalimaStarAnalyzer`, optional): Alternative
+                analyzer to use. If None, an instance of the model's default
+                analyzer is created. Defaults to None.
+
+        Returns:
+            :obj:`MLEDisambiguator`: The loaded MLE disambiguator.
+        """
+
+        # TODO: Use camel_tools.data instead (after reimplementing it).
+        if model_name is None:
+            model_name = 'almor-msa-ext'
+
+        mle_path = get_dataset_path('DisambigMLE', model_name) / 'model.json'
+
+        if analyzer is None:
+            analyzer_name = _MLE_ANALYZER_MAP[model_name]
+            db = CalimaStarDB.builtin_db(analyzer_name, 'a')
+            analyzer = CalimaStarAnalyzer(db)
+
+        return MLEDisambiguator(analyzer, str(mle_path))
 
     def disambiguate_word(self, sentence, word_ndx, top=1):
         word = sentence[word_ndx]
