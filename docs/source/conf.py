@@ -144,7 +144,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'camel_tools.tex', 'camel\\_tools Documentation',
+    (master_doc, 'camel_tools.tex', 'CAMeL Tools Documentation',
      'Ossama W. Obeid', 'manual'),
 ]
 
@@ -166,7 +166,9 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'camel_tools', 'camel_tools Documentation',
-     author, 'camel_tools', 'One line description of project.',
+     author, 'camel_tools',
+     'A suite of Arabic natural language processing tools developed by the '
+     'CAMeL Lab at New York University Abu Dhabi.',
      'Miscellaneous'),
 ]
 
@@ -191,4 +193,6 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 
-autodoc_mock_imports = ["kenlm"]
+autodoc_mock_imports = [
+    'kenlm'
+]
