@@ -1,7 +1,7 @@
 CAMeL Tools Documentation
 =========================
 
-.. image:: _static/camel_logo.png
+.. image:: _static/camel_tools_logo.png
 
 .. toctree::
    :maxdepth: 2
