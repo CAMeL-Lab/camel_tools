@@ -20,9 +20,9 @@ CAMeL Tools
 
 |
 
-.. image:: camel_logo.png
-   :target: camel_logo.png
-   :alt: CAMeL Lab Logo
+.. image:: camel_tools_logo.png
+   :target: camel_tools_logo.png
+   :alt: CAMeL Tools Logo
 
 Introduction
 ------------
