@@ -26,6 +26,7 @@
 """This module contains the CAMeL Tools NER component.
 """
 
+
 import torch
 import torch.nn.functional as torch_fun
 from transformers import BertTokenizer, BertForTokenClassification
@@ -36,12 +37,14 @@ from camel_tools.data import get_dataset_path
 _DEFAULT_DATA_PATH = get_dataset_path('NamedEntityRecognition')
 _LABELS = ['B-LOC', 'B-ORG', 'B-PERS', 'I-LOC', 'I-ORG', 'I-PERS']
 _IGNORE_LABELS = ['O']
-_SPECIAL_TOKENS = ['[SEP]', '[CLS]', '[UNK]', '[MASK]', '[PAD]']
+_SPECIAL_TOKENS = ['[SEP]', '[CLS]']
 
 
 class NERecognizer:
     """CAMeL Tools NER component.
-    :param model_path: the path to the fine-tuned model
+
+    Args:
+        model_path(:obj:`str`): The path to the fine-tuned model.
     """
 
     def __init__(self, model_path):
@@ -81,7 +84,7 @@ class NERecognizer:
         """Predict the named entity labels of a single sentence.
 
         Args:
-            sentence (:obj:`str`): Input sentence.
+            sentence (:obj:`list` of :obj:`str`): Input sentence.
 
         Returns:
             :obj:`list` of :obj:`dict`: The predicted named entity
@@ -91,7 +94,8 @@ class NERecognizer:
         # Add special tokens takes care of adding [CLS], [SEP] tokens
         input_ids = torch.tensor(
             self.tokenizer.encode(sentence, add_special_tokens=True,
-                                  truncation=True, max_length=512)).unsqueeze(0)
+                                  truncation=True,
+                                  max_length=512)).unsqueeze(0)
 
         with torch.no_grad():
             outputs = self.model(input_ids)
@@ -114,19 +118,20 @@ class NERecognizer:
             entity = {
                 "word": word,
                 "entity": entity_label,
+                "idx": idx - 1
             }
 
             if word not in _SPECIAL_TOKENS:
-                entities += [entity]
+                entities.append(entity)
 
         return entities
 
     def predict(self, sentences):
-        """Predict the named entity labels of a list of
-        sentences.
+        """Predict the named entity labels of a list of sentences.
 
         Args:
-            sentences (:obj:`list` of :obj:`str`): Input sentences.
+            sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
+                sentences.
 
         Returns:
             :obj:`list` of :obj:`list` of :obj:`dict`: The predicted
@@ -135,9 +140,6 @@ class NERecognizer:
 
         sentences_entities = []
         for idx, sentence in enumerate(sentences):
-            sentence_entities = {
-                "sentence_{}".format(idx): self.predict_sentence(sentence)
-            }
-            sentences_entities += [sentence_entities]
+            sentences_entities.append(self.predict_sentence(sentence))
 
         return sentences_entities
