@@ -105,6 +105,25 @@ class MLEDisambiguator(Disambiguator):
         return MLEDisambiguator(analyzer, str(mle_path))
 
     def disambiguate_word(self, sentence, word_ndx, top=1):
+        """Disambiguates a single word in a sentence. Note, that while MLE
+        disambiguation operates on each word out of context, we maintain this
+        interface to be compatible with disambiguators that work in context
+        of a sentence.
+
+        Args:
+            sentence (:obj:`list` of :obj:`str`): The list of space and
+                punctuation seperated list of tokens comprising a given
+                sentence.
+            word_ndx (:obj:`int`): The index of the word token in `sentence` to
+                disambiguate.
+            top (:obj:`int`, optional): The maximum number of top analyses to
+                return. Defaults to 1.
+
+        Returns:
+            :obj:`DisambiguatedWord`: The disambiguation of the word token in
+            `sentence` at `word_ndx`.
+        """
+
         word = sentence[word_ndx]
         word_dd = dediac_ar(word)
 
@@ -134,5 +153,18 @@ class MLEDisambiguator(Disambiguator):
                 return DisambiguatedWord(word, scored_analyses[0:top])
 
     def disambiguate(self, sentence, top=1):
+        """Disambiguate all words in a given sentence.
+
+        Args:
+            sentence (:obj:`list` of :obj:`str`): The list of space and
+                punctuation seperated list of tokens comprising a given
+                sentence.
+            top (:obj:`int`, optional): The maximum number of top analyses to
+                return. Defaults to 1.
+
+        Returns:
+            :obj:`list` of :obj:`DisambiguatedWord`: The list of
+            disambiguations for each word in the given sentence.
+        """
         return [self.disambiguate_word(sentence, x, top)
                 for x in range(len(sentence))]
