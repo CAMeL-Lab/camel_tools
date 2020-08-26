@@ -34,6 +34,14 @@
                     "path": "sentiment_analysis/mbert"
                 }
             }
+        },
+        "NamedEntityRecognition": {
+            "default": "arabert",
+            "datasets": {
+                "arabert": {
+                    "path": "ner/arabert"
+                }
+            }
         }
-    } 
+    }
 }
