@@ -67,7 +67,8 @@ class NERecognizer:
             :obj:`NERecognizer`: Instance with loaded pre-trained model.
         """
 
-        model_path = str(get_dataset_path('NamedEntityRecognition', model_name))
+        model_path = str(get_dataset_path('NamedEntityRecognition',
+                                          model_name))
         return NERecognizer(model_path)
 
     @staticmethod
