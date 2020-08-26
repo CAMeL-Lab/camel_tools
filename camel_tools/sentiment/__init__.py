@@ -36,6 +36,8 @@ from camel_tools.data import get_dataset_path
 
 
 _DEFAULT_DATA_PATH = get_dataset_path('SentimentAnalysis')
+_LABELS = ('positive', 'negative', 'neutral')
+
 
 class SentimentAnalyzer:
     """A class for running a fine-tuned sentiment analysis model to predict
@@ -73,7 +75,7 @@ class SentimentAnalyzer:
             :obj:`list` of :obj:`str`: List of sentiment labels.
         """
 
-        return list(self.labels_map.values())
+        return list(_LABELS)
 
     def predict_sentence(self, sentence):
         """Predict the sentiment label of a single sentence.
