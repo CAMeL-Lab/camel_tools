@@ -74,7 +74,7 @@ INSTALL_REQUIRES = [
     'kenlm @ https://github.com/kpu/kenlm/archive/master.zip',
     'dill',
     'torch>=1.3',
-    'transformers==2.5.1',
+    'transformers==3.0.2',
 ]
 
 setup(
