@@ -59,7 +59,7 @@ def _open_files(finpath, foutpath):
         fin = sys.stdin
     else:
         try:
-            fin = open(finpath, 'r')
+            fin = open(finpath, 'r', encoding='utf-8')
         except Exception:
             sys.stderr.write('Error: Couldn\'t open input file {}.'
                              '\n'.format(repr(finpath)))
@@ -69,7 +69,7 @@ def _open_files(finpath, foutpath):
         fout = sys.stdout
     else:
         try:
-            fout = open(foutpath, 'w')
+            fout = open(foutpath, 'w', encoding='utf-8')
         except Exception:
             sys.stderr.write('Error: Couldn\'t open output file {}.'
                              '\n'.format(repr(foutpath)))

@@ -126,7 +126,7 @@ def _open_files(finpath, foutpath):
 
     else:
         try:
-            fin = open(finpath, 'r')
+            fin = open(finpath, 'r', encoding='utf-8')
         except IOError:
             sys.stderr.write('Error: Couldn\'t open input file {}.'
                              '\n'.format(repr(finpath)))
@@ -136,7 +136,7 @@ def _open_files(finpath, foutpath):
         fout = sys.stdout
     else:
         try:
-            fout = open(foutpath, 'w')
+            fout = open(foutpath, 'w', encoding='utf-8')
         except IOError:
             sys.stderr.write('Error: Couldn\'t open output file {}.'
                              '\n'.format(repr(foutpath)))
@@ -239,23 +239,23 @@ def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
         tokens = _tokenize(line)
 
         for token in tokens:
+            analyses = analyzer.analyze(token)
+
+            if num_disambig is not None:
+                dambg = disambig.disambiguate([token], num_disambig)
+                analyses = [a.analysis for a in dambg[0].analyses]
+            else:
                 analyses = analyzer.analyze(token)
 
-                if num_disambig is not None:
-                    dambg = disambig.disambiguate([token], num_disambig)
-                    analyses = [a.analysis for a in dambg[0].analyses]
-                else:
-                    analyses = analyzer.analyze(token)
+            serialized = _serialize_analyses(fout, token, analyses,
+                                             db.order)
 
-                serialized = _serialize_analyses(fout, token, analyses,
-                                                 db.order)
+            if six.PY3:
+                fout.write(serialized)
+            else:
+                fout.write(force_encoding(serialized))
 
-                if six.PY3:
-                    fout.write(serialized)
-                else:
-                    fout.write(force_encoding(serialized))
-
-                fout.write('\n\n')
+            fout.write('\n\n')
 
         line = force_unicode(fin.readline())
 
