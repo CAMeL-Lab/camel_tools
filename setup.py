@@ -92,7 +92,8 @@ setup(
               'camel_tools.tokenizers',
               'camel_tools.data',
               'camel_tools.sentiment',
-              'camel_tools.dialectid'],
+              'camel_tools.dialectid',
+              'camel_tools.ner'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
         'camel_tools.data': ['catalogue.json'],
