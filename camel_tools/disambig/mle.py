@@ -37,10 +37,14 @@ from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
 from camel_tools.data import get_dataset_path
 
 
-# This may seem redundant now, but it allows for different model/analyzer
-# pairings later.
+def _almor_msa_ext_analyzer():
+    db = CalimaStarDB.builtin_db('almor-msa', 'a')
+    analyzer = CalimaStarAnalyzer(db, 'NOAN_PROP')
+    return analyzer
+
+
 _MLE_ANALYZER_MAP = {
-    'almor-msa-ext': 'almor-msa'
+    'almor-msa-ext': _almor_msa_ext_analyzer
 }
 
 
@@ -98,9 +102,7 @@ class MLEDisambiguator(Disambiguator):
         mle_path = get_dataset_path('DisambigMLE', model_name) / 'model.json'
 
         if analyzer is None:
-            analyzer_name = _MLE_ANALYZER_MAP[model_name]
-            db = CalimaStarDB.builtin_db(analyzer_name, 'a')
-            analyzer = CalimaStarAnalyzer(db)
+            analyzer = _MLE_ANALYZER_MAP[model_name]()
 
         return MLEDisambiguator(analyzer, str(mle_path))
 
