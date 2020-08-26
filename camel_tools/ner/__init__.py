@@ -136,7 +136,7 @@ class NERecognizer:
         sentences_entities = []
         for idx, sentence in enumerate(sentences):
             sentence_entities = {
-                "sentence_{}".format(idx): self.predict(sentence)
+                "sentence_{}".format(idx): self.predict_sentence(sentence)
             }
             sentences_entities += [sentence_entities]
 
