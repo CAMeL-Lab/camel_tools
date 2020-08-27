@@ -19,3 +19,4 @@ Python API Reference
    api/tokenizers
    api/dialectid
    api/sentiment
+   api/ner
