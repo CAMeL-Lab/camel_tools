@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 
-"""This module contains the CAMeL Tools NER component.
+"""This module contains the CAMeL Tools Named Entity Recognition component.
 """
 
 
