@@ -36,7 +36,7 @@ from camel_tools.data import get_dataset_path
 
 _DEFAULT_DATA_PATH = get_dataset_path('NamedEntityRecognition')
 _LABELS = ['B-LOC', 'B-ORG', 'B-PERS', 'I-LOC', 'I-ORG', 'I-PERS']
-_IGNORE_LABELS = ['O']
+_IGNORE_LABELS = []
 _SPECIAL_TOKENS = ['[SEP]', '[CLS]']
 
 
@@ -47,9 +47,11 @@ class NERecognizer:
         model_path(:obj:`str`): The path to the fine-tuned model.
     """
 
+    # TODO: Add options for custom values for special tokens
     def __init__(self, model_path):
         self.model = BertForTokenClassification.from_pretrained(model_path)
-        self.tokenizer = BertTokenizer.from_pretrained(model_path)
+        self.tokenizer = BertTokenizer.from_pretrained(model_path,
+                                                       do_basic_tokenize=False)
         self.labels_map = self.model.config.id2label
 
     @staticmethod
@@ -85,17 +87,18 @@ class NERecognizer:
         """Predict the named entity labels of a single sentence.
 
         Args:
-            sentence (:obj:`list` of :obj:`str`): Input sentence.
+            sentence (:obj:`list` of :obj:`str`): The input sentence.
 
         Returns:
-            :obj:`list` of :obj:`dict`: The predicted named entity
-            labels for a given sentence.
+            :obj:`list` of :obj:`str`: The predicted named entity
+            labels for the given sentence.
         """
 
         # Add special tokens takes care of adding [CLS], [SEP] tokens
         input_ids = torch.tensor(
             self.tokenizer.encode(sentence, add_special_tokens=True,
                                   truncation=True,
+                                  is_pretokenized=True,
                                   max_length=512)).unsqueeze(0)
 
         with torch.no_grad():
@@ -116,17 +119,12 @@ class NERecognizer:
                 int(input_ids.squeeze()[idx]))
             entity_label = self.labels_map[label_idx.item()]
 
-            entity = {
-                "word": word,
-                "entity": entity_label,
-                "idx": idx - 1
-            }
-
-            if word not in _SPECIAL_TOKENS:
-                entities.append(entity)
+            if not word.startswith('##') and word not in _SPECIAL_TOKENS:
+                entities.append(entity_label)
 
         return entities
 
+    # TODO: Take advantage of sentence batching in tokenizer
     def predict(self, sentences):
         """Predict the named entity labels of a list of sentences.
 
@@ -135,8 +133,8 @@ class NERecognizer:
                 sentences.
 
         Returns:
-            :obj:`list` of :obj:`list` of :obj:`dict`: The predicted
-            named entity labels for given sentences.
+            :obj:`list` of :obj:`list` of :obj:`str`: The predicted
+            named entity labels for the given sentences.
         """
 
         sentences_entities = []
