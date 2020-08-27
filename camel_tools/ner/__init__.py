@@ -113,16 +113,16 @@ class NERecognizer:
             if self.labels_map[label_idx.item()] not in _IGNORE_LABELS
         ]
 
-        entities = []
+        final_labels = []
         for idx, label_idx in predicted_labels:
             word = self.tokenizer.convert_ids_to_tokens(
                 int(input_ids.squeeze()[idx]))
             entity_label = self.labels_map[label_idx.item()]
 
             if not word.startswith('##') and word not in _SPECIAL_TOKENS:
-                entities.append(entity_label)
+                final_labels.append(entity_label)
 
-        return entities
+        return final_labels
 
     # TODO: Take advantage of sentence batching in tokenizer
     def predict(self, sentences):
