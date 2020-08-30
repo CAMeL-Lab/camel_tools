@@ -14,6 +14,7 @@ Python API Reference
    :caption: Modules:
 
    api/utils
+   api/data
    api/calima_star
    api/disambig
    api/tokenizers

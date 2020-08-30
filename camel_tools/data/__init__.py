@@ -158,10 +158,27 @@ def _gen_catalogue(cat_dict):
 
 
 class DataCatalogue(object):
+    """This class allows querying datasets provided by CAMeL Tools.
+    """
+
     _catalogue = _gen_catalogue(_CATALOGUE)
 
     @staticmethod
     def get_component_info(component):
+        """Get the catalogue entry for a given component.
+
+        Args:
+            component (:obj:`str`): Name of the component to lookup in the
+                catalogue.
+
+        Returns:
+            :obj:`ComponentInfo`: The catalogue entry associated with the given
+            component.
+
+        Raises:
+            DataLookupException: If `component` is not a valid component name.
+        """
+
         if component not in DataCatalogue._catalogue['components']:
             raise DataLookupException('Undefined component {}.'.format(
                                       repr(component)))
@@ -174,6 +191,22 @@ class DataCatalogue(object):
 
     @staticmethod
     def get_dataset_info(component, dataset=None):
+        """Get the catalogue entry for a given dataset for a given component.
+
+        Args:
+            component (:obj:`str`): Name of the component dataset belongs to.
+            dataset (:obj:`str`, optional): Name of the dataset for `component`
+                to lookup. If None, the entry for the default dataset for
+                `component` is returned. Defaults to None.
+
+        Returns:
+            :obj:`DatasetInfo`: The catalogue entry associated with the given
+            dataset.
+
+        Raises:
+            DataLookupException: If `component` is not a valid component name
+                or if `dataset` is not a valid dataset name for `component`.
+        """
         if component not in DataCatalogue._catalogue['components']:
             raise DataLookupException('Undefined component {}.'.format(
                                       repr(component)))
