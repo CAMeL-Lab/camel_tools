@@ -96,8 +96,7 @@ setup(
               'camel_tools.ner'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
-        'camel_tools.data': ['catalogue.json'],
-        'camel_tools.calima_star': ['databases/*/*.db', 'databases/*/LICENSE']
+        'camel_tools.data': ['catalogue.json']
     },
     include_package_data=True,
     entry_points={
