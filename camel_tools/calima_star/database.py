@@ -28,23 +28,14 @@
 from __future__ import absolute_import
 
 from collections import namedtuple
-import os.path
+from pathlib import Path
 import re
 
 from camel_tools.utils.stringutils import force_unicode
 from camel_tools.calima_star.errors import InvalidDatabaseFlagError
-from camel_tools.calima_star.errors import InvalidBuiltinDatabaseName
 from camel_tools.calima_star.errors import DatabaseParseError
+from camel_tools.data import DataCatalogue
 
-DBListing = namedtuple('DBListing', ['name', 'version'])
-
-_DATABASES_DIR = os.path.join(os.path.dirname(__file__), 'databases')
-_DATABASES = {
-    'almor-msa': {
-        'path': os.path.join(_DATABASES_DIR, 'almor-msa', 'almor-msa-r13.db'),
-        'version': 'r13'
-    }
-}
 
 _LEMMA_SPLIT_RE = re.compile(r'-|_')
 
@@ -72,42 +63,35 @@ class CalimaStarDB:
 
     @staticmethod
     def list_builtin_dbs():
-        """Returns a list of builtin databases in the form of named tuples
-        (:obj:`DBListing`) containing a property `name` that can be passed to
-        :meth:`builtin_db` and a property `version` indicating the
-        version of the provided database.
+        """Returns a list of builtin databases provided with CAMeL Tools.
 
         Returns:
-            :obj:`list` of :obj:`DBListing`: List of builtin databases.
+            :obj:`list` of :obj:`~camel_tools.data.DatasetInfo`: List of
+            builtin databases.
         """
 
-        return [DBListing(db, _DATABASES[db]['version']) for db in _DATABASES]
+        return list(DataCatalogue.get_component_info('MorphologyDB').datasets)
 
     @staticmethod
-    def builtin_db(dbname='almor-msa', flags='a'):
+    def builtin_db(db_name='almor-msa-ext', flags='a'):
         """Create a :obj:`CalimaStarDB` instance from one of the builtin
         databases provided.
 
         Args:
-            dbname (:obj:`str`, optional): Name of builtin database.
+            db_name (:obj:`str`, optional): Name of builtin database.
                 You can use :meth:`list_builtin_dbs` to get a list of
                 builtin databases or see :ref:`calima_star_databases`.
-                Defaults to 'almor-msa'.
+                Defaults to 'almor-msa-ext'.
             flags (:obj:`str`, optional): Flag string to be passed to
                 :obj:`CalimaStarDB` constructor. Defaults to 'a'.
 
         Returns:
             :obj:`CalimaStarDB`: Instance of builtin database with given flags.
-
-        Raises:
-            :obj:`~camel_tools.calima_star.errors.InvalidBuiltinDatabaseName`:
-                When an invalid value for **dbname** is provided.
         """
 
-        if dbname not in _DATABASES:
-            raise InvalidBuiltinDatabaseName(dbname)
+        db_info = DataCatalogue.get_dataset_info('MorphologyDB', db_name)
 
-        return CalimaStarDB(_DATABASES[dbname]['path'], flags)
+        return CalimaStarDB(str(Path(db_info.path, 'morphology.db')), flags)
 
     def __init__(self, fpath, flags='a'):
         """Class constructor.
