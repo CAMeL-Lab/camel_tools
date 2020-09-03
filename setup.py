@@ -29,8 +29,8 @@ from setuptools import setup
 VERSION_FILE = os.path.join(os.path.dirname(__file__),
                             'camel_tools',
                             'VERSION')
-with open(VERSION_FILE) as fh:
-    VERSION = fh.read().strip()
+with open(VERSION_FILE, encoding='utf-8') as version_fp:
+    VERSION = version_fp.read().strip()
 
 
 CLASSIFIERS = [
@@ -59,8 +59,8 @@ DESCRIPTION = ('A suite of Arabic natural language processing tools developed '
                'by the CAMeL Lab at New York University Abu Dhabi.')
 
 README_FILE = os.path.join(os.path.dirname(__file__), 'README.rst')
-with open(README_FILE, 'r') as fh:
-    LONG_DESCRIPTION = fh.read().strip()
+with open(README_FILE, 'r', encoding='utf-8') as version_fp:
+    LONG_DESCRIPTION = version_fp.read().strip()
 
 INSTALL_REQUIRES = [
     'future',

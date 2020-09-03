@@ -73,8 +73,8 @@ class MLEDisambiguator(Disambiguator):
 
     def __init__(self, analyzer, mle_path=None):
         if mle_path is not None:
-            with open(mle_path, 'r') as mlefp:
-                self._mle = json.load(mlefp)
+            with open(mle_path, 'r', encoding='utf-8') as mle_fp:
+                self._mle = json.load(mle_fp)
         else:
             self._mle = None
         self._analyzer = analyzer

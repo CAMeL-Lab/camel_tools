@@ -181,7 +181,7 @@ class CalimaStarDB:
         return res
 
     def _parse_dbfile(self, fpath):
-        with open(fpath, 'r') as dbfile:
+        with open(fpath, 'r', encoding='utf-8') as dbfile:
             # Process DEFINES
             for line in dbfile:
                 line = line = force_unicode(line).strip()
