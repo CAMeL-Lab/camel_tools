@@ -43,7 +43,7 @@ Examples
    # We can also initialize a builtin database using the same flags as above
    db = CalimaStarDB.builtin_db('almor-msa-ext', 'a')
 
-   # or if we want to use the default builtin database (ie. 'almor-msa')
+   # or if we want to use the default builtin database (ie. 'almor-msa-ext')
    db = CalimaStarDB.builtin_db(flags='g')
 
    # or just the following if we want the default database in analysis mode

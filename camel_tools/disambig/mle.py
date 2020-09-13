@@ -38,7 +38,7 @@ from camel_tools.data import get_dataset_path
 
 
 def _almor_msa_ext_analyzer():
-    db = CalimaStarDB.builtin_db('almor-msa', 'a')
+    db = CalimaStarDB.builtin_db('almor-msa-ext', 'a')
     analyzer = CalimaStarAnalyzer(db, 'NOAN_PROP')
     return analyzer
 
