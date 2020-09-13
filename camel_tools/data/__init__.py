@@ -60,8 +60,10 @@ _CATALOGUE_PATH = Path(__file__).parent / 'catalogue.json'
 with _CATALOGUE_PATH.open('r', encoding='utf-8') as cat_fp:
     _CATALOGUE = json.load(cat_fp)
 
-
-_CT_DATA_PATH = Path(os.environ.get('CAMELTOOLS_DATA', CT_DATA_PATH_DEFAULT))
+if os.environ.get('CAMELTOOLS_DATA') is None:
+    _CT_DATA_PATH = CT_DATA_PATH_DEFAULT
+else:
+    _CT_DATA_PATH = Path(os.environ.get('CAMELTOOLS_DATA'), 'data')
 
 
 _ComponentInfo = namedtuple('ComponentInfo', ['name', 'datasets', 'default'])
