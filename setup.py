@@ -86,7 +86,7 @@ setup(
     packages=['camel_tools',
               'camel_tools.cli',
               'camel_tools.utils',
-              'camel_tools.calima_star',
+              'camel_tools.morphology',
               'camel_tools.disambig',
               'camel_tools.tokenizers',
               'camel_tools.data',
@@ -104,8 +104,8 @@ setup(
              'camel_tools.cli.camel_transliterate:main'),
             ('camel_arclean='
              'camel_tools.cli.camel_arclean:main'),
-            ('camel_calima_star='
-             'camel_tools.cli.camel_calima_star:main'),
+            ('camel_morphology='
+             'camel_tools.cli.camel_morphology:main'),
         ],
     },
     url='https://github.com/CAMeL-Lab/CAMeL_Tools',

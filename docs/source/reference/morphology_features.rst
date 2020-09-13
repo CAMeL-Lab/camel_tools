@@ -1,8 +1,8 @@
-CALIMA Star Features
-====================
+Morphology Features
+===================
 
 Below is a listing of all the features and their respective values produced or
-required by the CALIMA Star analyzer, generator, and reinflector.
+required by the morphological analyzer, generator, and reinflector.
 
 Morphological Features
 ^^^^^^^^^^^^^^^^^^^^^^

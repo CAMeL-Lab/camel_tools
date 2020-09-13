@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""This sub-module contains components for the CALIMA Star morphological
-anlyzer, generator, and reinflector system.
+"""This sub-module contains components for the CAMeL Tools morphological
+anlyzer, generator, and reinflector systems based on
+`CALIMA Star <http://www.aclweb.org/anthology/W18-5816>`_.
 """

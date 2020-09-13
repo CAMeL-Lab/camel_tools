@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""The generator component of CALIMA Star.
+"""The generator component of CAMeL Tools.
 """
 
 from __future__ import absolute_import
@@ -30,31 +30,31 @@ from __future__ import absolute_import
 import copy
 import collections
 
-from camel_tools.calima_star.database import CalimaStarDB
-from camel_tools.calima_star.errors import GeneratorError
-from camel_tools.calima_star.errors import InvalidGeneratorFeature
-from camel_tools.calima_star.errors import InvalidGeneratorFeatureValue
-from camel_tools.calima_star.utils import merge_features
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.errors import GeneratorError
+from camel_tools.morphology.errors import InvalidGeneratorFeature
+from camel_tools.morphology.errors import InvalidGeneratorFeatureValue
+from camel_tools.morphology.utils import merge_features
 
 
-class CalimaStarGenerator(object):
-    """CALIMA Star generator component.
+class Generator(object):
+    """Morphological generator component.
 
     Args:
-        db (:obj:`~camel_tools.calima_star.database.CalimaStarDB`): Database to
+        db (:obj:`~camel_tools.morphology.database.MorphologyDB`): Database to
             use for generation. Must be opened in generation or reinflection
             mode.
 
     Raises:
-        :obj:`~camel_tools.calima_star.errors.GeneratorError`: If **db** is not
+        :obj:`~camel_tools.morphology.errors.GeneratorError`: If **db** is not
             an instance of
-            :obj:`~camel_tools.calima_star.database.CalimaStarDB` or if **db**
+            :obj:`~camel_tools.morphology.database.MorphologyDB` or if **db**
             does not support generation.
     """
 
     def __init__(self, db):
-        if not isinstance(db, CalimaStarDB):
-            raise GeneratorError('DB is not an instance of CalimaStarDB')
+        if not isinstance(db, MorphologyDB):
+            raise GeneratorError('DB is not an instance of MorphologyDB')
         if not db.flags.generation:
             raise GeneratorError('DB does not support generation')
 
@@ -67,18 +67,18 @@ class CalimaStarGenerator(object):
             lemma (:obj:`str`): Lemma to generate from.
             feats (:obj:`dict`): Dictionary of features. Must contain 'pos'
                 feature.
-                See :doc:`/reference/calima_star_features` for more information
+                See :doc:`/reference/morphology_features` for more information
                 on features and their values.
 
         Returns:
             :obj:`list` of :obj:`dict`: List of generated analyses.
-            See :doc:`/reference/calima_star_features` for more information on
+            See :doc:`/reference/morphology_features` for more information on
             features and their values.
 
         Raises:
-            :obj:`~camel_tools.calima_star.errors.InvalidGeneratorFeature`: If
+            :obj:`~camel_tools.morphology.errors.InvalidGeneratorFeature`: If
                 a feature is given that is not defined in database.
-            :obj:`~camel_tools.calima_star.errors.InvalidGeneratorFeatureValue`:
+            :obj:`~camel_tools.morphology.errors.InvalidGeneratorFeatureValue`:
                 If an invalid value is given to a feature or if 'pos' feature
                 is not defined.
         """

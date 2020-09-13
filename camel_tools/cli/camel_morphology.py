@@ -24,25 +24,25 @@
 # SOFTWARE.
 
 
-"""The CALIMA Star morphological analyzer, generator, and reinflector.
+"""The CAMeL Tools morphological analyzer, generator, and reinflector.
 
 Usage:
-    camel_calima_star analyze
-                      [-D DISAMBIG | --disambig=DISAMBIG]
-                      [-d DATABASE | --db=DATABASE]
-                      [-b BACKOFF | --backoff=BACKOFF]
-                      [-c | --cache]
-                      [-o OUTPUT | --output=OUTPUT] [FILE]
-    camel_calima_star generate
-                      [-d DATABASE | --db=DATABASE]
-                      [-b BACKOFF | --backoff=BACKOFF]
-                      [-o OUTPUT | --output=OUTPUT] [FILE]
-    camel_calima_star reinflect
-                      [-d DATABASE | --db=DATABASE]
-                      [-o OUTPUT | --output=OUTPUT] [FILE]
-    camel_calima_star (-l | --list)
-    camel_calima_star (-v | --version)
-    camel_calima_star (-h | --help)
+    camel_morphology analyze
+                     [-D DISAMBIG | --disambig=DISAMBIG]
+                     [-d DATABASE | --db=DATABASE]
+                     [-b BACKOFF | --backoff=BACKOFF]
+                     [-c | --cache]
+                     [-o OUTPUT | --output=OUTPUT] [FILE]
+    camel_morphology generate
+                     [-d DATABASE | --db=DATABASE]
+                     [-b BACKOFF | --backoff=BACKOFF]
+                     [-o OUTPUT | --output=OUTPUT] [FILE]
+    camel_morphology reinflect
+                     [-d DATABASE | --db=DATABASE]
+                     [-o OUTPUT | --output=OUTPUT] [FILE]
+    camel_morphology (-l | --list)
+    camel_morphology (-v | --version)
+    camel_morphology (-h | --help)
 
 Options:
   -b BACKOFF --backoff=BACKOFF
@@ -56,7 +56,7 @@ Options:
         Disambiguate analyses using pos-lex frequency showing only the top
         DISAMBIG analyses. DISAMBIG should be a non-zero positive integer.
   -d DATABASE --db=DATABASE
-        CalimaStar database to use. DATABASE could be the name of a builtin
+        Morphology database to use. DATABASE could be the name of a builtin
         database or a path to a database file. [default: almor-msa-ext]
   -o OUTPUT --output=OUTPUT
         Output file. If not specified, output will be printed to stdout.
@@ -81,12 +81,12 @@ import six
 import camel_tools as camelt
 from camel_tools.utils.charsets import AR_DIAC_CHARSET
 from camel_tools.utils.stringutils import force_unicode, force_encoding
-from camel_tools.calima_star.database import CalimaStarDB
-from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
-from camel_tools.calima_star.generator import CalimaStarGenerator
-from camel_tools.calima_star.reinflector import CalimaStarReinflector
-from camel_tools.calima_star.errors import DatabaseError, AnalyzerError
-from camel_tools.calima_star.errors import GeneratorError, CalimaStarError
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.analyzer import Analyzer
+from camel_tools.morphology.generator import Generator
+from camel_tools.morphology.reinflector import Reinflector
+from camel_tools.morphology.errors import DatabaseError, AnalyzerError
+from camel_tools.morphology.errors import GeneratorError, MorphologyError
 from camel_tools.disambig.mle import MLEDisambiguator
 
 
@@ -96,7 +96,7 @@ __version__ = camelt.__version__
 _ANALYSIS_BACKOFFS = frozenset(('NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
                                 'ADD_PROP'))
 _GENARATION_BACKOFFS = frozenset(('NONE', 'REINFLECT'))
-_BUILTIN_DBS = frozenset([db.name for db in CalimaStarDB.list_builtin_dbs()])
+_BUILTIN_DBS = frozenset([db.name for db in MorphologyDB.list_builtin_dbs()])
 _DEFAULT_DB = 'almor-msa-ext'
 
 _DIAC_RE = re.compile(r'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + r']')
@@ -148,7 +148,7 @@ def _open_files(finpath, foutpath):
 
 
 def _list_dbs():
-    for db in sorted(CalimaStarDB.list_builtin_dbs()):
+    for db in sorted(MorphologyDB.list_builtin_dbs()):
         sys.stdout.write('{}\t{}\n'.format(db.name, db.version))
 
 
@@ -220,9 +220,9 @@ def _parse_reinflector_line(line):
 
 def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
     if cache:
-        analyzer = CalimaStarAnalyzer(db, backoff, cache_size=1024)
+        analyzer = Analyzer(db, backoff, cache_size=1024)
     else:
-        analyzer = CalimaStarAnalyzer(db, backoff)
+        analyzer = Analyzer(db, backoff)
     disambig = None
 
     if num_disambig is not None:
@@ -261,8 +261,8 @@ def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
 
 
 def _generate(db, fin, fout, backoff):
-    generator = CalimaStarGenerator(db)
-    reinflector = CalimaStarReinflector(db) if backoff == 'REINFLECT' else None
+    generator = Generator(db)
+    reinflector = Reinflector(db) if backoff == 'REINFLECT' else None
 
     line = force_unicode(fin.readline())
     line_num = 1
@@ -332,7 +332,7 @@ def _generate(db, fin, fout, backoff):
 
 
 def _reinflect(db, fin, fout):
-    reinflector = CalimaStarReinflector(db)
+    reinflector = Reinflector(db)
 
     line = force_unicode(fin.readline())
     line_num = 1
@@ -370,7 +370,7 @@ def _reinflect(db, fin, fout):
                     fout.write(force_encoding(serialized))
 
                 fout.write('\n\n')
-            except CalimaStarError as error:
+            except MorphologyError as error:
                 # This could be thrown by the analyzer, generator, or
                 # reinflector.
                 if fin is sys.stdin:
@@ -434,9 +434,9 @@ def main():  # pragma: no cover
         try:
             dbname = arguments.get('--db', _DEFAULT_DB)
             if dbname in _BUILTIN_DBS:
-                db = CalimaStarDB.builtin_db(dbname, dbflags)
+                db = MorphologyDB.builtin_db(dbname, dbflags)
             else:
-                db = CalimaStarDB(dbname, dbflags)
+                db = MorphologyDB(dbname, dbflags)
         except DatabaseError:
             sys.stderr.write('Error: Couldn\'t parse database.\n')
             sys.exit(1)

@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""The database component of CALIMA Star.
+"""The database component of CAMeL Tools.
 """
 
 from __future__ import absolute_import
@@ -32,20 +32,20 @@ from pathlib import Path
 import re
 
 from camel_tools.utils.stringutils import force_unicode
-from camel_tools.calima_star.errors import InvalidDatabaseFlagError
-from camel_tools.calima_star.errors import DatabaseParseError
+from camel_tools.morphology.errors import InvalidDatabaseFlagError
+from camel_tools.morphology.errors import DatabaseParseError
 from camel_tools.data import DataCatalogue
 
 
 _LEMMA_SPLIT_RE = re.compile(r'-|_')
 
 
-CalimaStarDBFlags = namedtuple('CalimaStarDBFlags', ['analysis', 'generation',
+MorphologyDBFlags = namedtuple('MorphologyDBFlags', ['analysis', 'generation',
                                                      'reinflection'])
 
 
-class CalimaStarDB:
-    """Class providing indexes from a given CALIMA Star database file.
+class MorphologyDB:
+    """Class providing indexes from a given morphology database file.
 
     Args:
         fpath (:obj:`str`): File path to database.
@@ -57,7 +57,7 @@ class CalimaStarDB:
             Defaults to 'a'.
 
     Raises:
-        :obj:`~camel_tools.calima_star.errors.InvalidDatabaseFlagError`: When
+        :obj:`~camel_tools.morphology.errors.InvalidDatabaseFlagError`: When
             an invalid flag value is given.
     """
 
@@ -74,24 +74,24 @@ class CalimaStarDB:
 
     @staticmethod
     def builtin_db(db_name='almor-msa-ext', flags='a'):
-        """Create a :obj:`CalimaStarDB` instance from one of the builtin
+        """Create a :obj:`MorphologyDB` instance from one of the builtin
         databases provided.
 
         Args:
             db_name (:obj:`str`, optional): Name of builtin database.
                 You can use :meth:`list_builtin_dbs` to get a list of
-                builtin databases or see :ref:`calima_star_databases`.
+                builtin databases or see :ref:`morphology_databases`.
                 Defaults to 'almor-msa-ext'.
             flags (:obj:`str`, optional): Flag string to be passed to
-                :obj:`CalimaStarDB` constructor. Defaults to 'a'.
+                :obj:`MorphologyDB` constructor. Defaults to 'a'.
 
         Returns:
-            :obj:`CalimaStarDB`: Instance of builtin database with given flags.
+            :obj:`MorphologyDB`: Instance of builtin database with given flags.
         """
 
         db_info = DataCatalogue.get_dataset_info('MorphologyDB', db_name)
 
-        return CalimaStarDB(str(Path(db_info.path, 'morphology.db')), flags)
+        return MorphologyDB(str(Path(db_info.path, 'morphology.db')), flags)
 
     def __init__(self, fpath, flags='a'):
         """Class constructor.
@@ -117,7 +117,7 @@ class CalimaStarDB:
         if self._withAnalysis and self._withGeneration:
             self._withReinflection = True
 
-        self.flags = CalimaStarDBFlags(self._withAnalysis,
+        self.flags = MorphologyDBFlags(self._withAnalysis,
                                        self._withGeneration,
                                        self._withGeneration)
         self.defines = {}
@@ -126,18 +126,18 @@ class CalimaStarDB:
         self.compute_feats = set()
         self.stem_backoffs = {}
 
-        self.prefix_hash = {} if self._withAnalysis else None
-        self.suffix_hash = {} if self._withAnalysis else None
-        self.stem_hash = {} if self._withAnalysis else None
+        self.prefix_hash = {}
+        self.suffix_hash = {}
+        self.stem_hash = {}
 
-        self.prefix_cat_hash = {} if self._withGeneration else None
-        self.suffix_cat_hash = {} if self._withGeneration else None
-        self.lemma_hash = {} if self._withGeneration else None
+        self.prefix_cat_hash = {}
+        self.suffix_cat_hash = {}
+        self.lemma_hash = {}
 
-        self.prefix_stem_compat = {} if self._withAnalysis else None
+        self.prefix_stem_compat = {}
         self.stem_suffix_compat = {}
         self.prefix_suffix_compat = {}
-        self.stem_prefix_compat = {} if self._withGeneration else None
+        self.stem_prefix_compat = {}
         self.max_prefix_size = 0
         self.max_suffix_size = 0
 
@@ -168,7 +168,6 @@ class CalimaStarDB:
                 raise DatabaseParseError(
                     'invalid key value pair {} in DEFAULTS'.format(
                         repr(tok)))
-                continue
 
             feat = subtoks[0]
             val = ':'.join(subtoks[1:])

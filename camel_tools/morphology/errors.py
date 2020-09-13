@@ -22,12 +22,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""CALIMA Star error classes.
+"""Morphology error classes.
 """
 
 
-class CalimaStarError(Exception):
-    """Base class for all CALIMA Star errors.
+class MorphologyError(Exception):
+    """Base class for all morphology errors.
     """
 
     def __init__(self, msg):
@@ -39,12 +39,12 @@ class CalimaStarError(Exception):
 
 # Database Errors
 
-class DatabaseError(CalimaStarError):
+class DatabaseError(MorphologyError):
     """Base class for errors thrown by Database component.
     """
 
     def __init__(self, msg):
-        CalimaStarError.__init__(self, msg)
+        MorphologyError.__init__(self, msg)
 
 
 class InvalidBuiltinDatabaseName(DatabaseError):
@@ -76,22 +76,22 @@ class DatabaseParseError(DatabaseError):
 
 # Analyzer Errors
 
-class AnalyzerError(CalimaStarError):
+class AnalyzerError(MorphologyError):
     """Class for errors thrown by Analyzer component.
     """
 
     def __init__(self, msg):
-        CalimaStarError.__init__(self, msg)
+        MorphologyError.__init__(self, msg)
 
 
 # Generator Errors
 
-class GeneratorError(CalimaStarError):
+class GeneratorError(MorphologyError):
     """Base class for errors thrown by Generator component.
     """
 
     def __init__(self, msg):
-        CalimaStarError.__init__(self, msg)
+        MorphologyError.__init__(self, msg)
 
 
 class InvalidGeneratorFeature(GeneratorError):
@@ -113,12 +113,12 @@ class InvalidGeneratorFeatureValue(GeneratorError):
 
 # Reinflector Errors
 
-class ReinflectorError(CalimaStarError):
+class ReinflectorError(MorphologyError):
     """Base class for errors thrown by Reinflector component.
     """
 
     def __init__(self, msg):
-        CalimaStarError.__init__(self, msg)
+        MorphologyError.__init__(self, msg)
 
 
 class InvalidReinflectorFeature(ReinflectorError):

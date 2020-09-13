@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Utility functions used by the various components of Calima Star.
+"""Utility functions used by the various morphology components.
 """
 
 import copy

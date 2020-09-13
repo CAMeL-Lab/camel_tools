@@ -7,4 +7,4 @@ Command-line Tools
 
    cli/camel_transliterate
    cli/camel_arclean
-   cli/camel_calima_star
+   cli/camel_morphology

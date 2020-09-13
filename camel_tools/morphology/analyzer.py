@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 
-"""The morphological analyzer component of CALIMA Star.
+"""The morphological analyzer component of CAMeL Tools.
 """
 
 
@@ -41,10 +41,10 @@ from camel_tools.utils.charsets import UNICODE_PUNCT_SYMBOL_CHARSET
 from camel_tools.utils.charsets import AR_CHARSET, AR_DIAC_CHARSET
 
 from camel_tools.utils.charmap import CharMapper
-from camel_tools.calima_star.database import CalimaStarDB
-from camel_tools.calima_star.errors import AnalyzerError
-from camel_tools.calima_star.utils import merge_features
-from camel_tools.calima_star.utils import simple_ar_to_caphi
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.errors import AnalyzerError
+from camel_tools.morphology.utils import merge_features
+from camel_tools.morphology.utils import simple_ar_to_caphi
 from camel_tools.utils.dediac import dediac_ar
 
 
@@ -75,7 +75,7 @@ DEFAULT_NORMALIZE_MAP = CharMapper({
     u'\u0640': u''
 })
 """:obj:`~camel_tools.utils.charmap.CharMapper`: The default character map used
-for normalization by :obj:`CalimaStarAnalyzer`.
+for normalization by :obj:`Analyzer`.
 
 Removes the tatweel/kashida character and does the following conversions:
 
@@ -99,7 +99,7 @@ class AnalyzedWord(namedtuple('AnalyzedWord', ['word', 'analyses'])):
         word (:obj:`str`): The analyzed word.
 
         analyses (:obj:`list` of :obj:`dict`): List of analyses for **word**.
-            See :doc:`/reference/calima_star_features` for more information on
+            See :doc:`/reference/morphology_features` for more information on
             features and their values.
     """
 
@@ -134,11 +134,11 @@ def _segments_gen(word, max_prefix=1, max_suffix=1):
             yield (prefix, stem, suffix)
 
 
-class CalimaStarAnalyzer:
-    """CALIMA Star analyzer component.
+class Analyzer:
+    """Morphological analyzer component.
 
     Args:
-        db (:obj:`~camel_tools.calima_star.database.CalimaStarDB`): Database to
+        db (:obj:`~camel_tools.morphology.database.MorphologyDB`): Database to
             use for analysis. Must be opened in analysis or reinflection mode.
         backoff (:obj:`str`, optional): Backoff mode. Can be one of the
             following: 'NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL', or
@@ -155,9 +155,9 @@ class CalimaStarAnalyzer:
             frequent words, otherwise no analyses will be cached.
 
     Raises:
-        :obj:`~camel_tools.calima_star.errors.AnalyzerError`: If database is
+        :obj:`~camel_tools.morphology.errors.AnalyzerError`: If database is
             not an instance of
-            (:obj:`~camel_tools.calima_star.database.CalimaStarDB`), if **db**
+            (:obj:`~camel_tools.morphology.database.MorphologyDB`), if **db**
             does not support analysis, or if **backoff** is not a valid backoff
             mode.
     """
@@ -166,8 +166,8 @@ class CalimaStarAnalyzer:
                  norm_map=DEFAULT_NORMALIZE_MAP,
                  strict_digit=False,
                  cache_size=0):
-        if not isinstance(db, CalimaStarDB):
-            raise AnalyzerError('DB is not an instance of CalimaStarDB')
+        if not isinstance(db, MorphologyDB):
+            raise AnalyzerError('DB is not an instance of MorphologyDB')
         if not db.flags.analysis:
             raise AnalyzerError('DB does not support analysis')
 
@@ -283,6 +283,7 @@ class CalimaStarAnalyzer:
 
         return combined
 
+    # pylint: disable=E0202
     def analyze(self, word):
         """Analyze a given word.
 
@@ -291,7 +292,7 @@ class CalimaStarAnalyzer:
 
         Returns:
             :obj:`list` of :obj:`dict`: The list of analyses for **word**.
-            See :doc:`/reference/calima_star_features` for more information on
+            See :doc:`/reference/morphology_features` for more information on
             features and their values.
         """
 

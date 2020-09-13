@@ -1,12 +1,12 @@
-camel_tools.calima_star.generator
+camel_tools.morphology.generator
 =================================
 
-The generator component of CALIMA Star.
+.. automodule:: camel_tools.morphology.generator
 
 Classes
 -------
 
-.. autoclass:: camel_tools.calima_star.generator.CalimaStarGenerator
+.. autoclass:: camel_tools.morphology.generator.Generator
    :members:
 
 Examples
@@ -14,14 +14,14 @@ Examples
 
 .. code-block:: python
 
-   from camel_tools.calima_star.database import CalimaStarDB
-   from camel_tools.calima_star.generator import CalimaStarGenerator
+   from camel_tools.morphology.database import MorphologyDB
+   from camel_tools.morphology.generator import Generator
 
    # Initialize database in generation mode
-   db = CalimaStarDB('path/to/database', 'g')
+   db = DB('path/to/database', 'g')
 
    # Create generator instance
-   generator = CalimaStarGenerator(db)
+   generator = Generator(db)
 
    # Specify lemma and features to generate for
    lemma = ''

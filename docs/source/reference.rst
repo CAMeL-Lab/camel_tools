@@ -6,4 +6,4 @@ Reference
    :caption: Contents:
 
    reference/encoding_schemes
-   reference/calima_star_features
+   reference/morphology_features

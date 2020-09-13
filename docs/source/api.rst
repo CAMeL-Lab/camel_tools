@@ -15,7 +15,7 @@ Python API Reference
 
    api/utils
    api/data
-   api/calima_star
+   api/morphology
    api/disambig
    api/tokenizers
    api/dialectid

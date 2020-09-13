@@ -22,7 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""The reinflector component of CALIMA Star.
+"""The reinflector component of CAMeL Tools.
 """
 
 from __future__ import absolute_import
@@ -31,12 +31,12 @@ from collections import deque
 
 import re
 
-from camel_tools.calima_star.database import CalimaStarDB
-from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
-from camel_tools.calima_star.generator import CalimaStarGenerator
-from camel_tools.calima_star.errors import ReinflectorError
-from camel_tools.calima_star.errors import InvalidReinflectorFeature
-from camel_tools.calima_star.errors import InvalidReinflectorFeatureValue
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.analyzer import Analyzer
+from camel_tools.morphology.generator import Generator
+from camel_tools.morphology.errors import ReinflectorError
+from camel_tools.morphology.errors import InvalidReinflectorFeature
+from camel_tools.morphology.errors import InvalidReinflectorFeatureValue
 from camel_tools.utils.dediac import dediac_ar
 
 
@@ -56,31 +56,31 @@ _ANY_FEATS = frozenset(['per', 'gen', 'num', 'cas', 'stt', 'vox', 'mod',
 _LEMMA_SPLIT_RE = re.compile(u'-|_')
 
 
-class CalimaStarReinflector(object):
-    """CALIMA Star reinflector component.
+class Reinflector(object):
+    """Morphological reinflector component.
 
     Arguments:
-        db (:obj:`~camel_tools.calima_star.database.CalimaStarDB`): Database to
+        db (:obj:`~camel_tools.morphology.database.MorphologyDB`): Database to
             use for generation. Must be opened in reinflection mode or both
             analysis and generation modes.
 
     Raises:
-        :obj:`~camel_tools.calima_star.errors.ReinflectorError`: If **db** is
+        :obj:`~camel_tools.morphology.errors.ReinflectorError`: If **db** is
             not an instance of
-            :obj:`~camel_tools.calima_star.database.CalimaStarDB` or if **db**
+            :obj:`~camel_tools.morphology.database.MorphologyDB` or if **db**
             does not support reinflection.
     """
 
     def __init__(self, db):
-        if not isinstance(db, CalimaStarDB):
-            raise ReinflectorError('DB is not an instance of CalimaStarDB')
+        if not isinstance(db, MorphologyDB):
+            raise ReinflectorError('DB is not an instance of MorphologyDB')
         if not db.flags.generation:
             raise ReinflectorError('DB does not support reinflection')
 
         self._db = db
 
-        self._analyzer = CalimaStarAnalyzer(db)
-        self._generator = CalimaStarGenerator(db)
+        self._analyzer = Analyzer(db)
+        self._generator = Generator(db)
 
     def reinflect(self, word, feats):
         """Generate analyses for a given word from a given set of inflectional
@@ -89,18 +89,18 @@ class CalimaStarReinflector(object):
         Arguments:
             word (:obj:`str`): Word to reinflect.
             feats (:obj:`dict`): Dictionary of features.
-                See :doc:`/reference/calima_star_features` for more information
+                See :doc:`/reference/morphology_features` for more information
                 on features and their values.
 
         Returns:
             :obj:`list` of :obj:`dict`: List of generated analyses.
-            See :doc:`/reference/calima_star_features` for more information on
+            See :doc:`/reference/morphology_features` for more information on
             features and their values.
 
         Raises:
-            :obj:`~camel_tools.calima_star.errors.InvalidReinflectorFeature`:
+            :obj:`~camel_tools.morphology.errors.InvalidReinflectorFeature`:
                 If a feature is given that is not defined in database.
-            :obj:`~camel_tools.calima_star.errors.InvalidReinflectorFeatureValue`:
+            :obj:`~camel_tools.morphology.errors.InvalidReinflectorFeatureValue`:
                 If an invalid value is given to a feature or if 'pos' feature
                 is not defined.
         """

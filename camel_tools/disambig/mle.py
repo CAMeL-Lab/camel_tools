@@ -32,14 +32,14 @@ import json
 from camel_tools.utils.dediac import dediac_ar
 from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
-from camel_tools.calima_star.database import CalimaStarDB
-from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.analyzer import Analyzer
 from camel_tools.data import get_dataset_path
 
 
 def _almor_msa_ext_analyzer():
-    db = CalimaStarDB.builtin_db('almor-msa-ext', 'a')
-    analyzer = CalimaStarAnalyzer(db, 'NOAN_PROP')
+    db = MorphologyDB.builtin_db('almor-msa-ext', 'a')
+    analyzer = Analyzer(db, 'NOAN_PROP')
     return analyzer
 
 
@@ -62,7 +62,7 @@ class MLEDisambiguator(Disambiguator):
     disambiguate words based on the pos-lex frequencies of their analyses.
 
     Args:
-        analyzer (:obj:`~camel_tools.calima_star.analyzer.CalimaStarAnalyzer`):
+        analyzer (:obj:`~camel_tools.morphology.analyzer.Analyzer`):
             Disambiguator to use if a word is not in the word-based MLE model.
             The analyzer should provide the pos-lex frequencies for analyses to
             disambiguate analyses.
@@ -87,7 +87,7 @@ class MLEDisambiguator(Disambiguator):
             model_name (:obj:`str`, optional): The name of the pretrained
                 model. If none, the dault model ('almor-msa-ext') is loaded.
                 Defaults to None.
-            analyzer (:obj;`CalimaStarAnalyzer`, optional): Alternative
+            analyzer (:obj;`Analyzer`, optional): Alternative
                 analyzer to use. If None, an instance of the model's default
                 analyzer is created. Defaults to None.
 
