@@ -1,6 +1,10 @@
 camel_tools.dialectid
 ======================
 
+.. DANGER::
+   **Note:** This component is not available on Windows.
+
+
 .. automodule:: camel_tools.dialectid
 
 
