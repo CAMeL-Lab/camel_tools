@@ -47,10 +47,10 @@ def _get_appdatadir():
     home = Path.home()
 
     # TODO: Make sure this works with OSs other than Windows, Linux and Mac.
-    if sys.platform == "win32":
-        return Path(home, "AppData/Roaming/camel_tools/data")
+    if sys.platform == 'win32':
+        return Path(home, 'AppData/Roaming/camel_tools/data')
     else:
-        return Path(home, ".camel_tools/data")
+        return Path(home, '.camel_tools/data')
 
 
 CT_DATA_PATH_DEFAULT = _get_appdatadir()

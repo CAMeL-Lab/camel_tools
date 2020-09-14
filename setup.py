@@ -121,5 +121,5 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
-    python_requires=">=3.6.0"
+    python_requires='>=3.6.0'
 )
