@@ -31,7 +31,12 @@ import collections
 from pathlib import Path
 import sys
 
-import kenlm
+if sys.platform == 'win32':
+    raise ModuleNotFoundError(
+        'camel_tools.dialectid is not available on Windows.')
+else:
+    import kenlm
+
 import numpy as np
 import pandas as pd
 import scipy as sp
