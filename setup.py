@@ -24,6 +24,7 @@
 
 import os
 from setuptools import setup
+import sys
 
 
 VERSION_FILE = os.path.join(os.path.dirname(__file__),
@@ -70,11 +71,17 @@ INSTALL_REQUIRES = [
     'scipy',
     'pandas',
     'scikit-learn',
-    'kenlm @ https://github.com/kpu/kenlm/archive/master.zip',
     'dill',
     'torch>=1.3',
     'transformers==3.0.2',
 ]
+
+INSTALL_REQUIRES_NOT_WINDOWS = [
+    'kenlm @ https://github.com/kpu/kenlm/archive/master.zip'
+]
+
+if sys.platform != 'win32':
+    INSTALL_REQUIRES.extend(INSTALL_REQUIRES_NOT_WINDOWS)
 
 setup(
     name='camel_tools',
