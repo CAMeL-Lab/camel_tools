@@ -31,10 +31,9 @@ import torch
 import torch.nn.functional as torch_fun
 from transformers import BertTokenizer, BertForTokenClassification
 
-from camel_tools.data import get_dataset_path
+from camel_tools.data import DataCatalogue
 
 
-_DEFAULT_DATA_PATH = get_dataset_path('NamedEntityRecognition')
 _LABELS = ['B-LOC', 'B-ORG', 'B-PERS', 'I-LOC', 'I-ORG', 'I-PERS']
 _IGNORE_LABELS = []
 _SPECIAL_TOKENS = ['[SEP]', '[CLS]']
@@ -69,8 +68,10 @@ class NERecognizer:
             :obj:`NERecognizer`: Instance with loaded pre-trained model.
         """
 
-        model_path = str(get_dataset_path('NamedEntityRecognition',
-                                          model_name))
+        model_info = DataCatalogue.get_dataset_info('NamedEntityRecognition',
+                                                    model_name)
+        model_path = str(model_info.path)
+
         return NERecognizer(model_path)
 
     @staticmethod

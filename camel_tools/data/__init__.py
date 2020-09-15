@@ -30,7 +30,7 @@ import sys
 
 class DataLookupException(ValueError):
     """Exception thrown when an invalid component or dataset is specified in a
-    dataset lookup operation (eg. :meth:`get_dataset_path`).
+    dataset lookup operation.
 
     Args:
         msg (:obj:`str`): Exception message to be displayed.
@@ -97,43 +97,6 @@ class DatasetInfo(_DatasetInfo):
         version (:obj:`str`): This dataset's version number.
         path (:obj:`Path`): The path to this dataset.
     """
-
-
-# TODO: Wrap this in a class with static methods and a dict like interface
-def get_dataset_path(component, dataset=None):
-    """Return the path to given dataset for a specific component. It takes into
-    consideration the camel_tools data path. by default it's in
-    '~/.camel_tools/data' on Unix systems and
-    '~/AppData/Roaming/camel_tools/data' on Windows.
-
-    Args:
-        component (:obj:`str`): Name of the component
-        dataset (:obj:`str`, optional): Name of dataset for given component.
-            Defaults to 'default'.
-
-    Raises:
-        DataLookupException: When either component or dataset are invalid.
-
-    Returns:
-        :obj:`pathlib.Path`: Path to dataset.
-    """
-
-    if component not in _CATALOGUE['components']:
-        raise DataLookupException('Undefined component {}.'.format(
-            repr(component)))
-
-    if dataset is None:
-        dataset = _CATALOGUE['components'][component]['default']
-
-    if dataset not in _CATALOGUE['components'][component]['datasets']:
-        raise DataLookupException(
-            'Undefined dataset {} for component {}.'.format(repr(dataset),
-                                                            repr(component)))
-    # We assume that the catalogue is internally consistent so we don't need to
-    # check if 'path' exists.
-    ds_path = _CATALOGUE['components'][component]['datasets'][dataset]['path']
-
-    return Path(_CT_DATA_PATH, ds_path)
 
 
 def _gen_catalogue(cat_dict):

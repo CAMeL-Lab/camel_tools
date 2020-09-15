@@ -50,7 +50,7 @@ from sklearn.metrics import accuracy_score, f1_score, recall_score
 from sklearn.metrics import precision_score
 import dill
 
-from camel_tools.data import get_dataset_path
+from camel_tools.data import DataCatalogue
 from camel_tools.tokenizers.word import simple_word_tokenize
 from camel_tools.utils.dediac import dediac_ar
 
@@ -91,7 +91,7 @@ _LABEL_MAP = {
     'TUN': 'Tunis'
 }
 
-_DATA_DIR = get_dataset_path('DialectID')
+_DATA_DIR = DataCatalogue.get_dataset_info('DialectID').path
 _CHAR_LM_DIR = Path(_DATA_DIR, 'lm', 'char')
 _WORD_LM_DIR = Path(_DATA_DIR, 'lm', 'word')
 _TRAIN_DATA_PATH = Path(_DATA_DIR, 'corpus_26_train.tsv')

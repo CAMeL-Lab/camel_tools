@@ -32,10 +32,9 @@ import torch
 import torch.nn.functional as torch_fun
 from transformers import BertTokenizer, BertForSequenceClassification
 
-from camel_tools.data import get_dataset_path
+from camel_tools.data import DataCatalogue
 
 
-_DEFAULT_DATA_PATH = get_dataset_path('SentimentAnalysis')
 _LABELS = ('positive', 'negative', 'neutral')
 
 
@@ -64,7 +63,10 @@ class SentimentAnalyzer:
             :obj:`SentimentAnalyzer`: Instance with loaded pre-trained model.
         """
 
-        model_path = str(get_dataset_path('SentimentAnalysis', model_name))
+        model_info = DataCatalogue.get_dataset_info('SentimentAnalysis',
+                                                    model_name)
+        model_path = str(model_info.path)
+
         return SentimentAnalyzer(model_path)
 
     @staticmethod
