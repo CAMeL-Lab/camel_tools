@@ -28,7 +28,6 @@
 
 Usage:
     camel_morphology analyze
-                     [-D DISAMBIG | --disambig=DISAMBIG]
                      [-d DATABASE | --db=DATABASE]
                      [-b BACKOFF | --backoff=BACKOFF]
                      [-c | --cache]
@@ -52,9 +51,6 @@ Options:
         [default: NONE]
   -c --cache
         Cache computed analyses (only in analyze mode).
-  -D DISAMBIG --disambig=DISAMBIG
-        Disambiguate analyses using pos-lex frequency showing only the top
-        DISAMBIG analyses. DISAMBIG should be a non-zero positive integer.
   -d DATABASE --db=DATABASE
         Morphology database to use. DATABASE could be the name of a builtin
         database or a path to a database file. [default: calima-msa-r13]
@@ -87,7 +83,6 @@ from camel_tools.morphology.generator import Generator
 from camel_tools.morphology.reinflector import Reinflector
 from camel_tools.morphology.errors import DatabaseError, AnalyzerError
 from camel_tools.morphology.errors import GeneratorError, MorphologyError
-from camel_tools.disambig.mle import MLEDisambiguator
 
 
 __version__ = camelt.__version__
@@ -218,15 +213,11 @@ def _parse_reinflector_line(line):
     return (word, feats)
 
 
-def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
+def _analyze(db, fin, fout, backoff, cache):
     if cache:
         analyzer = Analyzer(db, backoff, cache_size=1024)
     else:
         analyzer = Analyzer(db, backoff)
-    disambig = None
-
-    if num_disambig is not None:
-        disambig = MLEDisambiguator(analyzer)
 
     line = force_unicode(fin.readline())
 
@@ -241,14 +232,7 @@ def _analyze(db, fin, fout, backoff, cache, num_disambig=None):
         for token in tokens:
             analyses = analyzer.analyze(token)
 
-            if num_disambig is not None:
-                dambg = disambig.disambiguate([token], num_disambig)
-                analyses = [a.analysis for a in dambg[0].analyses]
-            else:
-                analyses = analyzer.analyze(token)
-
-            serialized = _serialize_analyses(fout, token, analyses,
-                                             db.order)
+            serialized = _serialize_analyses(fout, token, analyses, db.order)
 
             if six.PY3:
                 fout.write(serialized)
@@ -399,16 +383,6 @@ def main():  # pragma: no cover
         cache = arguments.get('--cache', False)
         backoff = arguments.get('--backoff', 'NONE')
 
-        num_disambig = None
-        if analyze:
-            num_disambig = arguments.get('--disambig', None)
-            if num_disambig is not None:
-                num_disambig = _to_int(num_disambig)
-                if num_disambig is None or num_disambig < 1:
-                    sys.stderr.write('Error: DISAMBIG must be a'
-                                     'non-zero positive integer.\n')
-                    sys.exit(1)
-
         # Make sure we have a valid backoff mode
         if backoff is None:
             backoff = 'NONE'
@@ -447,7 +421,7 @@ def main():  # pragma: no cover
         # Continue execution in requested mode
         if analyze:
             try:
-                _analyze(db, fin, fout, backoff, cache, num_disambig)
+                _analyze(db, fin, fout, backoff, cache)
             except AnalyzerError as error:
                 sys.stderr.write('Error: {}\n'.format(error.msg))
                 sys.exit(1)
