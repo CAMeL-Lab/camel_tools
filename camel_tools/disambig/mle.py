@@ -82,8 +82,10 @@ class MLEDisambiguator(Disambiguator):
         if mle_path is not None:
             with open(mle_path, 'r', encoding='utf-8') as mle_fp:
                 self._mle = json.load(mle_fp)
-        else:
-            self._mle = None
+ 
+        if not isinstance(analyzer, Analyzer):
+            raise ValueError('Invalid analyzer instance.')
+
         self._analyzer = analyzer
 
     @staticmethod
