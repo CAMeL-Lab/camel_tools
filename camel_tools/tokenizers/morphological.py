@@ -41,7 +41,8 @@ class MorphologicalTokenizer(object):
         disambiguator (:obj:`~camel_tools.disambig.common.Disambiguator`): The
             disambiguator to use for tokenization.
         scheme (:obj:`str`, optional): The tokenization scheme to use.
-            Defaults to 'atbtok'. See :doc:`/reference/morphology_features`
+            Defaults to 'atbtok'.
+            See :doc:`/reference/camel_morphology_features`
             for more information on available tokenization schemes.
         split (:obj:`bool`, optional): If set to True, then morphological
             tokens will be split into separate strings, otherwise they will be

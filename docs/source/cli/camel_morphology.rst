@@ -83,7 +83,7 @@ line indicating the word followed by either a line of feature-value pairs for
 each analysis generated or a line with 'NO_ANALYSIS', to indicate no analyses
 could be generated, followed by an empty line. An additional empty line is
 printed to indicate the end of a line of input.
-See :doc:`/reference/morphology_features` for more information.
+See :doc:`/reference/camel_morphology_features` for more information.
 
 The output for the above example would be:
 
@@ -138,7 +138,7 @@ colon seperated (ie. \ ``lemma feature_1:value_1 feature_2:value_2 ...``\ ).
 The ``pos`` feature should **always** be specified.
 Note that, while each line should begin with lemma, the feature-value pairs can
 be specified in any order.
-See :doc:`/reference/morphology_features` for more information.
+See :doc:`/reference/camel_morphology_features` for more information.
 
 Example:
 
@@ -153,7 +153,7 @@ For each line in the input, ``camel_morphology`` will output a line indicating
 the lemma followed by either a line of feature-value pairs for each analysis
 generated or a line with 'NO_ANALYSIS', to indicate no analyses could be
 generated, followed by an empty line.
-See :doc:`/reference/morphology_features` for more information.
+See :doc:`/reference/camel_morphology_features` for more information.
 
 The output for the above example would be:
 
@@ -188,7 +188,7 @@ colon seperated
 (ie. \ ``word feature_1:value_1 feature_2:value_2 ...``\ ).
 Note that, while each line should begin with the word to be reinflected, the
 feature-value pairs can be specified in any order.
-See :doc:`/reference/morphology_features` for more information.
+See :doc:`/reference/camel_morphology_features` for more information.
 
 Example:
 
@@ -203,7 +203,7 @@ For each line in the input, ``camel_morphology`` will output a line indicating
 the word followed by either a line of feature-value pairs for each analysis
 generated or a line with 'NO_ANALYSIS', to indicate no analyses could be
 generated, followed by an empty line.
-See :doc:`/reference/morphology_features` for more information.
+See :doc:`/reference/camel_morphology_features` for more information.
 
 The output for the above example would be:
 

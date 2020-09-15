@@ -39,7 +39,7 @@ class ScoredAnalysis(namedtuple('ScoredAnalysis', ['score', 'analysis'])):
         score (:obj:`float`): The score of a given analysis.
 
         analysis (:obj:`dict`): The analysis dictionary.
-            See :doc:`/reference/morphology_features` for more information on
+            See :doc:`/reference/camel_morphology_features` for more information on
             features and their values.
     """
 

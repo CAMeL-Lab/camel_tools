@@ -89,12 +89,12 @@ class Reinflector(object):
         Arguments:
             word (:obj:`str`): Word to reinflect.
             feats (:obj:`dict`): Dictionary of features.
-                See :doc:`/reference/morphology_features` for more information
+                See :doc:`/reference/camel_morphology_features` for more information
                 on features and their values.
 
         Returns:
             :obj:`list` of :obj:`dict`: List of generated analyses.
-            See :doc:`/reference/morphology_features` for more information on
+            See :doc:`/reference/camel_morphology_features` for more information on
             features and their values.
 
         Raises:

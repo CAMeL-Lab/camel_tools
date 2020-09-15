@@ -6,4 +6,4 @@ Reference
    :caption: Contents:
 
    reference/encoding_schemes
-   reference/morphology_features
+   reference/camel_morphology_features

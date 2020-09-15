@@ -1,5 +1,5 @@
-Morphology Features
-===================
+CAMeL Morphology Features
+=========================
 
 Below is a listing of all the features and their respective values produced or
 required by the morphological analyzer, generator, and reinflector.
