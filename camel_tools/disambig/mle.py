@@ -34,7 +34,7 @@ from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
-from camel_tools.data import get_dataset_path
+from camel_tools.data import DataCatalogue
 
 
 def _calima_msa_r13_analyzer():
@@ -102,14 +102,11 @@ class MLEDisambiguator(Disambiguator):
             :obj:`MLEDisambiguator`: The loaded MLE disambiguator.
         """
 
-        # TODO: Use camel_tools.data instead (after reimplementing it).
-        if model_name is None:
-            model_name = 'calima-msa-r13'
-
-        mle_path = get_dataset_path('DisambigMLE', model_name) / 'model.json'
+        model_info = DataCatalogue.get_dataset_info('DisambigMLE', model_name)
+        mle_path = model_info.path / 'model.json'
 
         if analyzer is None:
-            analyzer = _MLE_ANALYZER_MAP[model_name]()
+            analyzer = _MLE_ANALYZER_MAP[model_info.name]()
 
         return MLEDisambiguator(analyzer, str(mle_path))
 
