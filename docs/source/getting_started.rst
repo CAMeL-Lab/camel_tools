@@ -4,7 +4,7 @@ Getting Started
 Installation
 ------------
 
-You will need Python 3.4 and above.
+You will need Python 3.6 and above (64-bit).
 
 Using pip
 ^^^^^^^^^
@@ -12,6 +12,9 @@ Using pip
 .. code-block:: bash
 
    pip install camel_tools
+
+   # On Windows you may have to do the following
+   pip install camel-tools -f https://download.pytorch.org/whl/torch_stable.html
 
 From Source
 ^^^^^^^^^^^
@@ -24,6 +27,9 @@ From Source
 
    # Install CAMeL Tools and all dependencies
    pip install .
+
+   # On Windows you may have to do the following
+   pip install . -f https://download.pytorch.org/whl/torch_stable.html
 
 Installing Data
 ^^^^^^^^^^^^^^^

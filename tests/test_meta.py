@@ -38,8 +38,8 @@ from camel_tools.cli import camel_arclean
 
 
 VERSION_PATH = os.path.join(os.path.dirname(camelt.__file__), 'VERSION')
-with open(VERSION_PATH, 'r') as infile:
-    VERSION = infile.read().strip()
+with open(VERSION_PATH, 'r', encoding='utf-8') as version_fp:
+    VERSION = version_fp.read().strip()
 
 
 def test_camel_tools_version():

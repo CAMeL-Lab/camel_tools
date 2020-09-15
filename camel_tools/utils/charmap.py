@@ -232,8 +232,8 @@ class CharMapper(object):
             :obj:`JSONDecodeError`: If `fpath` is not a valid JSON file.
         """
 
-        with open(fpath, 'r', encoding='utf-8') as infile:
-            jsonstr = infile.read()
+        with open(fpath, 'r', encoding='utf-8') as charmap_fp:
+            jsonstr = charmap_fp.read()
             json_dict = json.loads(jsonstr)
 
         return CharMapper(

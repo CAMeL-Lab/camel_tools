@@ -30,7 +30,7 @@ import sys
 
 class DataLookupException(ValueError):
     """Exception thrown when an invalid component or dataset is specified in a
-    dataset lookup operation (eg. :meth:`get_dataset_path`).
+    dataset lookup operation.
 
     Args:
         msg (:obj:`str`): Exception message to be displayed.
@@ -47,10 +47,10 @@ def _get_appdatadir():
     home = Path.home()
 
     # TODO: Make sure this works with OSs other than Windows, Linux and Mac.
-    if sys.platform == "win32":
-        return Path(home, "AppData/Roaming/camel_tools/data")
+    if sys.platform == 'win32':
+        return Path(home, 'AppData/Roaming/camel_tools/data')
     else:
-        return Path(home, ".camel_tools/data")
+        return Path(home, '.camel_tools/data')
 
 
 CT_DATA_PATH_DEFAULT = _get_appdatadir()
@@ -60,8 +60,10 @@ _CATALOGUE_PATH = Path(__file__).parent / 'catalogue.json'
 with _CATALOGUE_PATH.open('r', encoding='utf-8') as cat_fp:
     _CATALOGUE = json.load(cat_fp)
 
-
-_CT_DATA_PATH = Path(os.environ.get('CAMELTOOLS_DATA', CT_DATA_PATH_DEFAULT))
+if os.environ.get('CAMELTOOLS_DATA') is None:
+    _CT_DATA_PATH = CT_DATA_PATH_DEFAULT
+else:
+    _CT_DATA_PATH = Path(os.environ.get('CAMELTOOLS_DATA'), 'data')
 
 
 _ComponentInfo = namedtuple('ComponentInfo', ['name', 'datasets', 'default'])
@@ -97,43 +99,6 @@ class DatasetInfo(_DatasetInfo):
     """
 
 
-# TODO: Wrap this in a class with static methods and a dict like interface
-def get_dataset_path(component, dataset=None):
-    """Return the path to given dataset for a specific component. It takes into
-    consideration the camel_tools data path. by default it's in
-    '~/.camel_tools/data' on Unix systems and
-    '~/AppData/Roaming/camel_tools/data' on Windows.
-
-    Args:
-        component (:obj:`str`): Name of the component
-        dataset (:obj:`str`, optional): Name of dataset for given component.
-            Defaults to 'default'.
-
-    Raises:
-        DataLookupException: When either component or dataset are invalid.
-
-    Returns:
-        :obj:`pathlib.Path`: Path to dataset.
-    """
-
-    if component not in _CATALOGUE['components']:
-        raise DataLookupException('Undefined component {}.'.format(
-            repr(component)))
-
-    if dataset is None:
-        dataset = _CATALOGUE['components'][component]['default']
-
-    if dataset not in _CATALOGUE['components'][component]['datasets']:
-        raise DataLookupException(
-            'Undefined dataset {} for component {}.'.format(repr(dataset),
-                                                            repr(component)))
-    # We assume that the catalogue is internally consistent so we don't need to
-    # check if 'path' exists.
-    ds_path = _CATALOGUE['components'][component]['datasets'][dataset]['path']
-
-    return Path(_CT_DATA_PATH, ds_path)
-
-
 def _gen_catalogue(cat_dict):
     catalogue = {'components': {}}
 
@@ -158,10 +123,27 @@ def _gen_catalogue(cat_dict):
 
 
 class DataCatalogue(object):
+    """This class allows querying datasets provided by CAMeL Tools.
+    """
+
     _catalogue = _gen_catalogue(_CATALOGUE)
 
     @staticmethod
     def get_component_info(component):
+        """Get the catalogue entry for a given component.
+
+        Args:
+            component (:obj:`str`): Name of the component to lookup in the
+                catalogue.
+
+        Returns:
+            :obj:`ComponentInfo`: The catalogue entry associated with the given
+            component.
+
+        Raises:
+            DataLookupException: If `component` is not a valid component name.
+        """
+
         if component not in DataCatalogue._catalogue['components']:
             raise DataLookupException('Undefined component {}.'.format(
                                       repr(component)))
@@ -174,6 +156,22 @@ class DataCatalogue(object):
 
     @staticmethod
     def get_dataset_info(component, dataset=None):
+        """Get the catalogue entry for a given dataset for a given component.
+
+        Args:
+            component (:obj:`str`): Name of the component dataset belongs to.
+            dataset (:obj:`str`, optional): Name of the dataset for `component`
+                to lookup. If None, the entry for the default dataset for
+                `component` is returned. Defaults to None.
+
+        Returns:
+            :obj:`DatasetInfo`: The catalogue entry associated with the given
+            dataset.
+
+        Raises:
+            DataLookupException: If `component` is not a valid component name
+                or if `dataset` is not a valid dataset name for `component`.
+        """
         if component not in DataCatalogue._catalogue['components']:
             raise DataLookupException('Undefined component {}.'.format(
                                       repr(component)))

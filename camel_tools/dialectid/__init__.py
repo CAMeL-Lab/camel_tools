@@ -31,7 +31,12 @@ import collections
 from pathlib import Path
 import sys
 
-import kenlm
+if sys.platform == 'win32':
+    raise ModuleNotFoundError(
+        'camel_tools.dialectid is not available on Windows.')
+else:
+    import kenlm
+
 import numpy as np
 import pandas as pd
 import scipy as sp
@@ -45,7 +50,7 @@ from sklearn.metrics import accuracy_score, f1_score, recall_score
 from sklearn.metrics import precision_score
 import dill
 
-from camel_tools.data import get_dataset_path
+from camel_tools.data import DataCatalogue
 from camel_tools.tokenizers.word import simple_word_tokenize
 from camel_tools.utils.dediac import dediac_ar
 
@@ -86,7 +91,7 @@ _LABEL_MAP = {
     'TUN': 'Tunis'
 }
 
-_DATA_DIR = get_dataset_path('DialectID')
+_DATA_DIR = DataCatalogue.get_dataset_info('DialectID').path
 _CHAR_LM_DIR = Path(_DATA_DIR, 'lm', 'char')
 _WORD_LM_DIR = Path(_DATA_DIR, 'lm', 'word')
 _TRAIN_DATA_PATH = Path(_DATA_DIR, 'corpus_26_train.tsv')
@@ -444,13 +449,27 @@ class DialectIdentifier(object):
                 'No pretrained model for current Python version found.')
 
         with model_path.open('rb') as model_fp:
-            return dill.load(model_fp)
+            model = dill.load(model_fp)
+
+            # We need to reload LMs since they were set to None when
+            # serialized.
+            model._char_lms = collections.defaultdict(kenlm.Model)
+            model._word_lms = collections.defaultdict(kenlm.Model)
+            model._load_lms(_CHAR_LM_DIR, _WORD_LM_DIR)
+
+            return model
 
 
 def train_default_model():
     print(_DATA_DIR)
     did = DialectIdentifier()
     did.train()
+
+    # We don't want to serialize kenlm models as they will utilize the
+    # absolute LM paths used in training. They will be reloaded when using
+    # DialectIdentifer.pretrained().
+    did._char_lms = None
+    did._word_lms = None
 
     suffix = '{}{}'.format(sys.version_info.major, sys.version_info.minor)
     model_file_name = 'did_pretrained_{}.dill'.format(suffix)

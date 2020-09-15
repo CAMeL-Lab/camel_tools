@@ -24,13 +24,14 @@
 
 import os
 from setuptools import setup
+import sys
 
 
 VERSION_FILE = os.path.join(os.path.dirname(__file__),
                             'camel_tools',
                             'VERSION')
-with open(VERSION_FILE) as fh:
-    VERSION = fh.read().strip()
+with open(VERSION_FILE, encoding='utf-8') as version_fp:
+    VERSION = version_fp.read().strip()
 
 
 CLASSIFIERS = [
@@ -44,10 +45,9 @@ CLASSIFIERS = [
     'Natural Language :: Arabic',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.4',
-    'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
     'Topic :: Scientific/Engineering',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
     'Topic :: Scientific/Engineering :: Information Analysis',
@@ -59,8 +59,8 @@ DESCRIPTION = ('A suite of Arabic natural language processing tools developed '
                'by the CAMeL Lab at New York University Abu Dhabi.')
 
 README_FILE = os.path.join(os.path.dirname(__file__), 'README.rst')
-with open(README_FILE, 'r') as fh:
-    LONG_DESCRIPTION = fh.read().strip()
+with open(README_FILE, 'r', encoding='utf-8') as version_fp:
+    LONG_DESCRIPTION = version_fp.read().strip()
 
 INSTALL_REQUIRES = [
     'future',
@@ -71,11 +71,17 @@ INSTALL_REQUIRES = [
     'scipy',
     'pandas',
     'scikit-learn',
-    'kenlm @ https://github.com/kpu/kenlm/archive/master.zip',
     'dill',
     'torch>=1.3',
     'transformers==3.0.2',
 ]
+
+INSTALL_REQUIRES_NOT_WINDOWS = [
+    'kenlm @ https://github.com/kpu/kenlm/archive/master.zip'
+]
+
+if sys.platform != 'win32':
+    INSTALL_REQUIRES.extend(INSTALL_REQUIRES_NOT_WINDOWS)
 
 setup(
     name='camel_tools',
@@ -87,7 +93,7 @@ setup(
     packages=['camel_tools',
               'camel_tools.cli',
               'camel_tools.utils',
-              'camel_tools.calima_star',
+              'camel_tools.morphology',
               'camel_tools.disambig',
               'camel_tools.tokenizers',
               'camel_tools.data',
@@ -96,8 +102,7 @@ setup(
               'camel_tools.ner'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
-        'camel_tools.data': ['catalogue.json'],
-        'camel_tools.calima_star': ['databases/*/*.db', 'databases/*/LICENSE']
+        'camel_tools.data': ['catalogue.json']
     },
     include_package_data=True,
     entry_points={
@@ -106,8 +111,8 @@ setup(
              'camel_tools.cli.camel_transliterate:main'),
             ('camel_arclean='
              'camel_tools.cli.camel_arclean:main'),
-            ('camel_calima_star='
-             'camel_tools.cli.camel_calima_star:main'),
+            ('camel_morphology='
+             'camel_tools.cli.camel_morphology:main'),
         ],
     },
     url='https://github.com/CAMeL-Lab/CAMeL_Tools',
@@ -116,4 +121,5 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
+    python_requires='>=3.6.0'
 )

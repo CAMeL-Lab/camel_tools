@@ -41,7 +41,7 @@ at `New York University Abu Dhabi <http://nyuad.nyu.edu/>`_.
 Installation
 ------------
 
-You will need Python 3.4 and above.
+You will need Python 3.6 and above (64-bit).
 
 Using pip
 ^^^^^^^^^
@@ -49,6 +49,9 @@ Using pip
 .. code-block:: bash
 
    pip install camel-tools
+
+   # On Windows you may have to do the following
+   pip install camel-tools -f https://download.pytorch.org/whl/torch_stable.html
 
 From Source
 ^^^^^^^^^^^
@@ -61,6 +64,9 @@ From Source
 
    # Install CAMeL Tools and all dependencies
    pip install .
+
+   # On Windows you may have to do the following
+   pip install . -f https://download.pytorch.org/whl/torch_stable.html
 
 Installing Data
 ^^^^^^^^^^^^^^^

@@ -32,19 +32,26 @@ import json
 from camel_tools.utils.dediac import dediac_ar
 from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
-from camel_tools.calima_star.database import CalimaStarDB
-from camel_tools.calima_star.analyzer import CalimaStarAnalyzer
-from camel_tools.data import get_dataset_path
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.analyzer import Analyzer
+from camel_tools.data import DataCatalogue
 
 
-def _almor_msa_ext_analyzer():
-    db = CalimaStarDB.builtin_db('almor-msa', 'a')
-    analyzer = CalimaStarAnalyzer(db, 'NOAN_PROP')
+def _calima_msa_r13_analyzer():
+    db = MorphologyDB.builtin_db('calima-msa-r13', 'a')
+    analyzer = Analyzer(db, 'NOAN_PROP')
+    return analyzer
+
+
+def _calima_egy_r13_analyzer():
+    db = MorphologyDB.builtin_db('calima-egy-r13', 'a')
+    analyzer = Analyzer(db, 'NOAN_PROP')
     return analyzer
 
 
 _MLE_ANALYZER_MAP = {
-    'almor-msa-ext': _almor_msa_ext_analyzer
+    'calima-msa-r13': _calima_msa_r13_analyzer,
+    'calima-egy-r13': _calima_egy_r13_analyzer
 }
 
 
@@ -62,7 +69,7 @@ class MLEDisambiguator(Disambiguator):
     disambiguate words based on the pos-lex frequencies of their analyses.
 
     Args:
-        analyzer (:obj:`~camel_tools.calima_star.analyzer.CalimaStarAnalyzer`):
+        analyzer (:obj:`~camel_tools.morphology.analyzer.Analyzer`):
             Disambiguator to use if a word is not in the word-based MLE model.
             The analyzer should provide the pos-lex frequencies for analyses to
             disambiguate analyses.
@@ -73,10 +80,12 @@ class MLEDisambiguator(Disambiguator):
 
     def __init__(self, analyzer, mle_path=None):
         if mle_path is not None:
-            with open(mle_path, 'r') as mlefp:
-                self._mle = json.load(mlefp)
-        else:
-            self._mle = None
+            with open(mle_path, 'r', encoding='utf-8') as mle_fp:
+                self._mle = json.load(mle_fp)
+ 
+        if not isinstance(analyzer, Analyzer):
+            raise ValueError('Invalid analyzer instance.')
+
         self._analyzer = analyzer
 
     @staticmethod
@@ -85,9 +94,9 @@ class MLEDisambiguator(Disambiguator):
 
         Args:
             model_name (:obj:`str`, optional): The name of the pretrained
-                model. If none, the dault model ('almor-msa-ext') is loaded.
+                model. If none, the dault model ('calima-msa-r13') is loaded.
                 Defaults to None.
-            analyzer (:obj;`CalimaStarAnalyzer`, optional): Alternative
+            analyzer (:obj;`Analyzer`, optional): Alternative
                 analyzer to use. If None, an instance of the model's default
                 analyzer is created. Defaults to None.
 
@@ -95,14 +104,11 @@ class MLEDisambiguator(Disambiguator):
             :obj:`MLEDisambiguator`: The loaded MLE disambiguator.
         """
 
-        # TODO: Use camel_tools.data instead (after reimplementing it).
-        if model_name is None:
-            model_name = 'almor-msa-ext'
-
-        mle_path = get_dataset_path('DisambigMLE', model_name) / 'model.json'
+        model_info = DataCatalogue.get_dataset_info('DisambigMLE', model_name)
+        mle_path = model_info.path / 'model.json'
 
         if analyzer is None:
-            analyzer = _MLE_ANALYZER_MAP[model_name]()
+            analyzer = _MLE_ANALYZER_MAP[model_info.name]()
 
         return MLEDisambiguator(analyzer, str(mle_path))
 
