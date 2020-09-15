@@ -144,8 +144,9 @@ class Analyzer:
             following: 'NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL', or
             'ADD_PROP'. Defaults to 'NONE'.
         norm_map (:obj:`~camel_tools.utils.charmap.CharMapper`, optional):
-            Character map for normalizing input words. Defaults to
-            :const:`DEFAULT_NORMALIZE_MAP`.
+            Character map for normalizing input words. If set to None, then
+            :const:`DEFAULT_NORMALIZE_MAP` is used.
+            Defaults to None.
         strict_digit (:obj:`bool`, optional): If set to `True`, then only words
             completely comprised of digits are considered numbers, otherwise,
             all words containing a digit are considered numbers. Defaults to
@@ -163,7 +164,7 @@ class Analyzer:
     """
 
     def __init__(self, db, backoff='NONE',
-                 norm_map=DEFAULT_NORMALIZE_MAP,
+                 norm_map=None,
                  strict_digit=False,
                  cache_size=0):
         if not isinstance(db, MorphologyDB):
@@ -172,10 +173,13 @@ class Analyzer:
             raise AnalyzerError('DB does not support analysis')
 
         self._db = db
-
         self._backoff = backoff
-        self._norm_map = DEFAULT_NORMALIZE_MAP
         self._strict_digit = strict_digit
+
+        if norm_map is None:
+            self._norm_map = DEFAULT_NORMALIZE_MAP
+        else:
+            self._norm_map = norm_map
 
         if backoff in _BACKOFF_TYPES:
             if backoff == 'NONE':

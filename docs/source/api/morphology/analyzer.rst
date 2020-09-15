@@ -6,6 +6,7 @@ camel_tools.morphology.analyzer
 Globals
 -------
 .. autodata:: camel_tools.morphology.analyzer.DEFAULT_NORMALIZE_MAP
+   :annotation:
 
 Classes
 -------
