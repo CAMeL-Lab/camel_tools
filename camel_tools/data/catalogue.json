@@ -1,18 +1,18 @@
 {
     "components": {
         "MorphologyDB": {
-            "default": "almor-msa-ext",
+            "default": "calima-msa-r13",
             "datasets": {
-                "almor-msa-ext": {
-                    "path": "morphology_db/almor-msa-ext"
+                "calima-msa-r13": {
+                    "path": "morphology_db/calima-msa-r13"
                 }
             }
         },
         "DisambigMLE": {
-            "default": "almor-msa-ext",
+            "default": "calima-msa-r13",
             "datasets": {
-                "almor-msa-ext": {
-                    "path": "disambig_mle/almor-msa-ext"
+                "calima-msa-r13": {
+                    "path": "disambig_mle/calima-msa-r13"
                 }
             }
         },

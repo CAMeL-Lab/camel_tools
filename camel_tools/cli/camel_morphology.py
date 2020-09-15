@@ -57,7 +57,7 @@ Options:
         DISAMBIG analyses. DISAMBIG should be a non-zero positive integer.
   -d DATABASE --db=DATABASE
         Morphology database to use. DATABASE could be the name of a builtin
-        database or a path to a database file. [default: almor-msa-ext]
+        database or a path to a database file. [default: calima-msa-r13]
   -o OUTPUT --output=OUTPUT
         Output file. If not specified, output will be printed to stdout.
   -l --list
@@ -97,7 +97,7 @@ _ANALYSIS_BACKOFFS = frozenset(('NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
                                 'ADD_PROP'))
 _GENARATION_BACKOFFS = frozenset(('NONE', 'REINFLECT'))
 _BUILTIN_DBS = frozenset([db.name for db in MorphologyDB.list_builtin_dbs()])
-_DEFAULT_DB = 'almor-msa-ext'
+_DEFAULT_DB = 'calima-msa-r13'
 
 _DIAC_RE = re.compile(r'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + r']')
 

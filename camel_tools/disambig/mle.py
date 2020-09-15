@@ -37,14 +37,14 @@ from camel_tools.morphology.analyzer import Analyzer
 from camel_tools.data import get_dataset_path
 
 
-def _almor_msa_ext_analyzer():
-    db = MorphologyDB.builtin_db('almor-msa-ext', 'a')
+def _calima_msa_r13_analyzer():
+    db = MorphologyDB.builtin_db('calima-msa-r13', 'a')
     analyzer = Analyzer(db, 'NOAN_PROP')
     return analyzer
 
 
 _MLE_ANALYZER_MAP = {
-    'almor-msa-ext': _almor_msa_ext_analyzer
+    'calima-msa-r13': _calima_msa_r13_analyzer
 }
 
 
@@ -85,7 +85,7 @@ class MLEDisambiguator(Disambiguator):
 
         Args:
             model_name (:obj:`str`, optional): The name of the pretrained
-                model. If none, the dault model ('almor-msa-ext') is loaded.
+                model. If none, the dault model ('calima-msa-r13') is loaded.
                 Defaults to None.
             analyzer (:obj;`Analyzer`, optional): Alternative
                 analyzer to use. If None, an instance of the model's default
@@ -97,7 +97,7 @@ class MLEDisambiguator(Disambiguator):
 
         # TODO: Use camel_tools.data instead (after reimplementing it).
         if model_name is None:
-            model_name = 'almor-msa-ext'
+            model_name = 'calima-msa-r13'
 
         mle_path = get_dataset_path('DisambigMLE', model_name) / 'model.json'
 

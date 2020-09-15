@@ -41,9 +41,9 @@ Examples
 
 
    # We can also initialize a builtin database using the same flags as above
-   db = MorphologyDB.builtin_db('almor-msa-ext', 'a')
+   db = MorphologyDB.builtin_db('calima-msa-r13', 'a')
 
-   # or if we want to use the default builtin database (ie. 'almor-msa-ext')
+   # or if we want to use the default builtin database (ie. 'calima-msa-r13')
    db = MorphologyDB.builtin_db(flags='g')
 
    # or just the following if we want the default database in analysis mode

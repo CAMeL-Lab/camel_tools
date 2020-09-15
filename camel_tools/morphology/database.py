@@ -73,7 +73,7 @@ class MorphologyDB:
         return list(DataCatalogue.get_component_info('MorphologyDB').datasets)
 
     @staticmethod
-    def builtin_db(db_name='almor-msa-ext', flags='a'):
+    def builtin_db(db_name='calima-msa-r13', flags='a'):
         """Create a :obj:`MorphologyDB` instance from one of the builtin
         databases provided.
 
@@ -81,7 +81,7 @@ class MorphologyDB:
             db_name (:obj:`str`, optional): Name of builtin database.
                 You can use :meth:`list_builtin_dbs` to get a list of
                 builtin databases or see :ref:`morphology_databases`.
-                Defaults to 'almor-msa-ext'.
+                Defaults to 'calima-msa-r13'.
             flags (:obj:`str`, optional): Flag string to be passed to
                 :obj:`MorphologyDB` constructor. Defaults to 'a'.
 
