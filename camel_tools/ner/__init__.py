@@ -36,7 +36,7 @@ from camel_tools.data import DataCatalogue
 
 
 _LABELS = ['B-LOC', 'B-ORG', 'B-PERS', 'B-MISC', 'I-LOC', 'I-ORG', 'I-PERS',
-           'I-MISC']
+           'I-MISC', 'O']
 
 
 class _PrepSentence:
