@@ -230,11 +230,8 @@ box.
 
 Below is a list of databases that can be passed to ``-d`` or ``--db``:
 
-.. note::
-   While we currently only provide one builtin database, more will be added over
-   time.
-
 * **calima-msa-r13** Database for analyzing Modern Standard Arabic. [#fn1]_
+* **calima-egy-r13** Database for analyzing Egyptian Arabic. [#fn2]_
 
 If no database is specified, **calima-msa-r13** is used.
 
@@ -249,4 +246,10 @@ one of the above listed databases.
    database that ships with
    `MADAMIRA <http://innovation.columbia.edu/technologies/cu14012_arabic-language-disambiguation-for-natural-language-processing-applications>`_.
    The `calima-msa-r13.db` database is distributed under the
+   `GNU General Public License version 2 <https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html#SEC1>`_.
+
+.. [#fn2] **calima-egy-r13** is a modified version of the `almor-cra07.db`
+   database that ships with
+   `MADAMIRA <http://innovation.columbia.edu/technologies/cu14012_arabic-language-disambiguation-for-natural-language-processing-applications>`_.
+   The `calima-egy-r13.db` database is distributed under the
    `GNU General Public License version 2 <https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html#SEC1>`_.

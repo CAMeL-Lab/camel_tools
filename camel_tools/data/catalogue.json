@@ -5,6 +5,9 @@
             "datasets": {
                 "calima-msa-r13": {
                     "path": "morphology_db/calima-msa-r13"
+                },
+                "calima-egy-r13": {
+                    "path": "morphology_db/calima-egy-r13"
                 }
             }
         },
@@ -13,6 +16,9 @@
             "datasets": {
                 "calima-msa-r13": {
                     "path": "disambig_mle/calima-msa-r13"
+                },
+                "calima-egy-r13": {
+                    "path": "disambig_mle/calima-egy-r13"
                 }
             }
         },

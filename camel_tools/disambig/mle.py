@@ -43,8 +43,15 @@ def _calima_msa_r13_analyzer():
     return analyzer
 
 
+def _calima_egy_r13_analyzer():
+    db = MorphologyDB.builtin_db('calima-egy-r13', 'a')
+    analyzer = Analyzer(db, 'NOAN_PROP')
+    return analyzer
+
+
 _MLE_ANALYZER_MAP = {
-    'calima-msa-r13': _calima_msa_r13_analyzer
+    'calima-msa-r13': _calima_msa_r13_analyzer,
+    'calima-egy-r13': _calima_egy_r13_analyzer
 }
 
 
