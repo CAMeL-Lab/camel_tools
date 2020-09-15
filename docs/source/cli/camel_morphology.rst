@@ -220,36 +220,17 @@ The output for the above example would be:
    diac:بِشارِعَيْنِ lex:شارِع_2 bw:بِ/PREP+شارِع/NOUN+َيْنِ/NSUFF_MASC_DU_GEN gloss:by;with+legislator+two pos:noun prc3:0 prc2:0 prc1:bi_prep prc0:0 per:na asp:na vox:na mod:na gen:m num:d stt:i cas:g enc0:0 rat:y source:lex
    
 
-.. _morphology_databases:
 
 Databases
 ---------
 
 We provide builtin databases to be able to run ``camel_morphology`` out of the
-box.
-
-Below is a list of databases that can be passed to ``-d`` or ``--db``:
-
-* **calima-msa-r13** Database for analyzing Modern Standard Arabic. [#fn1]_
-* **calima-egy-r13** Database for analyzing Egyptian Arabic. [#fn2]_
-
-If no database is specified, **calima-msa-r13** is used.
+box that can be passed to ``-d`` or ``--db``.
+A list of available databases can be found at :ref:`camel_morphology_dbs`.
 
 You can always check what builtin databases are provided in your current
 ``camel_tools`` installation by running ``camel_morphology --list``.
 Alternatively, you can pass in a path to a database of your chosing instead of
 one of the above listed databases.
 
-.. rubric:: Footnotes
-
-.. [#fn1] **calima-msa-r13** is a modified version of the `almor-msa-r13.db`
-   database that ships with
-   `MADAMIRA <http://innovation.columbia.edu/technologies/cu14012_arabic-language-disambiguation-for-natural-language-processing-applications>`_.
-   The `calima-msa-r13.db` database is distributed under the
-   `GNU General Public License version 2 <https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html#SEC1>`_.
-
-.. [#fn2] **calima-egy-r13** is a modified version of the `almor-cra07.db`
-   database that ships with
-   `MADAMIRA <http://innovation.columbia.edu/technologies/cu14012_arabic-language-disambiguation-for-natural-language-processing-applications>`_.
-   The `calima-egy-r13.db` database is distributed under the
-   `GNU General Public License version 2 <https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html#SEC1>`_.
+If no database is specified, **calima-msa-r13** is used.

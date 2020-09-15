@@ -80,7 +80,7 @@ class MorphologyDB:
         Args:
             db_name (:obj:`str`, optional): Name of builtin database.
                 You can use :meth:`list_builtin_dbs` to get a list of
-                builtin databases or see :ref:`morphology_databases`.
+                builtin databases or see :ref:`camel_morphology_dbs`.
                 Defaults to 'calima-msa-r13'.
             flags (:obj:`str`, optional): Flag string to be passed to
                 :obj:`MorphologyDB` constructor. Defaults to 'a'.
