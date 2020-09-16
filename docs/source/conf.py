@@ -23,7 +23,7 @@ from recommonmark.parser import CommonMarkParser
 # -- Project information -----------------------------------------------------
 
 project = 'camel_tools'
-copyright = '2018-2019, New York University Abu Dhabi'
+copyright = '2018-2020, New York University Abu Dhabi'
 author = 'Ossama W. Obeid'
 
 # The short X.Y version
