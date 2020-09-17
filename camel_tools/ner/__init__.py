@@ -99,7 +99,7 @@ class NERDataset(Dataset):
         # Use cross entropy ignore_index as padding label id so that only
         # real label ids contribute to the loss later.
         self.pad_token_label_id = nn.CrossEntropyLoss().ignore_index
-        self.features = self.featurize_input(
+        self.features = self._featurize_input(
             prepared_sentences,
             labels,
             max_seq_length,
@@ -111,16 +111,16 @@ class NERDataset(Dataset):
             pad_token_label_id=self.pad_token_label_id,
         )
 
-    def featurize_input(self, prepared_sentences, label_list, max_seq_length,
+    def _featurize_input(self, prepared_sentences, label_list, max_seq_length,
                         tokenizer, cls_token="[CLS]", cls_token_segment_id=0,
                         sep_token="[SEP]", pad_token=0, pad_token_segment_id=0,
                         pad_token_label_id=-100, sequence_a_segment_id=0,
                         mask_padding_with_zero=True):
-        """Featurizes the input which will be fed to the fine-tuned BERT model
+        """Featurizes the input which will be fed to the fine-tuned BERT model.
 
         Args:
             prepared_sentences (:obj:`list` of :obj:`PrepSentence`): list of
-                PrepSentence objects
+                PrepSentence objects.
             label_list (:obj:`list` of :obj:`str`): The labels which the model
                 was trained to classify.
             max_seq_length (:obj:`int`):  Maximum sequence length.
@@ -228,12 +228,13 @@ class NERecognizer():
     @staticmethod
     def pretrained(model_name=None):
         """Load a pre-trained model provided with camel_tools.
+
         Args:
             model_name (:obj:`str`, optional): Name of pre-trained model to
-                load.
-                One model is available: 'arabert'.
+                load. One model is available: 'arabert'.
                 If None, the default model ('arabert') will be loaded.
                 Defaults to None.
+
         Returns:
             :obj:`NERecognizer`: Instance with loaded pre-trained model.
         """
@@ -247,6 +248,7 @@ class NERecognizer():
     @staticmethod
     def labels():
         """Get the list of NER labels returned by predictions.
+
         Returns:
             :obj:`list` of :obj:`str`: List of NER labels.
         """
