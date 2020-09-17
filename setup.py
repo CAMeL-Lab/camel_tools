@@ -113,6 +113,8 @@ setup(
              'camel_tools.cli.camel_arclean:main'),
             ('camel_morphology='
              'camel_tools.cli.camel_morphology:main'),
+            ('camel_dediac='
+             'camel_tools.cli.camel_dediac:main'),
         ],
     },
     url='https://github.com/CAMeL-Lab/CAMeL_Tools',
