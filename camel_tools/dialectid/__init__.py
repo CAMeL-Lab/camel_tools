@@ -24,6 +24,9 @@
 
 
 """This module contains the CAMeL Tools dialect identification component.
+This Dialect Identification system can identify between 25 Arabic city dialects
+as well as Modern Standard Arabic. It is based on the system described by
+`Salameh, Bouamor and Habash <http://www.aclweb.org/anthology/C18-1113>`_.
 """
 
 
@@ -104,7 +107,8 @@ class DIDPred(collections.namedtuple('DIDPred', ['top', 'scores'])):
     """A named tuple containing dialect ID prediction results.
 
     Attributes:
-        top (:obj:`str`): The dialect label with the highest score.
+        top (:obj:`str`): The dialect label with the highest score. See
+            :ref:`dialectid_labels` for a list of output labels.
         scores (:obj:`dict`): A dictionary mapping each dialect label to it's
             computed score.
     """

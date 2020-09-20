@@ -32,6 +32,72 @@ Functions
 .. autofunction:: camel_tools.dialectid.label_dialect_pairs
 
 
+.. _dialectid_labels:
+
+Labels
+------
+
+Below is a table mapping output labels to their respective dialects:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Label
+     - Dialect
+   * - ALE
+     - Aleppo
+   * - ALG
+     - Algiers
+   * - ALX
+     - Alexandria
+   * - AMM
+     - Amman
+   * - ASW
+     - Aswan
+   * - BAG
+     - Baghdad
+   * - BAS
+     - Basra
+   * - BEI
+     - Beirut
+   * - BEN
+     - Benghazi
+   * - CAI
+     - Cairo
+   * - DAM
+     - Damascus
+   * - DOH
+     - Doha
+   * - FES
+     - Fes
+   * - JED
+     - Jeddha
+   * - JER
+     - Jerusalem
+   * - KHA
+     - Khartoum
+   * - MOS
+     - Mosul
+   * - MSA
+     - Modern Standard Arabic
+   * - MUS
+     - Muscat
+   * - RAB
+     - Rabat
+   * - RIY
+     - Riyadh
+   * - SAL
+     - Salt
+   * - SAN
+     - Sana'a
+   * - SFX
+     - Sfax
+   * - TRI
+     - Tripoli
+   * - TUN
+     - Tunis
+
+
 Examples
 --------
 
