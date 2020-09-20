@@ -21,6 +21,11 @@
 # SOFTWARE.
 
 
+"""This sub-module contains utilities for locating datastes for the various
+CAMeL Tools components.
+"""
+
+
 from collections import namedtuple
 import json
 import os
