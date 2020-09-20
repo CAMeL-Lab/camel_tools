@@ -42,7 +42,7 @@ Options:
         Output file. If not specified, output will be printed to stdout.
   -m MARKER --marker=MARKER
         Marker used to prefix tokens not to be transliterated.
-        [deafualt: @@IGNORE@@]
+        [default: @@IGNORE@@]
   -I --ignore-markers
         Transliterate marked words as well.
   -S --strip-markers
