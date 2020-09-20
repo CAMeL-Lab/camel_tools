@@ -115,6 +115,8 @@ setup(
              'camel_tools.cli.camel_morphology:main'),
             ('camel_dediac='
              'camel_tools.cli.camel_dediac:main'),
+            ('camel_word_tokenize='
+             'camel_tools.cli.camel_word_tokenize:main'),
         ],
     },
     url='https://github.com/CAMeL-Lab/CAMeL_Tools',
