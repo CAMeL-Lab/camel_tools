@@ -52,7 +52,7 @@ class MorphologyDB:
         flags (:obj:`str`): Flag string (similar to opening files) indicates
             what components the database will be used for. 'a' indicates
             analysis, 'g' indicates generation, and 'r' indicates indicates
-            reinflection. 'r' is equivalent to 'rg' since the reinflector
+            reinflection. 'r' is equivalent to 'ag' since the reinflector
             uses both analyzer and generator components internally.
             Defaults to 'a'.
 

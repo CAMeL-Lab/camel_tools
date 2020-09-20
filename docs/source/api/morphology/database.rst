@@ -33,33 +33,40 @@ Examples
 
    from camel_tools.morphology.database import MorphologyDB
 
-   # Initialize database for analysis
-   db = MorphologyDB('/path/to/database', 'a')
+   # Initialize the default database ('calima-msa-r13')
+   db = MorphologyDB.builtin_db()
 
-   # or just
-   db = MorphologyDB('/path/to/database')
+   # In the above call, the database is loaded for analysis only by defaut.
+   # This is equivalent to writing:
+   db = MorphologyDB.builtin_db(flags='a')
 
-
-   # Initialize database for generation
-   db = MorphologyDB('/path/to/database', 'g')
-
-
-   # Initialize database for reinflection
-   db = MorphologyDB('/path/to/database', 'r')
-
-   # or the following since reinflection requires both analysis and generation
-   # indexes.
-   db = MorphologyDB('/path/to/database', 'ag')
-
-
-   # We can also initialize a builtin database using the same flags as above
-   db = MorphologyDB.builtin_db('calima-msa-r13', 'a')
-
-   # or if we want to use the default builtin database (ie. 'calima-msa-r13')
+   # We can load it for generation as so:
    db = MorphologyDB.builtin_db(flags='g')
 
-   # or just the following if we want the default database in analysis mode
-   db = MorphologyDB.builtin_db()
+   # Or for reinflection as so:
+   db = MorphologyDB.builtin_db(flags='r')
+
+   # Since reinflection uses the database in both analysis and generation modes
+   # internally, the above is equivalent to writing:
+   db = MorphologyDB.builtin_db(flags='ag')
+
+
+   # We can initialize other builtin databases by providing the name of the
+   # desired database. In the examples above, we loaded the default database
+   # 'calima-msa-r13'. We can load other builtin databases by providing the
+   # desired databases name. Here we'll load the builtin Egyptian database,
+   # 'calima-egy-r13':
+   db = MorphologyDB.builtin_db('calima-egy-r13')
+
+   # Or with flags:
+   db = MorphologyDB.builtin_db('calima-egy-r13', flags="r")
+
+
+   # We can also initialize external databases:
+   db = MorphologyDB('/path/to/database')
+
+   # or with flags:
+   db = MorphologyDB('/path/to/database', flags="g")
 
 
 .. rubric:: Footnotes
