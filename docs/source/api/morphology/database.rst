@@ -59,14 +59,14 @@ Examples
    db = MorphologyDB.builtin_db('calima-egy-r13')
 
    # Or with flags:
-   db = MorphologyDB.builtin_db('calima-egy-r13', flags="r")
+   db = MorphologyDB.builtin_db('calima-egy-r13', flags='r')
 
 
    # We can also initialize external databases:
    db = MorphologyDB('/path/to/database')
 
    # or with flags:
-   db = MorphologyDB('/path/to/database', flags="g")
+   db = MorphologyDB('/path/to/database', flags='g')
 
 
 .. rubric:: Footnotes

@@ -18,14 +18,18 @@ Examples
    from camel_tools.morphology.generator import Generator
 
    # Initialize database in generation mode
-   db = DB('path/to/database', 'g')
+   db = MorphologyDB.builtin_db(flags='g')
 
    # Create generator instance
    generator = Generator(db)
 
    # Specify lemma and features to generate for
-   lemma = ''
-   features = {}
+   lemma = 'شارِع'
+   features = {
+       'pos': 'noun',
+       'gen': 'm',
+       'num': 'p'
+   }
 
    # Generate analyses for lemma and features
    analyses = generator.generate(lemma, features)

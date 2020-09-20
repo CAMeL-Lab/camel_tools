@@ -25,7 +25,7 @@ Examples
    from camel_tools.morphology.database import MorphologyDB
    from camel_tools.morphology.analyzer import Analyzer
 
-   db = MorphologyDB('path/to/database', 'a')
+   db = MorphologyDB.builtin_db()
 
    # Create analyzer with no backoff
    analyzer = Analyzer(db)

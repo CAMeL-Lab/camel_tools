@@ -18,14 +18,18 @@ Examples
    from camel_tools.morphology.reinflector import Reinflector
 
    # Initialize database in reinflection mode
-   db = MorphologyDB('path/to/database', 'r')
+   db = MorphologyDB.builtin_db(flags='r')
 
    # Create reinflector instance
-   reinflector = Generator(db)
+   reinflector = Reinflector(db)
 
    # Specify word and features to generate for
-   word = ''
-   features = {}
+   word = 'شوارع'
+   features = {
+       'gen': 'm',
+       'num': 'd',
+       'prc1': 'bi_prep'
+   }
 
    # Generate analyses for lemma and features
    analyses = reinflector.reinflect(word, features)
