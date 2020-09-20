@@ -42,8 +42,9 @@ _TOKENIZE_RE = re.compile(r'[' + re.escape(_ALL_PUNCT) + r']|[' +
 def simple_word_tokenize(sentence):
     """Tokenizes a sentence by splitting on whitespace and seperating
     punctuation. The resulting tokens are either alpha-numeric words or single
-    punctuation/symbol characters.
-    For example, tokenizing :code:`'Hello, world!!!'`
+    punctuation/symbol characters. This function is language agnostic and
+    splits all characters marked as punctuation or symbols in the Unicode
+    specification. For example, tokenizing :code:`'Hello,    world!!!'`
     would yield :code:`['Hello', ',', 'world', '!', '!', '!']`.
 
     Args:
