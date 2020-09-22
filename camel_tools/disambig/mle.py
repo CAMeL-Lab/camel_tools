@@ -62,6 +62,22 @@ def _get_pos_lex_freq(analysis):
     return freq
 
 
+_SCORE_FEATS = frozenset(['asp', 'cas', 'enc0', 'gen', 'mod', 'num', 'per',
+                          'pos', 'prc0', 'prc1', 'prc2', 'prc3', 'form_num',
+                          'form_gen', 'enc1', 'enc2', 'stt', 'vox', 'diac',
+                          'lex'])
+
+
+def _score_analysis(analysis, reference):
+    score = 0
+
+    for feat in _SCORE_FEATS:
+        if analysis.get(feat, '') == reference.get(feat, ''):
+            score += 1
+
+    return score
+
+
 class MLEDisambiguator(Disambiguator):
     """A disambiguator using a Maximum Likelihood Estimation (MLE) model.
     It first does a lookup in a given word-based MLE model. If none is provided
@@ -136,8 +152,27 @@ class MLEDisambiguator(Disambiguator):
         word_dd = dediac_ar(word)
 
         if self._mle is not None and word_dd in self._mle:
-            analyses = [ScoredAnalysis(1.0, self._mle[word_dd])]
-            return DisambiguatedWord(word, analyses)
+            mle_analysis = self._mle[word_dd]
+            analyses = self._analyzer.analyze(word_dd)
+
+            if len(analyses) == 0:
+                return DisambiguatedWord(word, [])
+
+            scored = [(_score_analysis(a, mle_analysis), a) for a in analyses]
+
+            scored.sort(key=lambda s: s[1]['diac'])
+            scored.sort(key=lambda s: len(s[1]['bw']))
+            scored.sort(reverse=True, key=lambda s: s[0])
+
+            max_score = max([s[0] for s in scored])
+
+            scored_analyses = [ScoredAnalysis(s[0] / max_score, s[1])
+                               for s in scored]
+
+            if top < 1:
+                return DisambiguatedWord(word, scored_analyses)
+            else:
+                return DisambiguatedWord(word, scored_analyses[0:top])
 
         else:
             analyses = self._analyzer.analyze(word_dd)
