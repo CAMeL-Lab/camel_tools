@@ -31,11 +31,11 @@ Examples
    analyzer = Analyzer(db)
 
 
-   # Create analyzer with NOAN_ALL backoff
-   analyzer = Analyzer(db, 'NOAN_ALL')
+   # Create analyzer with NOAN_PROP backoff
+   analyzer = Analyzer(db, 'NOAN_PROP')
 
    # or
-   analyzer = Analyzer(db, backoff='NOAN_ALL')
+   analyzer = Analyzer(db, backoff='NOAN_PROP')
 
 
    # To analyze a word, we can use the analyze() method
