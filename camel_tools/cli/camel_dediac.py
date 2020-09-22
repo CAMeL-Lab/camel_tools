@@ -73,8 +73,8 @@ _BUILTIN_SCHEMES = [
     ('ar', 'Arabic script', dediac_ar),
     ('bw', 'Buckwalter encoding', dediac_bw),
     ('safebw', 'Safe Buckwalter encoding', dediac_safebw),
-    ('xmlbw', 'XML Buckwalter encodings', dediac_xmlbw),
-    ('hsb', 'Habash-Soudi-Buckwalter encodings', dediac_hsb)
+    ('xmlbw', 'XML Buckwalter encoding', dediac_xmlbw),
+    ('hsb', 'Habash-Soudi-Buckwalter encoding', dediac_hsb)
 ]
 
 _WHITESPACE_RE = re.compile(r'\s+|\S+')
