@@ -31,7 +31,8 @@ from collections import deque
 from camel_tools.utils.dediac import dediac_ar
 
 
-_SCHEME_SET = frozenset(['atbtok', 'd3tok'])
+_SCHEME_SET = frozenset(['atbtok', 'atbseg', 'd1tok', 'd1seg', 'd2tok',
+                         'd2seg', 'd3tok', 'd3seg'])
 
 
 class MorphologicalTokenizer(object):
@@ -88,7 +89,7 @@ class MorphologicalTokenizer(object):
                 analysis = scored_analyses[0].analysis
                 tok = analysis.get(self._scheme, None)
 
-                if tok is None:
+                if tok is None or tok == 'NOAN':
                     tok = disambig_word.word
                     result.append(self._diacf(tok))
                 elif self._split:
