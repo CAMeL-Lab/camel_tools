@@ -14,14 +14,14 @@ For example the following sentence:
 .. code-block:: none
 
    Hello,     world!!!!
-   مرحلا يا عالم!!!
+   مرحبا يا عالم!!!
 
 becomes:
 
 .. code-block:: none
 
    Hello , world ! ! ! !
-   مرحلا يا عالم ! ! !
+   مرحبا يا عالم ! ! !
 
 
 Usage
