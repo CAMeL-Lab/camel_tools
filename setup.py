@@ -118,6 +118,8 @@ setup(
              'camel_tools.cli.camel_dediac:main'),
             ('camel_word_tokenize='
              'camel_tools.cli.camel_word_tokenize:main'),
+            ('camel_diac='
+             'camel_tools.cli.camel_diac:main'),
         ],
     },
     url='https://github.com/CAMeL-Lab/CAMeL_Tools',

@@ -9,4 +9,5 @@ Command-line Tools
    cli/camel_arclean
    cli/camel_word_tokenize
    cli/camel_dediac
+   cli/camel_diac
    cli/camel_morphology
