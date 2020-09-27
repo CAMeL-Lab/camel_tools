@@ -74,6 +74,7 @@ INSTALL_REQUIRES = [
     'dill',
     'torch>=1.3',
     'transformers==3.0.2',
+    'editdistance',
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [

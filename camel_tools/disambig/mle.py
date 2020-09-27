@@ -29,6 +29,9 @@
 
 import json
 
+from cachetools import LFUCache, cached
+import editdistance
+
 from camel_tools.utils.dediac import dediac_ar
 from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
@@ -62,18 +65,24 @@ def _get_pos_lex_freq(analysis):
     return freq
 
 
-_SCORE_FEATS = frozenset(['asp', 'cas', 'enc0', 'gen', 'mod', 'num', 'per',
-                          'pos', 'prc0', 'prc1', 'prc2', 'prc3', 'form_num',
-                          'form_gen', 'enc1', 'enc2', 'stt', 'vox', 'diac',
-                          'lex'])
+_EQ_FEATS = frozenset(['asp', 'cas', 'enc0', 'gen', 'mod', 'num', 'per', 'pos',
+                       'prc0', 'prc1', 'prc2', 'prc3', 'form_num', 'form_gen',
+                       'enc1', 'enc2', 'stt', 'vox'])
+_DISTANCE_FEATS = frozenset(['diac', 'lex', 'bw'])
 
 
 def _score_analysis(analysis, reference):
-    score = 0
+    score = 0.0
 
-    for feat in _SCORE_FEATS:
+    for feat in _EQ_FEATS:
         if analysis.get(feat, '') == reference.get(feat, ''):
             score += 1
+
+    for feat in _DISTANCE_FEATS:
+        feat_r = reference.get(feat, '')
+        feat_a = analysis.get(feat, '')
+        distance = editdistance.eval(feat_r, feat_a)
+        score += max(0.0, (len(feat_r) - distance) / len(feat_r))
 
     return score
 
@@ -92,20 +101,40 @@ class MLEDisambiguator(Disambiguator):
         mle_path (:obj:`str`, optional): Path to MLE JSON file. If `None`,
             then no word-based MLE lookup is performed skipping directly to
             using the pos-lex model. Defaults to `None`.
+        top (:obj:`int`, optional): The maximum number of top analyses to
+            return. Defaults to 1.
+        cache_size (:obj:`int`, optional): The number of unique word
+            disambiguations to cache. The cache uses a least-frequently-used
+            eviction policy. Defaults to 100000.
     """
 
-    def __init__(self, analyzer, mle_path=None):
+    def __init__(self, analyzer, mle_path=None, top=1, cache_size=100000):
+        if not isinstance(analyzer, Analyzer):
+            raise ValueError('Invalid analyzer instance.')
+        if not isinstance(top, int):
+            raise ValueError('Invalid value for top.')
+        if not isinstance(cache_size, int):
+            raise ValueError('Invalid value for cache_size.')
+
         if mle_path is not None:
             with open(mle_path, 'r', encoding='utf-8') as mle_fp:
                 self._mle = json.load(mle_fp)
- 
-        if not isinstance(analyzer, Analyzer):
-            raise ValueError('Invalid analyzer instance.')
 
         self._analyzer = analyzer
 
+        if top < 1:
+            top = 1
+        self._top = top
+
+        if cache_size < 0:
+            cache_size = 0
+
+        self._cache = LFUCache(cache_size)
+        self._scored_analyses = cached(self._cache)(
+            self._scored_analyses)
+
     @staticmethod
-    def pretrained(model_name=None, analyzer=None):
+    def pretrained(model_name=None, analyzer=None, top=1, cache_size=100000):
         """Load a pre-trained MLE disambiguator provided with CAMeL Tools.
 
         Args:
@@ -115,6 +144,11 @@ class MLEDisambiguator(Disambiguator):
             analyzer (:obj;`Analyzer`, optional): Alternative
                 analyzer to use. If None, an instance of the model's default
                 analyzer is created. Defaults to None.
+            top (:obj:`int`, optional): The maximum number of top analyses to
+                return. Defaults to 1.
+            cache_size (:obj:`int`, optional): The number of unique word
+                disambiguations to cache. The cache uses a
+                least-frequently-used eviction policy. Defaults to 100000.
 
         Returns:
             :obj:`MLEDisambiguator`: The loaded MLE disambiguator.
@@ -126,9 +160,50 @@ class MLEDisambiguator(Disambiguator):
         if analyzer is None:
             analyzer = _MLE_ANALYZER_MAP[model_info.name]()
 
-        return MLEDisambiguator(analyzer, str(mle_path))
+        return MLEDisambiguator(analyzer, str(mle_path), top, cache_size)
 
-    def disambiguate_word(self, sentence, word_ndx, top=1):
+    def _scored_analyses(self, word_dd):
+        if self._mle is not None and word_dd in self._mle:
+            mle_analysis = self._mle[word_dd]
+            analyses = self._analyzer.analyze(word_dd)
+
+            if len(analyses) == 0:
+                return []
+
+            scored = [(_score_analysis(a, mle_analysis), a) for a in analyses]
+            scored.sort(key=lambda s: (-s[0], len(s[1]['bw']), s[1]['diac']))
+
+            max_score = max([s[0] for s in scored])
+
+            scored_analyses = [ScoredAnalysis(s[0] / max_score, s[1])
+                               for s in scored]
+
+            return scored_analyses[0:self._top]
+
+        else:
+            analyses = self._analyzer.analyze(word_dd)
+
+            if len(analyses) == 0:
+                return []
+
+            probabilities = [10 ** _get_pos_lex_freq(a) for a in analyses]
+            max_prob = max(probabilities)
+
+            scored_analyses = [ScoredAnalysis(p / max_prob, a)
+                               for a, p in zip(analyses, probabilities)]
+            scored_analyses.sort(key=lambda w: (-w.score,
+                                                len(w.analysis['bw']),
+                                                w.analysis['diac']))
+
+            return scored_analyses[0:self._top]
+
+    def _disambiguate_word(self, word):
+        word_dd = dediac_ar(word)
+        scored_analyses = self._scored_analyses(word_dd)
+
+        return DisambiguatedWord(word, scored_analyses)
+
+    def disambiguate_word(self, sentence, word_ndx):
         """Disambiguates a single word in a sentence. Note, that while MLE
         disambiguation operates on each word out of context, we maintain this
         interface to be compatible with disambiguators that work in context
@@ -140,74 +215,25 @@ class MLEDisambiguator(Disambiguator):
                 sentence.
             word_ndx (:obj:`int`): The index of the word token in `sentence` to
                 disambiguate.
-            top (:obj:`int`, optional): The maximum number of top analyses to
-                return. Defaults to 1.
 
         Returns:
             :obj:`DisambiguatedWord`: The disambiguation of the word token in
             `sentence` at `word_ndx`.
         """
 
-        word = sentence[word_ndx]
-        word_dd = dediac_ar(word)
+        return self._disambiguate_word(sentence[word_ndx])
 
-        if self._mle is not None and word_dd in self._mle:
-            mle_analysis = self._mle[word_dd]
-            analyses = self._analyzer.analyze(word_dd)
-
-            if len(analyses) == 0:
-                return DisambiguatedWord(word, [])
-
-            scored = [(_score_analysis(a, mle_analysis), a) for a in analyses]
-
-            scored.sort(key=lambda s: s[1]['diac'])
-            scored.sort(key=lambda s: len(s[1]['bw']))
-            scored.sort(reverse=True, key=lambda s: s[0])
-
-            max_score = max([s[0] for s in scored])
-
-            scored_analyses = [ScoredAnalysis(s[0] / max_score, s[1])
-                               for s in scored]
-
-            if top < 1:
-                return DisambiguatedWord(word, scored_analyses)
-            else:
-                return DisambiguatedWord(word, scored_analyses[0:top])
-
-        else:
-            analyses = self._analyzer.analyze(word_dd)
-
-            if len(analyses) == 0:
-                return DisambiguatedWord(word, [])
-
-            probabilities = [10 ** _get_pos_lex_freq(a) for a in analyses]
-            max_prob = max(probabilities)
-
-            scored_analyses = [ScoredAnalysis(p / max_prob, a)
-                               for a, p in zip(analyses, probabilities)]
-
-            scored_analyses.sort(key=lambda w: w.analysis['diac'])
-            scored_analyses.sort(key=lambda w: len(w.analysis['bw']))
-            scored_analyses.sort(key=lambda w: w.score, reverse=True)
-
-            if top < 1:
-                return DisambiguatedWord(word, scored_analyses)
-            else:
-                return DisambiguatedWord(word, scored_analyses[0:top])
-
-    def disambiguate(self, sentence, top=1):
+    def disambiguate(self, sentence):
         """Disambiguate all words in a given sentence.
 
         Args:
             sentence (:obj:`list` of :obj:`str`): The list of space and
                 punctuation seperated list of tokens comprising a given
                 sentence.
-            top (:obj:`int`, optional): The maximum number of top analyses to
-                return. Defaults to 1.
 
         Returns:
             :obj:`list` of :obj:`DisambiguatedWord`: The list of
             disambiguations for each word in the given sentence.
         """
-        return [self.disambiguate_word(sentence, x, top)
-                for x in range(len(sentence))]
+
+        return [self._disambiguate_word(w) for w in sentence]
