@@ -226,10 +226,10 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
 
     for concat_feat in _CONCAT_FEATS:
         if concat_feat in db.defines:
-            result[concat_feat] = u'{}+{}+{}'.format(
+            result[concat_feat] = u'+'.join([x for x in [
                 prefix_feats.get(concat_feat, ''),
                 stem_feats.get(concat_feat, ''),
-                suffix_feats.get(concat_feat, ''))
+                suffix_feats.get(concat_feat, '')] if len(x) > 0])
 
     for concat_feat in _CONCAT_FEATS_NONE:
         if concat_feat in db.defines:
