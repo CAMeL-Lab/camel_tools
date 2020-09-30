@@ -333,9 +333,9 @@ class Analyzer:
             if 'ud' in self._db.defines:
                 result['ud'] = 'NUM'
 
-            result['pos_freq'] = -99.0
-            result['lex_freq'] = -99.0
-            result['pos_lex_freq'] = -99.0
+            result['pos_logprob'] = -99.0
+            result['lex_logprob'] = -99.0
+            result['pos_lex_logprob'] = -99.0
 
             return [result]
 
@@ -362,9 +362,9 @@ class Analyzer:
             if 'ud' in self._db.defines:
                 result['ud'] = 'PUNCT'
 
-            result['pos_freq'] = -99.0
-            result['lex_freq'] = -99.0
-            result['pos_lex_freq'] = -99.0
+            result['pos_logprob'] = -99.0
+            result['lex_logprob'] = -99.0
+            result['pos_lex_logprob'] = -99.0
 
             return [result]
 
@@ -395,9 +395,9 @@ class Analyzer:
             if 'ud' in self._db.defines:
                 result['ud'] = 'X'
 
-            result['pos_freq'] = -99.0
-            result['lex_freq'] = -99.0
-            result['pos_lex_freq'] = -99.0
+            result['pos_logprob'] = -99.0
+            result['lex_logprob'] = -99.0
+            result['pos_lex_logprob'] = -99.0
 
             return [result]
 
