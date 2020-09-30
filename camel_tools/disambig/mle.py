@@ -58,11 +58,11 @@ _MLE_ANALYZER_MAP = {
 }
 
 
-def _get_pos_lex_freq(analysis):
-    freq = analysis.get('pos_lex_freq', -99.0)
-    if freq is None:
+def _get_pos_lex_logprob(analysis):
+    logprob = analysis.get('pos_lex_logprob', -99.0)
+    if logprob is None:
         return -99
-    return freq
+    return logprob
 
 
 _EQ_FEATS = frozenset(['asp', 'cas', 'enc0', 'gen', 'mod', 'num', 'per', 'pos',
@@ -91,13 +91,13 @@ class MLEDisambiguator(Disambiguator):
     """A disambiguator using a Maximum Likelihood Estimation (MLE) model.
     It first does a lookup in a given word-based MLE model. If none is provided
     or a word is not in the word-based model, then an analyzer is used to
-    disambiguate words based on the pos-lex frequencies of their analyses.
+    disambiguate words based on the pos-lex log probabilities of their analyses.
 
     Args:
         analyzer (:obj:`~camel_tools.morphology.analyzer.Analyzer`):
             Disambiguator to use if a word is not in the word-based MLE model.
-            The analyzer should provide the pos-lex frequencies for analyses to
-            disambiguate analyses.
+            The analyzer should provide the pos-lex log probabilities for
+            analyses to disambiguate analyses.
         mle_path (:obj:`str`, optional): Path to MLE JSON file. If `None`,
             then no word-based MLE lookup is performed skipping directly to
             using the pos-lex model. Defaults to `None`.
@@ -188,7 +188,7 @@ class MLEDisambiguator(Disambiguator):
             if len(analyses) == 0:
                 return []
 
-            probabilities = [10 ** _get_pos_lex_freq(a) for a in analyses]
+            probabilities = [10 ** _get_pos_lex_logprob(a) for a in analyses]
             max_prob = max(probabilities)
 
             scored_analyses = [ScoredAnalysis(p / max_prob, a)

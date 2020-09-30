@@ -33,7 +33,7 @@ _JOIN_FEATS = frozenset(['gloss', 'bw'])
 _CONCAT_FEATS = frozenset(['diac', 'pattern', 'caphi', 'catib6', 'ud'])
 _CONCAT_FEATS_NONE = frozenset(['d3tok', 'd3seg', 'atbseg', 'd2seg', 'd1seg',
                                 'd1tok', 'd2tok', 'atbtok'])
-_FREQ_FEATS = frozenset(['pos_freq', 'lex_freq', 'pos_lex_freq'])
+_LOGPROB_FEATS = frozenset(['pos_logprob', 'lex_logprob', 'pos_lex_logprob'])
 
 # Tokenization schemes to which Sun letters and Fatha after Alif rewrite
 # rules apply
@@ -268,8 +268,8 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
                                              suffix_feats.get('diac', ''))
         result['pattern'] = rewrite_pattern(result['pattern'])
 
-    for freq_feat in _FREQ_FEATS:
-        if freq_feat in db.defines:
-            result[freq_feat] = float(result.get(freq_feat, -99.0))
+    for logprob_feat in _LOGPROB_FEATS:
+        if logprob_feat in db.defines:
+            result[logprob_feat] = float(result.get(logprob_feat, -99.0))
 
     return result
