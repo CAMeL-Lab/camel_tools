@@ -296,20 +296,20 @@ Other Features
 
 * **ud** - Universal Dependencies POS tag
 
-* **pos_freq** - Log POS frequency
+* **pos_logprob** - POS log probability
 
-  * **None** - No frequency
-  * The natural log (base 10) of the frequency of the associated **pos** value
+  * **None** - No log probability
+  * The natural log (base 10) of the probability of the associated **pos** value
     in the database.
 
-* **lex_freq** - Log lemma frequency
+* **lex_logprob** - Lemma log probability
 
-  * **None** - No frequency
-  * The natural log (base 10) of the frequency of the associated **lex** value
+  * **None** - No log probability
+  * The natural log (base 10) of the probability of the associated **lex** value
     in the database.
 
-* **pos_lex_freq** - Log POS-lemma frequency
+* **pos_lex_logprob** - POS-lemma log probability
 
-  * **None** - No frequency
-  * The natural log (base 10) of the frequency of the associated
+  * **None** - No log probability
+  * The natural log (base 10) of the probability of the associated
     **pos**\ -\ **lex** pair values in the database.
