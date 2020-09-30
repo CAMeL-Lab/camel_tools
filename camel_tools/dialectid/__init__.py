@@ -224,6 +224,7 @@ class DialectIdentifier(object):
     def _load_lms(self, char_lm_dir, word_lm_dir):
         config = kenlm.Config()
         config.show_progress = False
+        config.arpa_complain = kenlm.ARPALoadComplain.NONE
 
         for label in self._labels:
             char_lm_path = Path(char_lm_dir, '{}.arpa'.format(label))
