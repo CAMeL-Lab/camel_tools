@@ -39,6 +39,9 @@ the
 `CAMeL Lab <http://camel-lab.com>`_
 at `New York University Abu Dhabi <http://nyuad.nyu.edu/>`_.
 
+    **Please use** `GitHub Issues <https://github.com/CAMeL-Lab/camel_tools/issues>`_
+    **to report a bug or if you need help using CAMeL Tools.**
+
 
 Installation
 ------------
