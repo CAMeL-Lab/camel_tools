@@ -166,4 +166,6 @@ class Reinflector(object):
                 if generated is not None:
                     results.extend(generated)
 
+        results  = [dict(y) for y in set(tuple(x.items()) for x in results)]
+
         return list(results)
