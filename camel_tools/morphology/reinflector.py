@@ -165,7 +165,8 @@ class Reinflector(object):
                 generated = self._generator.generate(lemma, generate_feats)
                 if generated is not None:
                     results.extend(generated)
-
+        
+        # TODO: Temporary fix to get unique analyses
         results  = [dict(y) for y in set(tuple(x.items()) for x in results)]
 
         return list(results)
