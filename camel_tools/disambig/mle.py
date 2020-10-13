@@ -219,8 +219,8 @@ class MLEDisambiguator(Disambiguator):
                 disambiguate.
 
         Returns:
-            :obj:`DisambiguatedWord`: The disambiguation of the word token in
-            `sentence` at `word_ndx`.
+            :obj:`~camel_tools.disambig.common.DisambiguatedWord`: The
+            disambiguation of the word token in `sentence` at `word_ndx`.
         """
 
         return self._disambiguate_word(sentence[word_ndx])
@@ -234,8 +234,8 @@ class MLEDisambiguator(Disambiguator):
                 sentence.
 
         Returns:
-            :obj:`list` of :obj:`DisambiguatedWord`: The list of
-            disambiguations for each word in the given sentence.
+            :obj:`list` of :obj:`~camel_tools.disambig.common.DisambiguatedWord`:
+            The list of disambiguations for each word in the given sentence.
         """
 
         return [self._disambiguate_word(w) for w in sentence]
