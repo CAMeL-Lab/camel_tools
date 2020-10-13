@@ -10,6 +10,7 @@ Python API Reference
    api/data
    api/morphology
    api/disambig
+   api/tagger
    api/tokenizers
    api/dialectid
    api/sentiment
