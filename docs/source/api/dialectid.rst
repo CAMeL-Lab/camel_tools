@@ -29,8 +29,12 @@ Classes
 Functions
 ---------
 
-.. autofunction:: camel_tools.dialectid.label_to_dialect
-.. autofunction:: camel_tools.dialectid.label_dialect_pairs
+.. autofunction:: camel_tools.dialectid.label_to_city
+.. autofunction:: camel_tools.dialectid.label_to_country
+.. autofunction:: camel_tools.dialectid.label_to_region
+.. autofunction:: camel_tools.dialectid.label_city_pairs
+.. autofunction:: camel_tools.dialectid.label_country_pairs
+.. autofunction:: camel_tools.dialectid.label_region_pairs
 
 
 .. _dialectid_labels:
@@ -38,65 +42,120 @@ Functions
 Labels
 ------
 
-Below is a table mapping output labels to their respective dialects:
+Below is a table mapping output labels to their respective city, country, and
+region dialects:
 
 .. list-table::
    :header-rows: 1
 
    * - Label
-     - Dialect
+     - City
+     - Country
+     - Region
    * - ALE
      - Aleppo
+     - Syria
+     - Levant
    * - ALG
      - Algiers
+     - Algeria
+     - Maghreb
    * - ALX
      - Alexandria
+     - Egypt
+     - Nile Basin
    * - AMM
      - Amman
+     - Jordan
+     - Levant
    * - ASW
      - Aswan
+     - Egypt
+     - Nile Basin
    * - BAG
      - Baghdad
+     - Iraq
+     - Iraq
    * - BAS
      - Basra
+     - Iraq
+     - Iraq
    * - BEI
      - Beirut
+     - Lebanon
+     - Levant
    * - BEN
      - Benghazi
+     - Libya
+     - Maghreb
    * - CAI
      - Cairo
+     - Egypt
+     - Nile Basin
    * - DAM
      - Damascus
+     - Syria
+     - Levant
    * - DOH
      - Doha
+     - Qatar
+     - Gulf
    * - FES
      - Fes
+     - Morocco
+     - Maghreb
    * - JED
      - Jeddha
+     - Saudi Arabia
+     - Gulf
    * - JER
      - Jerusalem
+     - Palestine
+     - Levant
    * - KHA
      - Khartoum
+     - Sudan
+     - Nile Basin
    * - MOS
      - Mosul
+     - Iraq
+     - Iraq
    * - MSA
+     - Modern Standard Arabic
+     - Modern Standard Arabic
      - Modern Standard Arabic
    * - MUS
      - Muscat
+     - Oman
+     - Gulf
    * - RAB
      - Rabat
+     - Morocco
+     - Maghreb
    * - RIY
      - Riyadh
+     - Saudi Arabia
+     - Gulf
    * - SAL
      - Salt
+     - Jordan
+     - Levant
    * - SAN
      - Sana'a
+     - Yemen
+     - Gulf of Aden
    * - SFX
      - Sfax
+     - Tunisia
+     - Maghreb
    * - TRI
      - Tripoli
+     - Libya
+     - Maghreb
    * - TUN
      - Tunis
+     - Tunisia
+     - Maghreb
 
 
 Examples

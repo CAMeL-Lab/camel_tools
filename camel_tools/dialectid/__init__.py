@@ -65,7 +65,16 @@ _DEFAULT_LABELS = frozenset(['ALE', 'ALG', 'ALX', 'AMM', 'ASW', 'BAG', 'BAS',
 
 _DEFAULT_LABELS_EXTRA = frozenset(['BEI', 'CAI', 'DOH', 'MSA', 'RAB', 'TUN'])
 
-_LABEL_MAP = {
+_DEFAULT_COUNTRIES = frozenset(['Algeria', 'Egypt', 'Iraq', 'Jordan',
+                                'Lebanon', 'Libya', 'Modern Standard Arabic',
+                                'Morocco', 'Oman', 'Palestine', 'Qatar',
+                                'Saudi Arabia', 'Sudan', 'Syria', 'Tunisia',
+                                'Yemen'])
+
+_DEFAULT_REGIONS = frozenset(['Gulf', 'Gulf Aden', 'Iraq', 'Levant', 'Maghreb',
+                              'Modern Standard Arabic', 'Nile Basin'])
+
+_LABEL_TO_CITY_MAP = {
     'ALE': 'Aleppo',
     'ALG': 'Algiers',
     'ALX': 'Alexandria',
@@ -92,6 +101,64 @@ _LABEL_MAP = {
     'SFX': 'Sfax',
     'TRI': 'Tripoli',
     'TUN': 'Tunis'
+}
+
+_LABEL_TO_COUNTRY_MAP = {
+    'ALE': 'Syria',
+    'ALG': 'Algeria',
+    'ALX': 'Egypt',
+    'AMM': 'Jordan',
+    'ASW': 'Egypt',
+    'BAG': 'Iraq',
+    'BAS': 'Iraq',
+    'BEI': 'Lebanon',
+    'BEN': 'Libya',
+    'CAI': 'Egypt',
+    'DAM': 'Syria',
+    'DOH': 'Qatar',
+    'FES': 'Morocco',
+    'JED': 'Saudi Arabia',
+    'JER': 'Palestine',
+    'KHA': 'Sudan',
+    'MOS': 'Iraq',
+    'MSA': 'Modern Standard Arabic',
+    'MUS': 'Oman',
+    'RAB': 'Morocco',
+    'RIY': 'Saudi Arabia',
+    'SAL': 'Jordan',
+    'SAN': 'Yemen',
+    'SFX': 'Tunisia',
+    'TRI': 'Libya',
+    'TUN': 'Tunisia'
+}
+
+_LABEL_TO_REGION_MAP = {
+    'ALE': 'Levant',
+    'ALG': 'Maghreb',
+    'ALX': 'Nile Basin',
+    'AMM': 'Levant',
+    'ASW': 'Nile Basin',
+    'BAG': 'Iraq',
+    'BAS': 'Iraq',
+    'BEI': 'Levant',
+    'BEN': 'Maghreb',
+    'CAI': 'Nile Basin',
+    'DAM': 'Levant',
+    'DOH': 'Gulf',
+    'FES': 'Maghreb',
+    'JED': 'Gulf',
+    'JER': 'Levant',
+    'KHA': 'Nile Basin',
+    'MOS': 'Iraq',
+    'MSA': 'Modern Standard Arabic',
+    'MUS': 'Gulf',
+    'RAB': 'Maghreb',
+    'RIY': 'Gulf',
+    'SAL': 'Levant',
+    'SAN': 'Gulf of Aden',
+    'SFX': 'Maghreb',
+    'TRI': 'Maghreb',
+    'TUN': 'Maghreb'
 }
 
 _DATA_DIR = DataCatalogue.get_dataset_info('DialectID').path
@@ -173,6 +240,62 @@ def _max_score(score_tups):
             max_dialect = dialect
 
     return max_dialect
+
+
+def label_to_city(prediction):
+    """Converts a dialect prediction using labels to use city names instead.
+
+    Args:
+        pred (:obj:`DIDPred`): The prediction to convert.
+
+    Returns:
+        :obj:`DIDPred` The converted prediction.
+    """
+
+    scores = { _LABEL_TO_CITY_MAP[l]: s for l, s in prediction.scores.items() }
+    top = _LABEL_TO_CITY_MAP[prediction.top]
+
+    return DIDPred(top, scores)
+
+
+def label_to_country(prediction):
+    """Converts a dialect prediction using labels to use country names instead.
+
+    Args:
+        pred (:obj:`DIDPred`): The prediction to convert.
+
+    Returns:
+        :obj:`DIDPred` The converted prediction.
+    """
+
+    scores = { i: 0.0 for i in _DEFAULT_COUNTRIES }
+
+    for label, prob in prediction.scores.items():
+        scores[_LABEL_TO_COUNTRY_MAP[label]] += prob
+
+    top = max(scores.items(), key=lambda x: x[1])
+
+    return DIDPred(top[0], scores)
+
+
+def label_to_region(prediction):
+    """Converts a dialect prediction using labels to use region names instead.
+
+    Args:
+        pred (:obj:`DIDPred`): The prediction to convert.
+
+    Returns:
+        :obj:`DIDPred` The converted prediction.
+    """
+
+    scores = { i: 0.0 for i in _DEFAULT_REGIONS }
+
+    for label, prob in prediction.scores.items():
+        scores[_LABEL_TO_REGION_MAP[label]] += prob
+
+    top = max(scores.items(), key=lambda x: x[1])
+
+    return DIDPred(top[0], scores)
 
 
 class DialectIdentifier(object):
@@ -405,12 +528,14 @@ class DialectIdentifier(object):
 
         return scores
 
-    def predict(self, sentences):
+    def predict(self, sentences, output='label'):
         """Predict the dialect probability scores for a given list of
         sentences.
 
         Args:
             sentences (:obj:`list` of :obj:`str`): The list of sentences.
+            output (:obj:`str`): The output label type. Possible values are
+                'label', 'city', 'country', or 'region'. Defaults to 'label'.
 
         Returns:
             :obj:`list` of :obj:`DIDPred`: A list of prediction results,
@@ -421,15 +546,26 @@ class DialectIdentifier(object):
             raise UntrainedModelError(
                 'Can\'t predict with an untrained model.')
 
+        if output == 'label':
+            convert = lambda x: x
+        elif output == 'city':
+            convert = label_to_city
+        elif output == 'country':
+            convert = label_to_country
+        elif output == 'region':
+            convert = label_to_region
+        else:
+            convert = lambda x: x
+
         x_prepared = self._prepare_sentences(sentences)
         predicted_scores = self._classifier.predict_proba(x_prepared)
 
         result = collections.deque()
-        for sentence, scores in zip(sentences, predicted_scores):
+        for scores in predicted_scores:
             score_tups = list(zip(self._labels_sorted, scores))
-            predicted_dialect = _max_score(score_tups)
+            predicted_dialect = max(score_tups, key=lambda x: x[1])[0]
             dialect_scores = dict(score_tups)
-            result.append(DIDPred(predicted_dialect, dialect_scores))
+            result.append(convert(DIDPred(predicted_dialect, dialect_scores)))
 
         return list(result)
 
@@ -484,26 +620,31 @@ def train_default_model():
         dill.dump(did, model_fp)
 
 
-def label_to_dialect(label):
-    """Maps a given label from the default label set to the
-    dialect the given label represents.
-
-    Args:
-        label (:obj:`str`): The input label.
-
-    Returns:
-        :obj:`str`: The dialect name associated with the input label. If the
-        input label is not a valid label, None is returned instead.
-    """
-
-    return _LABEL_MAP.get(label, None)
-
-
-def label_dialect_pairs():
-    """Returns the set of default label-dialect pairs.
+def label_city_pairs():
+    """Returns the set of default label-city pairs.
 
     Returns:
         :obj:`frozenset` of :obj:`tuple`: The set of default label-dialect
         pairs.
     """
-    return frozenset(_LABEL_MAP.items())
+    return frozenset(_LABEL_TO_CITY_MAP.items())
+
+
+def label_country_pairs():
+    """Returns the set of default label-country pairs.
+
+    Returns:
+        :obj:`frozenset` of :obj:`tuple`: The set of default label-country
+        pairs.
+    """
+    return frozenset(_LABEL_TO_COUNTRY_MAP.items())
+
+
+def label_region_pairs():
+    """Returns the set of default label-region pairs.
+
+    Returns:
+        :obj:`frozenset` of :obj:`tuple`: The set of default label-region
+        pairs.
+    """
+    return frozenset(_LABEL_TO_REGION_MAP.items())
