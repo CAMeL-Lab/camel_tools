@@ -84,6 +84,7 @@ _FEAT_ACTIONS = {
     'prc3': _tag_none,
     'atbtok': _tag_passthrough,
     'atbseg': _tag_passthrough,
+    'bwtok': _tag_passthrough,
     'd1tok': _tag_passthrough,
     'd1seg': _tag_passthrough,
     'd2tok': _tag_passthrough,
