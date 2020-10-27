@@ -93,7 +93,7 @@ class MorphologicalTokenizer(object):
                     tok = disambig_word.word
                     result.append(self._diacf(tok))
                 elif self._split:
-                    result.extend(self._diacf(t) for t in [tok.split('_')])
+                    result.extend(self._diacf(t) for t in tok.split('_'))
                 else:
                     result.append(self._diacf(tok))
 
