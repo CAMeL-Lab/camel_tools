@@ -27,9 +27,10 @@ The list of features that can be produced by :obj:`DefaultTagger` are:
 :code:`'mod'`, :code:`'num'`, :code:`'per'`, :code:`'pos'`, :code:`'enc0'`,
 :code:`'enc1'`, :code:`'enc2'`, :code:`'prc0'`, :code:`'prc1'`, :code:`'prc2'`,
 :code:`'prc3'`, :code:`'form_num'`, :code:`'form_gen'`, :code:`'stt'`,
-:code:`'vox'`, :code:`'atbtok'`, :code:`'atbseg'`, :code:`'d1tok'`,
-:code:`'d1seg'`, :code:`'d2tok'`, :code:`'d2seg'`, :code:`'d3tok'`,
-:code:`'d3seg'`, :code:`'catib6'`, :code:`'ud'`, :code:`'caphi'`.
+:code:`'vox'`, :code:`'atbtok'`, :code:`'atbseg'`, :code:`bwtok`,
+:code:`'d1tok'`, :code:`'d1seg'`, :code:`'d2tok'`, :code:`'d2seg'`,
+:code:`'d3tok'`, :code:`'d3seg'`, :code:`'catib6'`, :code:`'ud'`,
+:code:`'caphi'`.
 
 See See :doc:`/reference/camel_morphology_features` for more information on
 features and their values.

@@ -253,6 +253,7 @@ Lexical Features
 * **root** - Traditional Arabic root consonants
 * **atbtok** - ATB tokenization
 * **d3tok** - D3 tokenization
+* **bwtok** - Buckwalter POS tag based tokenization
 
 .. * **atbseg** - ATB segmentation
 .. * **d1tok** - D1 tokenization

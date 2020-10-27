@@ -74,6 +74,10 @@ class MorphologicalTokenizer(object):
         diac (:obj:`bool`, optional): If set to True, then output tokens will
             be diacritized, otherwise they will be undiacritized.
             Defaults to False.
+            Note that when the tokenization scheme is set to 'bwtok', the
+            number of produced undiacritized tokens might be less than the
+            diacritized tokens becuase the 'bwtok' scheme can have
+            morphemes that are standalone diacritics (e.g. case and mood).
     """
 
     def __init__(self, disambiguator, scheme='atbtok', split=False,
