@@ -61,7 +61,7 @@ _IS_AR_RE = re.compile(u'^[' + re.escape(u''.join(AR_CHARSET)) + u']+$')
 _NOAN_RE = re.compile(u'NOAN')
 
 _COPY_FEATS = frozenset(['gloss', 'atbtok', 'atbseg', 'd1tok', 'd1seg',
-                         'd2tok', 'd2seg', 'd3tok', 'd3seg'])
+                         'd2tok', 'd2seg', 'd3tok', 'd3seg', 'bwtok'])
 
 _UNDEFINED_LEX_FEATS = frozenset(['root', 'pattern', 'caphi'])
 

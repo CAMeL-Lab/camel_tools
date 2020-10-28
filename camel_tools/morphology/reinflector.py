@@ -44,7 +44,7 @@ _CLITIC_FEATS = frozenset(['enc0', 'prc0', 'prc1', 'prc2', 'prc3'])
 _IGNORED_FEATS = frozenset(['diac', 'lex', 'bw', 'gloss', 'source', 'stem',
                             'stemcat', 'lmm', 'dediac', 'caphi', 'catib6',
                             'ud', 'd3seg', 'atbseg', 'd2seg', 'd1seg', 'd1tok',
-                            'd2tok', 'atbtok', 'd3tok', 'root', 'pattern',
+                            'd2tok', 'atbtok', 'd3tok', 'bwtok', 'root', 'pattern',
                             'freq', 'pos_logprob', 'lex_logprob',
                             'pos_lex_logprob', 'stemgloss'])
 _SPECIFIED_FEATS = frozenset(['form_gen', 'form_num'])

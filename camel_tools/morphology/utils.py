@@ -32,7 +32,7 @@ import re
 _JOIN_FEATS = frozenset(['gloss', 'bw'])
 _CONCAT_FEATS = frozenset(['diac', 'pattern', 'caphi', 'catib6', 'ud'])
 _CONCAT_FEATS_NONE = frozenset(['d3tok', 'd3seg', 'atbseg', 'd2seg', 'd1seg',
-                                'd1tok', 'd2tok', 'atbtok'])
+                                'd1tok', 'd2tok', 'atbtok', 'bwtok'])
 _LOGPROB_FEATS = frozenset(['pos_logprob', 'lex_logprob', 'pos_lex_logprob'])
 
 # Tokenization schemes to which Sun letters and Fatha after Alif rewrite

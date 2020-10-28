@@ -27,12 +27,35 @@
 """
 
 
+import re
 from collections import deque
 from camel_tools.utils.dediac import dediac_ar
 
 
-_SCHEME_SET = frozenset(['atbtok', 'atbseg', 'd1tok', 'd1seg', 'd2tok',
+# Reduce consequitive '+'s to one
+_REMOVE_PLUSES = re.compile(r'(_\+|\+_)+')
+
+_SCHEME_SET = frozenset(['atbtok', 'atbseg', 'bwtok', 'd1tok', 'd1seg', 'd2tok',
                          'd2seg', 'd3tok', 'd3seg'])
+
+def _default_dediac(tok):
+    return dediac_ar(tok)
+
+
+def _special_dediac(tok):
+    return _REMOVE_PLUSES.sub(r'\g<1>', dediac_ar(tok).strip('+_'))
+
+_DIAC_TYPE = {
+    'atbtok': _default_dediac,
+    'atbseg': _default_dediac,
+    'bwtok': _special_dediac,
+    'd1tok': _default_dediac,
+    'd1seg': _default_dediac,
+    'd2tok': _default_dediac,
+    'd2seg': _default_dediac,
+    'd3tok': _default_dediac,
+    'd3seg': _default_dediac
+}
 
 
 class MorphologicalTokenizer(object):
@@ -51,6 +74,10 @@ class MorphologicalTokenizer(object):
         diac (:obj:`bool`, optional): If set to True, then output tokens will
             be diacritized, otherwise they will be undiacritized.
             Defaults to False.
+            Note that when the tokenization scheme is set to 'bwtok', the
+            number of produced undiacritized tokens might be less than the
+            diacritized tokens becuase the 'bwtok' scheme can have
+            morphemes that are standalone diacritics (e.g. case and mood).
     """
 
     def __init__(self, disambiguator, scheme='atbtok', split=False,
@@ -58,7 +85,7 @@ class MorphologicalTokenizer(object):
         self._disambiguator = disambiguator
         self._scheme = scheme
         self._split = split
-        self._diacf = lambda w: w if diac else dediac_ar(w)
+        self._diacf = lambda w: w if diac else _DIAC_TYPE[self._scheme](w)
 
     @classmethod
     def scheme_set(cls):
@@ -93,7 +120,8 @@ class MorphologicalTokenizer(object):
                     tok = disambig_word.word
                     result.append(self._diacf(tok))
                 elif self._split:
-                    result.extend(self._diacf(t) for t in [tok.split('_')])
+                    tok = self._diacf(tok)
+                    result.extend(tok.split('_'))
                 else:
                     result.append(self._diacf(tok))
 
