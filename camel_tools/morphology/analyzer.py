@@ -99,8 +99,8 @@ class AnalyzedWord(namedtuple('AnalyzedWord', ['word', 'analyses'])):
         word (:obj:`str`): The analyzed word.
 
         analyses (:obj:`list` of :obj:`dict`): List of analyses for **word**.
-            See :doc:`/reference/camel_morphology_features` for more information on
-            features and their values.
+            See :doc:`/reference/camel_morphology_features` for more
+            information on features and their values.
     """
 
 
@@ -296,8 +296,8 @@ class Analyzer:
 
         Returns:
             :obj:`list` of :obj:`dict`: The list of analyses for **word**.
-            See :doc:`/reference/camel_morphology_features` for more information on
-            features and their values.
+            See :doc:`/reference/camel_morphology_features` for more
+            information on features and their values.
         """
 
         word = word.strip()

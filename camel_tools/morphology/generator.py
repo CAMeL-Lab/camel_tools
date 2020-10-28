@@ -67,13 +67,13 @@ class Generator(object):
             lemma (:obj:`str`): Lemma to generate from.
             feats (:obj:`dict`): Dictionary of features. Must contain 'pos'
                 feature.
-                See :doc:`/reference/camel_morphology_features` for more information
-                on features and their values.
+                See :doc:`/reference/camel_morphology_features` for
+                more information on features and their values.
 
         Returns:
             :obj:`list` of :obj:`dict`: List of generated analyses.
-            See :doc:`/reference/camel_morphology_features` for more information on
-            features and their values.
+            See :doc:`/reference/camel_morphology_features` for more
+            information on features and their values.
 
         Raises:
             :obj:`~camel_tools.morphology.errors.InvalidGeneratorFeature`: If

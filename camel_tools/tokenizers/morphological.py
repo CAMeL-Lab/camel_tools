@@ -35,20 +35,20 @@ from camel_tools.utils.dediac import dediac_ar
 # Reduce consequitive '+'s to one
 _REMOVE_PLUSES = re.compile(r'(_\+|\+_)+')
 
-_SCHEME_SET = frozenset(['atbtok', 'atbseg', 'bwtok', 'd1tok', 'd1seg', 'd2tok',
-                         'd2seg', 'd3tok', 'd3seg'])
+_SCHEME_SET = frozenset(['atbtok', 'atbseg', 'bwtok', 'd1tok', 'd1seg',
+                         'd2tok', 'd2seg', 'd3tok', 'd3seg'])
 
 def _default_dediac(tok):
     return dediac_ar(tok)
 
 
-def _special_dediac(tok):
+def _bwtok_dediac(tok):
     return _REMOVE_PLUSES.sub(r'\g<1>', dediac_ar(tok).strip('+_'))
 
 _DIAC_TYPE = {
     'atbtok': _default_dediac,
     'atbseg': _default_dediac,
-    'bwtok': _special_dediac,
+    'bwtok': _bwtok_dediac,
     'd1tok': _default_dediac,
     'd1seg': _default_dediac,
     'd2tok': _default_dediac,
