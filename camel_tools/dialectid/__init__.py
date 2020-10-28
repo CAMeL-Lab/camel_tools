@@ -508,22 +508,63 @@ class DialectIdentifier(object):
         eval_data = pd.read_csv(data_path, sep='\t', index_col=0)
         x = eval_data['ar'].values
         y_true = eval_data['dialect'].values
+        y_true_country = [_LABEL_TO_COUNTRY_MAP[y] for y in y_true]
+        y_true_region = [_LABEL_TO_REGION_MAP[y] for y in y_true]
 
         # Generate predictions
         x_prepared = self._prepare_sentences(x)
         y_pred = self._classifier.predict(x_prepared)
         y_pred = self._label_encoder.inverse_transform(y_pred)
+        y_pred_country = [_LABEL_TO_COUNTRY_MAP[y] for y in y_pred]
+        y_pred_region = [_LABEL_TO_REGION_MAP[y] for y in y_pred]
 
         # Get scores
         scores = {
-            'accuracy': accuracy_score(y_true, y_pred),
-            'f1_micro': f1_score(y_true, y_pred, average='micro'),
-            'f1_macro': f1_score(y_true, y_pred, average='macro'),
-            'recall_micro': recall_score(y_true, y_pred, average='micro'),
-            'recall_macro': recall_score(y_true, y_pred, average='macro'),
-            'precision_micro': precision_score(y_true, y_pred,
-                                               average='micro'),
-            'precision_macro': precision_score(y_true, y_pred, average='macro')
+            'city': {
+                'accuracy': accuracy_score(y_true, y_pred),
+                'f1_micro': f1_score(y_true, y_pred, average='micro'),
+                'f1_macro': f1_score(y_true, y_pred, average='macro'),
+                'recall_micro': recall_score(y_true, y_pred, average='micro'),
+                'recall_macro': recall_score(y_true, y_pred, average='macro'),
+                'precision_micro': precision_score(y_true, y_pred,
+                                                average='micro'),
+                'precision_macro': precision_score(y_true, y_pred,
+                                                   average='macro')
+            },
+            'country': {
+                'accuracy': accuracy_score(y_true_country, y_pred_country),
+                'f1_micro': f1_score(y_true_country, y_pred_country,
+                                     average='micro'),
+                'f1_macro': f1_score(y_true_country, y_pred_country,
+                                     average='macro'),
+                'recall_micro': recall_score(y_true_country, y_pred_country,
+                                             average='micro'),
+                'recall_macro': recall_score(y_true_country, y_pred_country,
+                                             average='macro'),
+                'precision_micro': precision_score(y_true_country,
+                                                   y_pred_country,
+                                                   average='micro'),
+                'precision_macro': precision_score(y_true_country,
+                                                   y_pred_country,
+                                                   average='macro')
+            },
+            'region': {
+                'accuracy': accuracy_score(y_true_region, y_pred_region),
+                'f1_micro': f1_score(y_true_region, y_pred_region,
+                                     average='micro'),
+                'f1_macro': f1_score(y_true_region, y_pred_region,
+                                     average='macro'),
+                'recall_micro': recall_score(y_true_region, y_pred_region,
+                                             average='micro'),
+                'recall_macro': recall_score(y_true_region, y_pred_region,
+                                             average='macro'),
+                'precision_micro': precision_score(y_true_region,
+                                                   y_pred_region,
+                                                   average='micro'),
+                'precision_macro': precision_score(y_true_region,
+                                                   y_pred_region,
+                                                   average='macro')
+            },
         }
 
         return scores
