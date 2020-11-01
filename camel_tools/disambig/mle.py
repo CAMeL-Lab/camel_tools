@@ -141,9 +141,11 @@ class MLEDisambiguator(Disambiguator):
 
         Args:
             model_name (:obj:`str`, optional): The name of the pretrained
-                model. If none, the dault model ('calima-msa-r13') is loaded.
+                model. If none, the default model ('calima-msa-r13') is loaded.
+                At the moment, the model names available are the same as those
+                in :ref:`camel_morphology_dbs`.
                 Defaults to None.
-            analyzer (:obj;`Analyzer`, optional): Alternative
+            analyzer (:obj:`Analyzer`, optional): Alternative
                 analyzer to use. If None, an instance of the model's default
                 analyzer is created. Defaults to None.
             top (:obj:`int`, optional): The maximum number of top analyses to
