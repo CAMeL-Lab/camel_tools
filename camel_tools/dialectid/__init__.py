@@ -71,7 +71,7 @@ _DEFAULT_COUNTRIES = frozenset(['Algeria', 'Egypt', 'Iraq', 'Jordan',
                                 'Saudi Arabia', 'Sudan', 'Syria', 'Tunisia',
                                 'Yemen'])
 
-_DEFAULT_REGIONS = frozenset(['Gulf', 'Gulf Aden', 'Iraq', 'Levant', 'Maghreb',
+_DEFAULT_REGIONS = frozenset(['Gulf', 'Gulf of Aden', 'Levant', 'Maghreb',
                               'Modern Standard Arabic', 'Nile Basin'])
 
 _LABEL_TO_CITY_MAP = {
@@ -138,8 +138,8 @@ _LABEL_TO_REGION_MAP = {
     'ALX': 'Nile Basin',
     'AMM': 'Levant',
     'ASW': 'Nile Basin',
-    'BAG': 'Iraq',
-    'BAS': 'Iraq',
+    'BAG': 'Gulf',
+    'BAS': 'Gulf',
     'BEI': 'Levant',
     'BEN': 'Maghreb',
     'CAI': 'Nile Basin',
@@ -149,7 +149,7 @@ _LABEL_TO_REGION_MAP = {
     'JED': 'Gulf',
     'JER': 'Levant',
     'KHA': 'Nile Basin',
-    'MOS': 'Iraq',
+    'MOS': 'Gulf',
     'MSA': 'Modern Standard Arabic',
     'MUS': 'Gulf',
     'RAB': 'Maghreb',
