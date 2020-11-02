@@ -506,63 +506,48 @@ class DialectIdentifier(object):
 
         # Load eval data
         eval_data = pd.read_csv(data_path, sep='\t', index_col=0)
-        x = eval_data['ar'].values
-        y_true = eval_data['dialect'].values
-        y_true_country = [_LABEL_TO_COUNTRY_MAP[y] for y in y_true]
-        y_true_region = [_LABEL_TO_REGION_MAP[y] for y in y_true]
+        sentences = eval_data['ar'].values
+        did_true_city = eval_data['dialect'].values
+        did_true_country = [_LABEL_TO_COUNTRY_MAP[d] for d in did_true_city]
+        did_true_region = [_LABEL_TO_REGION_MAP[d] for d in did_true_city]
 
         # Generate predictions
-        x_prepared = self._prepare_sentences(x)
-        y_pred = self._classifier.predict(x_prepared)
-        y_pred = self._label_encoder.inverse_transform(y_pred)
-        y_pred_country = [_LABEL_TO_COUNTRY_MAP[y] for y in y_pred]
-        y_pred_region = [_LABEL_TO_REGION_MAP[y] for y in y_pred]
+        did_pred = self.predict(sentences)
+        did_pred_city = [d.top for d in did_pred]
+        did_pred_country = [d.top for d in map(label_to_country, did_pred)]
+        did_pred_region = [d.top for d in map(label_to_region, did_pred)]
 
         # Get scores
         scores = {
             'city': {
-                'accuracy': accuracy_score(y_true, y_pred),
-                'f1_micro': f1_score(y_true, y_pred, average='micro'),
-                'f1_macro': f1_score(y_true, y_pred, average='macro'),
-                'recall_micro': recall_score(y_true, y_pred, average='micro'),
-                'recall_macro': recall_score(y_true, y_pred, average='macro'),
-                'precision_micro': precision_score(y_true, y_pred,
-                                                average='micro'),
-                'precision_macro': precision_score(y_true, y_pred,
+                'accuracy': accuracy_score(did_true_city, did_pred_city),
+                'f1_macro': f1_score(did_true_city, did_pred_city,
+                                     average='macro'),
+                'recall_macro': recall_score(did_true_city, did_pred_city,
+                                             average='macro'),
+                'precision_macro': precision_score(did_true_city,
+                                                   did_pred_city,
                                                    average='macro')
             },
             'country': {
-                'accuracy': accuracy_score(y_true_country, y_pred_country),
-                'f1_micro': f1_score(y_true_country, y_pred_country,
-                                     average='micro'),
-                'f1_macro': f1_score(y_true_country, y_pred_country,
+                'accuracy': accuracy_score(did_true_country, did_pred_country),
+                'f1_macro': f1_score(did_true_country, did_pred_country,
                                      average='macro'),
-                'recall_micro': recall_score(y_true_country, y_pred_country,
-                                             average='micro'),
-                'recall_macro': recall_score(y_true_country, y_pred_country,
+                'recall_macro': recall_score(did_true_country,
+                                             did_pred_country,
                                              average='macro'),
-                'precision_micro': precision_score(y_true_country,
-                                                   y_pred_country,
-                                                   average='micro'),
-                'precision_macro': precision_score(y_true_country,
-                                                   y_pred_country,
+                'precision_macro': precision_score(did_true_country,
+                                                   did_pred_country,
                                                    average='macro')
             },
             'region': {
-                'accuracy': accuracy_score(y_true_region, y_pred_region),
-                'f1_micro': f1_score(y_true_region, y_pred_region,
-                                     average='micro'),
-                'f1_macro': f1_score(y_true_region, y_pred_region,
+                'accuracy': accuracy_score(did_true_region, did_pred_region),
+                'f1_macro': f1_score(did_true_region, did_pred_region,
                                      average='macro'),
-                'recall_micro': recall_score(y_true_region, y_pred_region,
-                                             average='micro'),
-                'recall_macro': recall_score(y_true_region, y_pred_region,
+                'recall_macro': recall_score(did_true_region, did_pred_region,
                                              average='macro'),
-                'precision_micro': precision_score(y_true_region,
-                                                   y_pred_region,
-                                                   average='micro'),
-                'precision_macro': precision_score(y_true_region,
-                                                   y_pred_region,
+                'precision_macro': precision_score(did_true_region,
+                                                   did_pred_region,
                                                    average='macro')
             },
         }
