@@ -166,7 +166,7 @@ _CHAR_LM_DIR = Path(_DATA_DIR, 'lm', 'char')
 _WORD_LM_DIR = Path(_DATA_DIR, 'lm', 'word')
 _TRAIN_DATA_PATH = Path(_DATA_DIR, 'corpus_26_train.tsv')
 _TRAIN_DATA_EXTRA_PATH = Path(_DATA_DIR, 'corpus_6_train.tsv')
-_VAL_DATA_PATH = Path(_DATA_DIR, 'corpus_26_val.tsv')
+_DEV_DATA_PATH = Path(_DATA_DIR, 'corpus_26_dev.tsv')
 _TEST_DATA_PATH = Path(_DATA_DIR, 'corpus_26_test.tsv')
 
 
@@ -475,7 +475,7 @@ class DialectIdentifier(object):
 
         self._is_trained = True
 
-    def eval(self, data_path=None, data_set='VALIDATION'):
+    def eval(self, data_path=None, data_set='DEV'):
         """Evaluate the trained model on a given data set.
 
         Args:
@@ -497,8 +497,8 @@ class DialectIdentifier(object):
                 'Can\'t evaluate an untrained model.')
 
         if data_path is None:
-            if data_set == 'VALIDATION':
-                data_path = _VAL_DATA_PATH
+            if data_set == 'DEV':
+                data_path = _DEV_DATA_PATH
             elif data_set == 'TEST':
                 data_path = _TEST_DATA_PATH
             else:
