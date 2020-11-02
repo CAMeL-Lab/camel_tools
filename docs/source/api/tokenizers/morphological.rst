@@ -28,25 +28,29 @@ Examples
    sentence_egy = ['وكاتباله', 'مكتوبين']
 
    # Create different morphological tokenizer instances
-   d3_tokenizer = MorphologicalTokenizer(disambiguator=mle_msa, scheme='d3tok', split=True)
-   atb_tokenizer = MorphologicalTokenizer(disambiguator=mle_msa, scheme='atbtok', diac=True)
-   bw_tokenizer = MorphologicalTokenizer(disambiguator=mle_egy, scheme='bwtok')
+   msa_d3_tokenizer = MorphologicalTokenizer(disambiguator=mle_msa, scheme='d3tok')
+   msa_atb_tokenizer = MorphologicalTokenizer(disambiguator=mle_msa, scheme='atbtok')
+   msa_bw_tokenizer = MorphologicalTokenizer(disambiguator=mle_msa, scheme='bwtok')
+   egy_bw_tokenizer = MorphologicalTokenizer(disambiguator=mle_egy, scheme='bwtok')
 
    # Generate tokenizations
    # Note that our Egyptian resources currently provide bwtok tokenization only. 
-   d3_tok = d3_tokenizer.tokenize(sentence_msa)
-   atb_tok = atb_tokenizer.tokenize(sentence_msa)
-   bw_tok = bw_tokenizer.tokenize(sentence_egy)
+   msa_d3_tok = msa_d3_tokenizer.tokenize(sentence_msa)
+   msa_atb_tok = msa_atb_tokenizer.tokenize(sentence_msa)
+   msa_bw_tok = msa_bw_tokenizer.tokenize(sentence_msa)
+   egy_bw_tok = egy_bw_tokenizer.tokenize(sentence_egy)
 
    # Print results
-   print('D3 tokenization: ', d3_tok)
-   print('ATB tokenization: ', atb_tok)
-   print('BW tokenization: ', bw_tok)
+   print('D3 tokenization (MSA):', msa_d3_tok)
+   print('ATB tokenization (MSA):', msa_atb_tok)
+   print('BW tokenization (MSA):', msa_bw_tok)
+   print('BW tokenization (EGY):', egy_bw_tok)
 
 This will output:
 
 .. code-block:: none
 
-   D3 tokenization:  ['ف+', 'تنفست', 'ال+', 'صعداء']
-   ATB tokenization:  ['فَ+_تَنَفَّسْتُ', 'الصُّعَداءَ']
-   BW tokenization:  ['و+_كاتب_+ة_+ل_+ه', 'مكتوب_+ين']
+   D3 tokenization (MSA): ['ف+_تنفست', 'ال+_صعداء']
+   ATB tokenization (MSA): ['ف+_تنفست', 'الصعداء']
+   BW tokenization (MSA): ['ف+_تنفس_+ت', 'ال+_صعداء']
+   BW tokenization (EGY): ['و+_كاتب_+ة_+ل_+ه', 'مكتوب_+ين']
