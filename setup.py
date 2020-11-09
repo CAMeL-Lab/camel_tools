@@ -97,6 +97,7 @@ setup(
               'camel_tools.morphology',
               'camel_tools.disambig',
               'camel_tools.tokenizers',
+              'camel_tools.tagger',
               'camel_tools.data',
               'camel_tools.sentiment',
               'camel_tools.dialectid',
