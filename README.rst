@@ -236,7 +236,39 @@ follows:
 This should compile all the HTML documentation in to ``docs/build/html``.
 
 
-LICENSE
+Citation
+--------
+
+If you find CAMeL Tools useful in your research, please cite our paper:
+
+.. code-block:: bibtex
+
+   @inproceedings{obeid-etal-2020-camel,
+      title = "{CAM}e{L} Tools: An Open Source Python Toolkit for {A}rabic Natural Language Processing",
+      author = "Obeid, Ossama  and
+         Zalmout, Nasser  and
+         Khalifa, Salam  and
+         Taji, Dima  and
+         Oudah, Mai  and
+         Alhafni, Bashar  and
+         Inoue, Go  and
+         Eryani, Fadhl  and
+         Erdmann, Alexander  and
+         Habash, Nizar",
+      booktitle = "Proceedings of the 12th Language Resources and Evaluation Conference",
+      month = may,
+      year = "2020",
+      address = "Marseille, France",
+      publisher = "European Language Resources Association",
+      url = "https://www.aclweb.org/anthology/2020.lrec-1.868",
+      pages = "7022--7032",
+      abstract = "We present CAMeL Tools, a collection of open-source tools for Arabic natural language processing in Python. CAMeL Tools currently provides utilities for pre-processing, morphological modeling, Dialect Identification, Named Entity Recognition and Sentiment Analysis. In this paper, we describe the design of CAMeL Tools and the functionalities it provides.",
+      language = "English",
+      ISBN = "979-10-95546-34-4",
+   }
+
+
+License
 -------
 
 CAMeL Tools is available under the MIT license.
