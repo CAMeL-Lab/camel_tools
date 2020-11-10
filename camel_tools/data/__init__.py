@@ -53,31 +53,58 @@ def _get_appdatadir():
 
     # TODO: Make sure this works with OSs other than Windows, Linux and Mac.
     if sys.platform == 'win32':
-        return Path(home, 'AppData/Roaming/camel_tools/data')
+        return Path(home, 'AppData/Roaming/camel_tools')
     else:
-        return Path(home, '.camel_tools/data')
+        return Path(home, '.camel_tools')
 
 
 CT_DATA_PATH_DEFAULT = _get_appdatadir()
 CT_DATA_PATH_DEFAULT.mkdir(parents=True, exist_ok=True)
+CT_DATA_DIR = CT_DATA_PATH_DEFAULT
 
 _CATALOGUE_PATH = Path(__file__).parent / 'catalogue.json'
 with _CATALOGUE_PATH.open('r', encoding='utf-8') as cat_fp:
     _CATALOGUE = json.load(cat_fp)
 
-if os.environ.get('CAMELTOOLS_DATA') is None:
-    _CT_DATA_PATH = CT_DATA_PATH_DEFAULT
-else:
-    _CT_DATA_PATH = Path(os.environ.get('CAMELTOOLS_DATA'), 'data')
+if os.environ.get('CAMELTOOLS_DATA') is not None:
+    CT_DATA_DIR = Path(
+        os.environ.get('CAMELTOOLS_DATA')).expanduser().absolute()
 
+_CT_DATASET_PATH = Path(CT_DATA_DIR, 'data')
+
+
+_DownloadInfo = namedtuple('DownloadInfo', ['name',
+                                            'description',
+                                            'type',
+                                            'file_id',
+                                            'url',
+                                            'destination'])
 
 _ComponentInfo = namedtuple('ComponentInfo', ['name', 'datasets', 'default'])
+
 _DatasetInfo = namedtuple('DatasetInfo', ['component',
                                           'name',
                                           'description',
                                           'license',
                                           'version',
                                           'path'])
+
+
+class DownloadInfo(_DownloadInfo):
+    """Named tuple containing information about a data download.
+
+    Attributes:
+        name (:obj:`str`): The name used to query this download.
+        description (:obj:`str`): A description of this download.
+        type (:obj:`str`): The type of download. Values can be one of the
+            following: 'url', 'google-drive'.
+        url (:obj:`str`): The URL of the download (used only when `type` is set
+            to 'url').
+        file_id (:obj:`str`): The file ID of the download (used only when
+            `type` is set to 'google-drive').
+        destination (:obj:`str`): The destination of the downloaded file
+            relative to the camel-tools data path.
+    """
 
 
 class ComponentInfo(_ComponentInfo):
@@ -105,13 +132,24 @@ class DatasetInfo(_DatasetInfo):
 
 
 def _gen_catalogue(cat_dict):
-    catalogue = {'components': {}}
+    catalogue = {'downloads': {}, 'components': {}}
 
+    # Populate downloads
+    for dl_name, dl_info in cat_dict['downloads'].items():
+        catalogue['downloads'][dl_name] = DownloadInfo(
+            dl_name,
+            dl_info.get('description', None),
+            dl_info['type'],
+            dl_info.get('file_id', None),
+            dl_info.get('url', None),
+            dl_info['destination'])
+
+    # Populate components
     for comp_name, comp_info in cat_dict['components'].items():
         datasets = {}
 
         for ds_name, ds_info in comp_info['datasets'].items():
-            ds_path = Path(_CT_DATA_PATH, ds_info['path'])
+            ds_path = Path(_CT_DATASET_PATH, ds_info['path'])
             datasets[ds_name] = DatasetInfo(comp_name,
                                             ds_name,
                                             ds_info.get('description', None),
@@ -132,6 +170,32 @@ class DataCatalogue(object):
     """
 
     _catalogue = _gen_catalogue(_CATALOGUE)
+
+    @staticmethod
+    def get_download_info(download):
+        """Get the download entry for a given download name.
+
+        Args:
+            download (:obj:`str`): Name of the download to lookup in the
+            catalogue.
+
+        Returns:
+            :obj:`DownloadInfo`: The catalogue entry associated with the given
+            download.
+
+        Raises:
+            DataLookupException: If `download` is not a valid download name.
+        """
+
+        if download not in DataCatalogue._catalogue['downloads']:
+            raise DataLookupException('Undefined download {}.'.format(
+                                      repr(download)))
+        
+        return DataCatalogue._catalogue['downloads'][download]
+
+    @staticmethod
+    def downloads_list():
+        return sorted(DataCatalogue._catalogue['downloads'].items())
 
     @staticmethod
     def get_component_info(component):

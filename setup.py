@@ -75,6 +75,7 @@ INSTALL_REQUIRES = [
     'torch>=1.3',
     'transformers==3.0.2',
     'editdistance',
+    'requests',
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [
