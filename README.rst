@@ -90,8 +90,10 @@ Install from source
 Installing data
 ^^^^^^^^^^^^^^^
 
-First, download the
-`zipped data <https://drive.google.com/file/d/1ZtseLpW2vufNdkpruDpbQf28WEw38U5u/view?usp=sharing>`_.
+First, download either the
+`Full data zip <https://drive.google.com/file/d/1LbU8IefOziwYkTpvyCnX_OgaBJCyU6RG/view?usp=sharing>`_
+or the `Light data zip <https://drive.google.com/file/d/1K_xYXN1T5GGMDGX25KElVBXp4EEmjG5R/view?usp=sharing>`_
+(see :ref:`datasets` for a comparison).
 
 Unzip the file and then move and rename the unzipped directory to
 :code:`~/.camel_tools`. If installed correctly, there should be a direct path to
@@ -149,8 +151,10 @@ Install from source
 Installing data
 ^^^^^^^^^^^^^^^
 
-First, download the
-`zipped data <https://drive.google.com/file/d/1ZtseLpW2vufNdkpruDpbQf28WEw38U5u/view?usp=sharing>`_.
+First, download either the
+`Full data zip <https://drive.google.com/file/d/1LbU8IefOziwYkTpvyCnX_OgaBJCyU6RG/view?usp=sharing>`_
+or the `Light data zip <https://drive.google.com/file/d/1K_xYXN1T5GGMDGX25KElVBXp4EEmjG5R/view?usp=sharing>`_
+(see :ref:`datasets` for a comparison).
 
 Unzip the file and then move and rename the unzipped directory to
 :code:`C:\Users\your_user_name\AppData\Roaming\camel_tools`.
@@ -172,6 +176,42 @@ path. Below are the instructions to do so (on Windows 10):
 
 Again, :code:`data` should be a subdirectory of the path set in
 :code:`CAMELTOOLS_DATA`.
+
+
+.. _datasets:
+
+Datasets
+--------
+
+We provide two data distributions for use with CAMeL Tools:
+`Full <https://drive.google.com/file/d/1LbU8IefOziwYkTpvyCnX_OgaBJCyU6RG/view?usp=sharing>`_
+and `Light <https://drive.google.com/file/d/1K_xYXN1T5GGMDGX25KElVBXp4EEmjG5R/view?usp=sharing>`_.
+
+While the Full archive provides data for all components in CAMeL Tools,
+the Light archive contains data for use with the morphological analyzer, the
+MLE Disambiguator, and any other components that depend on them only.
+
+Below is a table comparing the feature set included in each release.
+
++--------------------------+--------+-------+
+|                          | Full   | Light |
++==========================+========+=======+
+| Size                     | 1.8 GB | 19 MB |
++--------------------------+--------+-------+
+| Morphology               | ✓      | ✓     |
++--------------------------+--------+-------+
+| Disambiguation           | ✓      | ✓     |
++--------------------------+--------+-------+
+| Taggers                  | ✓      | ✓     |
++--------------------------+--------+-------+
+| Tokenization             | ✓      | ✓     |
++--------------------------+--------+-------+
+| Dialect Identification   | ✓      |       |
++--------------------------+--------+-------+
+| Sentiment Analysis       | ✓      |       |
++--------------------------+--------+-------+
+| Named Entity Recognition | ✓      |       |
++--------------------------+--------+-------+
 
 
 Documentation
