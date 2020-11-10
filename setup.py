@@ -35,7 +35,7 @@ with open(VERSION_FILE, encoding='utf-8') as version_fp:
 
 
 CLASSIFIERS = [
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 5 - Production/Stable',
     'Environment :: Console',
     'Intended Audience :: Developers',
     'Intended Audience :: Education',
