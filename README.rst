@@ -28,12 +28,6 @@ CAMeL Tools
 Introduction
 ------------
 
-**Note:** Due to the current COVID-19 situation, the 1.0 release of CAMeL Tools
-has been delayed.
-If you would like to receive an email notification when the release is ready,
-please fill out
-`this form <https://docs.google.com/forms/d/e/1FAIpQLSfw5QSQrx9sUVGZ3Q5MCb0zVOGXWf6aEUFPo-idQQab8tkoDw/viewform>`_.
-
 CAMeL Tools is  suite of Arabic natural language processing tools developed by
 the
 `CAMeL Lab <http://camel-lab.com>`_
