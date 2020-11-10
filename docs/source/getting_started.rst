@@ -6,13 +6,6 @@ Installation
 
 You will need Python 3.6 and above (64-bit).
 
-.. warning::
-
-   CAMeL Tools is still in a pre-release stage and the pip package is
-   out-of-date.
-   It is therefore recommended to **install from source** until the next
-   official release.
-
 Linux/macOS
 ~~~~~~~~~~~
 
