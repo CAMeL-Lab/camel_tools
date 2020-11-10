@@ -154,23 +154,23 @@ MLE Disambiguator, and any other components that depend on them only.
 Below is a table comparing the feature set included in each release.
 
 +--------------------------+--------+-------+
-|                          | Full   | Light |
+|                          |  Full  | Light |
 +==========================+========+=======+
 | Size                     | 1.8 GB | 19 MB |
 +--------------------------+--------+-------+
-| Morphology               | ✓      | ✓     |
+| Morphology               |   ✓    |   ✓   |
 +--------------------------+--------+-------+
-| Disambiguation           | ✓      | ✓     |
+| Disambiguation           |   ✓    |   ✓   |
 +--------------------------+--------+-------+
-| Taggers                  | ✓      | ✓     |
+| Taggers                  |   ✓    |   ✓   |
 +--------------------------+--------+-------+
-| Tokenization             | ✓      | ✓     |
+| Tokenization             |   ✓    |   ✓   |
 +--------------------------+--------+-------+
-| Dialect Identification   | ✓      |       |
+| Dialect Identification   |   ✓    |       |
 +--------------------------+--------+-------+
-| Sentiment Analysis       | ✓      |       |
+| Sentiment Analysis       |   ✓    |       |
 +--------------------------+--------+-------+
-| Named Entity Recognition | ✓      |       |
+| Named Entity Recognition |   ✓    |       |
 +--------------------------+--------+-------+
 
 
