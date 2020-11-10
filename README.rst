@@ -93,7 +93,7 @@ Installing data
 First, download either the
 `Full data zip <https://drive.google.com/file/d/1LbU8IefOziwYkTpvyCnX_OgaBJCyU6RG/view?usp=sharing>`_
 or the `Light data zip <https://drive.google.com/file/d/1K_xYXN1T5GGMDGX25KElVBXp4EEmjG5R/view?usp=sharing>`_
-(see :ref:`datasets` for a comparison).
+(see `Datasets <#datasets>`_ for a comparison).
 
 Unzip the file and then move and rename the unzipped directory to
 :code:`~/.camel_tools`. If installed correctly, there should be a direct path to
@@ -154,7 +154,7 @@ Installing data
 First, download either the
 `Full data zip <https://drive.google.com/file/d/1LbU8IefOziwYkTpvyCnX_OgaBJCyU6RG/view?usp=sharing>`_
 or the `Light data zip <https://drive.google.com/file/d/1K_xYXN1T5GGMDGX25KElVBXp4EEmjG5R/view?usp=sharing>`_
-(see :ref:`datasets` for a comparison).
+(see `Datasets <#datasets>`_ for a comparison).
 
 Unzip the file and then move and rename the unzipped directory to
 :code:`C:\Users\your_user_name\AppData\Roaming\camel_tools`.
