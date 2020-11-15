@@ -52,10 +52,13 @@ Install using pip
 
 .. code-block:: bash
 
+   pip install camel-tools --no-deps
    pip install camel-tools
 
    # or run the following if you already have camel_tools installed
-   pip install --upgrade --force-reinstall camel-tools
+   pip uninstall camel-tools -y
+   pip install camel-tools --upgrade --force-reinstall --no-deps
+   pip install camel-tools
 
 .. _linux-macos-install-source:
 
