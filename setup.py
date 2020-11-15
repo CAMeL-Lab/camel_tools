@@ -78,7 +78,7 @@ INSTALL_REQUIRES = [
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [
-    'kenlm @ https://github.com/kpu/kenlm/archive/master.zip'
+    'camel-kenlm'
 ]
 
 if sys.platform != 'win32':
