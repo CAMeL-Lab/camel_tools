@@ -55,7 +55,8 @@ Install using pip
    pip install camel-tools
 
    # or run the following if you already have camel_tools installed
-   pip install --upgrade --force-reinstall camel-tools
+   pip install camel-tools --upgrade --force-reinstall
+
 
 .. _linux-macos-install-source:
 
@@ -228,7 +229,8 @@ This should compile all the HTML documentation in to ``docs/build/html``.
 Citation
 --------
 
-If you find CAMeL Tools useful in your research, please cite our paper:
+If you find CAMeL Tools useful in your research, please cite
+`our paper <https://www.aclweb.org/anthology/2020.lrec-1.868/>`_:
 
 .. code-block:: bibtex
 

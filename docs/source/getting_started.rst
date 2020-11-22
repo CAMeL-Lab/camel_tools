@@ -19,7 +19,8 @@ Install using pip
    pip install camel-tools
 
    # or run the following if you already have camel_tools installed
-   pip install --upgrade --force-reinstall camel-tools
+   pip install camel-tools --upgrade --force-reinstall
+
 
 .. _linux-macos-install-source:
 
