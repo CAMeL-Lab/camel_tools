@@ -5,6 +5,7 @@
             "url": null,
             "file_id": "1ZtseLpW2vufNdkpruDpbQf28WEw38U5u",
             "description": "Contains all data sets required by camel-tools components.",
+            "size": "1.8 GB",
             "destination": "."
         },
         "test": {
@@ -12,6 +13,7 @@
             "url": "https://github.com/owo/test_releases/releases/download/v0.1.0/camel_tools_data.zip",
             "file_id": null,
             "description": "Contains all data sets required by camel-tools components.",
+            "size": "19 MB",
             "destination": "."
         }
     },

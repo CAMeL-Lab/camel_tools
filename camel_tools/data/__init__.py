@@ -78,6 +78,7 @@ _DownloadInfo = namedtuple('DownloadInfo', ['name',
                                             'type',
                                             'file_id',
                                             'url',
+                                            'size',
                                             'destination'])
 
 _ComponentInfo = namedtuple('ComponentInfo', ['name', 'datasets', 'default'])
@@ -102,6 +103,7 @@ class DownloadInfo(_DownloadInfo):
             to 'url').
         file_id (:obj:`str`): The file ID of the download (used only when
             `type` is set to 'google-drive').
+        size (:obj:`str`): Estimated data size in Bytes, KB, MB, or GB.
         destination (:obj:`str`): The destination of the downloaded file
             relative to the camel-tools data path.
     """
@@ -142,6 +144,7 @@ def _gen_catalogue(cat_dict):
             dl_info['type'],
             dl_info.get('file_id', None),
             dl_info.get('url', None),
+            dl_info['size'],
             dl_info['destination'])
 
     # Populate components
