@@ -25,7 +25,7 @@ JSON files to be used with :obj:`CharMapper` should have the following format:
    {
        "default": "",
 
-       "charmap": {
+       "charMap": {
            "a": "z",
            "b-g": "",
            "x-z": null
@@ -33,7 +33,7 @@ JSON files to be used with :obj:`CharMapper` should have the following format:
    }
 
 The root object in the file should be a dictionary with two keys: 'default' and
-'charmap'. These correspond to and follow the same restrictions as the
+'charMap'. These correspond to and follow the same restrictions as the
 respective input parameters to the :obj:`CharMapper` constructor (with
 `null` in the JSON file corresponding to `None` in Python).
 
