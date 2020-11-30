@@ -44,15 +44,20 @@ Install from source
 Installing data
 ^^^^^^^^^^^^^^^
 
-First, download either the
-`Full data zip <https://drive.google.com/file/d/1LbU8IefOziwYkTpvyCnX_OgaBJCyU6RG/view?usp=sharing>`_
-or the `Light data zip <https://drive.google.com/file/d/1K_xYXN1T5GGMDGX25KElVBXp4EEmjG5R/view?usp=sharing>`_
-(see :ref:`datasets` for a comparison).
+To install the data sets required by CAMeL Tools components run one of the
+following:
 
-Unzip the file and then move and rename the unzipped directory to
-:code:`~/.camel_tools`. If installed correctly, there should be a direct path to
-:code:`~/.camel_tools/data`.
+.. code-block:: bash
 
+   # To install all data sets
+   camel_data full
+
+   # or for a light weight package for morphology and MLE disambiguation only
+   camel_data light
+
+See :ref:`available_packages` for a comparison.
+
+By default, data is stored in ``~/.camel_tools``.
 Alternatively, if you would like to install the data in a different location,
 you need to set the :code:`CAMELTOOLS_DATA` environment variable to the desired
 path.
@@ -63,9 +68,6 @@ etc:
 .. code-block:: bash
 
    export CAMELTOOLS_DATA=/path/to/camel_tools_data
-
-Again, :code:`data` should be a subdirectory of the path set in
-:code:`CAMELTOOLS_DATA`.
 
 Windows
 ~~~~~~~
@@ -105,67 +107,33 @@ Install from source
 Installing data
 ^^^^^^^^^^^^^^^
 
-First, download either the
-`Full data zip <https://drive.google.com/file/d/1LbU8IefOziwYkTpvyCnX_OgaBJCyU6RG/view?usp=sharing>`_
-or the `Light data zip <https://drive.google.com/file/d/1K_xYXN1T5GGMDGX25KElVBXp4EEmjG5R/view?usp=sharing>`_
-(see :ref:`datasets` for a comparison).
+To install the data packages required by CAMeL Tools components, run one of the
+following commands:
 
-Unzip the file and then move and rename the unzipped directory to
-:code:`C:\Users\your_user_name\AppData\Roaming\camel_tools`.
-If installed correctly, there should be a direct path to
-:code:`C:\Users\your_user_name\AppData\Roaming\camel_tools\data`.
+.. code-block:: bash
 
+   # To install all data sets
+   camel_data full
+
+   # or for a light weight package for morphology and MLE disambiguation only
+   camel_data light
+
+See :ref:`available_packages` for a comparison.
+
+By default, data is stored in
+``C:\Users\your_user_name\AppData\Roaming\camel_tools``.
 Alternatively, if you would like to install the data in a different location,
-you need to set the :code:`CAMELTOOLS_DATA` environment variable to the desired
+you need to set the ``CAMELTOOLS_DATA`` environment variable to the desired
 path. Below are the instructions to do so (on Windows 10):
 
-* Press the **Windows** button and type :code:`env`.
+* Press the **Windows** button and type ``env``.
 * Click on **Edit the system environment variables (Control panel)**.
 * Click on the **Environment Variables...** button.
 * Click on the **New...** button under the **User variables** panel.
-* Type :code:`CAMELTOOLS_DATA` in the **Variable name** input box and the
+* Type ``CAMELTOOLS_DATA`` in the **Variable name** input box and the
   desired data path in **Variable value**. Alternatively, you can browse for the
   data directory by clicking on the **Browse Directory...** button.
 * Click **OK** on all the opened windows.
-
-Again, :code:`data` should be a subdirectory of the path set in
-:code:`CAMELTOOLS_DATA`.
-
-
-.. _datasets:
-
-Datasets
---------
-
-We provide two data distributions for use with CAMeL Tools:
-`Full <https://drive.google.com/file/d/1LbU8IefOziwYkTpvyCnX_OgaBJCyU6RG/view?usp=sharing>`_
-and `Light <https://drive.google.com/file/d/1K_xYXN1T5GGMDGX25KElVBXp4EEmjG5R/view?usp=sharing>`_.
-
-While the Full archive provides data for all components in CAMeL Tools,
-the Light archive contains data for use with the morphological analyzer, the
-MLE Disambiguator, and any other components that depend on them only.
-
-Below is a table comparing the feature set included in each release.
-
-+--------------------------+--------+-------+
-|                          |  Full  | Light |
-+==========================+========+=======+
-| Size                     | 1.8 GB | 19 MB |
-+--------------------------+--------+-------+
-| Morphology               |   ✓    |   ✓   |
-+--------------------------+--------+-------+
-| Disambiguation           |   ✓    |   ✓   |
-+--------------------------+--------+-------+
-| Taggers                  |   ✓    |   ✓   |
-+--------------------------+--------+-------+
-| Tokenization             |   ✓    |   ✓   |
-+--------------------------+--------+-------+
-| Dialect Identification   |   ✓    |       |
-+--------------------------+--------+-------+
-| Sentiment Analysis       |   ✓    |       |
-+--------------------------+--------+-------+
-| Named Entity Recognition |   ✓    |       |
-+--------------------------+--------+-------+
 
 
 Next Steps
