@@ -1,18 +1,18 @@
 {
     "downloads": {
-        "all": {
+        "full": {
             "type": "google-drive",
             "url": null,
-            "file_id": "1ZtseLpW2vufNdkpruDpbQf28WEw38U5u",
+            "file_id": "13I9p9e-2brBMxPv9JfMnQj-bUV1dO4Hl",
             "description": "Contains all data sets required by camel-tools components.",
             "size": "1.8 GB",
             "destination": "."
         },
-        "test": {
-            "type": "url",
-            "url": "https://github.com/owo/test_releases/releases/download/v0.1.0/camel_tools_data.zip",
-            "file_id": null,
-            "description": "Contains all data sets required by camel-tools components.",
+        "light": {
+            "type": "google-drive",
+            "url": null,
+            "file_id": "12y9QZvoi7Vu2vUbg_CBE7J5gueUY-fPR",
+            "description": "Contains only data sets for morphology and MLE disambiguation.",
             "size": "19 MB",
             "destination": "."
         }

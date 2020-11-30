@@ -198,7 +198,8 @@ class DataCatalogue(object):
 
     @staticmethod
     def downloads_list():
-        return sorted(DataCatalogue._catalogue['downloads'].items())
+        return [v for _, v in 
+                sorted(DataCatalogue._catalogue['downloads'].items())]
 
     @staticmethod
     def get_component_info(component):

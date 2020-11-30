@@ -187,5 +187,5 @@ class DataDownloader(object):
         elif dl_info.type == 'google-drive':
             GoogleDriveDownloader.download(dl_info.file_id, destination)
         else:
-            # TODO: Throw an error
-            pass
+            raise DownloaderError(
+                'Invalid download type {}'.format(repr(dl_info.type)))
