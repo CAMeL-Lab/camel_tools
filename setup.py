@@ -76,6 +76,7 @@ INSTALL_REQUIRES = [
     'transformers==3.0.2',
     'editdistance',
     'requests',
+    'sentencepiece==0.1.91',
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [
