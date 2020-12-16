@@ -4,7 +4,7 @@ camel_data
 About
 -----
 
-The ``camel_data`` tool allows you to diacritize Arabic text.
+The ``camel_data`` tool allows you to download data sets required by CAMeL Tools components.
 
 
 Usage
