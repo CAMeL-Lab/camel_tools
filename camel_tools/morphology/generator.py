@@ -34,7 +34,7 @@ from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.errors import GeneratorError
 from camel_tools.morphology.errors import InvalidGeneratorFeature
 from camel_tools.morphology.errors import InvalidGeneratorFeatureValue
-from camel_tools.morphology.utils import merge_features
+from camel_tools.morphology.utils import merge_features, strip_lex
 
 
 class Generator(object):
@@ -83,6 +83,7 @@ class Generator(object):
                 is not defined.
         """
 
+        lemma = strip_lex(lemma)
         if lemma not in self._db.lemma_hash:
             return []
 

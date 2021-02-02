@@ -316,7 +316,7 @@ class Analyzer:
             result['stem'] = word
             result['stemgloss'] = word
             result['stemcat'] = None
-            result['lex'] = word + '_0'
+            result['lex'] = word
             result['bw'] = word + '/NOUN_NUM'
             result['source'] = 'digit'
 
@@ -345,7 +345,7 @@ class Analyzer:
             result['stem'] = word
             result['stemgloss'] = word
             result['stemcat'] = None
-            result['lex'] = word + '_0'
+            result['lex'] = word
             result['bw'] = word + '/PUNC'
             result['source'] = 'punc'
 
@@ -377,7 +377,7 @@ class Analyzer:
             result['stem'] = word
             result['stemgloss'] = word
             result['stemcat'] = None
-            result['lex'] = word + '_0'
+            result['lex'] = word
             result['bw'] = word + '/FOREIGN'
             result['source'] = 'foreign'
 

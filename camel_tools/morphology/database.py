@@ -32,12 +32,10 @@ from pathlib import Path
 import re
 
 from camel_tools.utils.stringutils import force_unicode
+from camel_tools.morphology.utils import strip_lex
 from camel_tools.morphology.errors import InvalidDatabaseFlagError
 from camel_tools.morphology.errors import DatabaseParseError
 from camel_tools.data import DataCatalogue
-
-
-_LEMMA_SPLIT_RE = re.compile(r'-|_')
 
 
 MorphologyDBFlags = namedtuple('MorphologyDBFlags', ['analysis', 'generation',
@@ -351,6 +349,7 @@ class MorphologyDB:
                 stem = parts[0]
                 category = parts[1]
                 analysis = self._parse_analysis_line_toks(parts[2].split(u' '))
+                analysis['lex'] = strip_lex(analysis['lex'])
 
                 if self._withAnalysis:
                     if stem not in self.stem_hash:
@@ -359,8 +358,7 @@ class MorphologyDB:
 
                 if self._withGeneration:
                     # FIXME: Make sure analyses for category are unique?
-                    lemma = analysis['lex']
-                    lemma_key = _LEMMA_SPLIT_RE.split(lemma)[0]
+                    lemma_key = analysis['lex']
                     analysis['stemcat'] = category
                     if lemma_key not in self.lemma_hash:
                         self.lemma_hash[lemma_key] = []

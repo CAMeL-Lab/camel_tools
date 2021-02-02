@@ -41,6 +41,9 @@ _TOK_SCHEMES_1 = frozenset(['d1tok', 'd2tok', 'atbtok'])
 # Tokenization schemes to which only the Fatha after Alif rewrite rule apply
 _TOK_SCHEMES_2 = frozenset(['d3tok'])
 
+# Splits lemmas on '_' and '-'
+_STRIP_LEX_RE = re.compile('_|-')
+
 # Sun letters with definite article
 _REWRITE_DIAC_RE_1 = re.compile(u'#\\+*([\u062a\u062b\u062f\u0630\u0631\u0632'
                                 u'\u0633\u0634\u0635\u0636\u0637\u0638\u0644'
@@ -128,6 +131,10 @@ _AR2CAPHI = {
         '\u0649': 'aa',
         '\u064A': 'y'
 }
+
+
+def strip_lex(lex):
+    return _STRIP_LEX_RE.split(lex)[0]
 
 
 def simple_ar_to_caphi(ar_str):

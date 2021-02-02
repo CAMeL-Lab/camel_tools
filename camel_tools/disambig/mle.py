@@ -37,6 +37,7 @@ from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
+from camel_tools.morphology.utils import strip_lex
 from camel_tools.data import DataCatalogue
 
 
@@ -119,6 +120,10 @@ class MLEDisambiguator(Disambiguator):
         if mle_path is not None:
             with open(mle_path, 'r', encoding='utf-8') as mle_fp:
                 self._mle = json.load(mle_fp)
+
+                # TODO: Remove this when MLE files are fixed
+                for analysis in self._mle.values():
+                    analysis['lex'] = strip_lex(analysis['lex'])
         else:
             self._mle = None
 
