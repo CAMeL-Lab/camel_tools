@@ -27,6 +27,8 @@
 
 import copy
 import re
+import sys
+
 
 # eatures which should be concatinated when generating analysis
 _JOIN_FEATS = frozenset(['gloss', 'bw'])
@@ -280,3 +282,9 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
             result[logprob_feat] = float(result.get(logprob_feat, -99.0))
 
     return result
+
+
+def feat_prettyprint(feats, order, default='', file=sys.stdout):
+    for feat in order:
+        feat_value = repr(feats.get(feat, default))
+        print(f'{feat}: {feat_value}', file=file)
