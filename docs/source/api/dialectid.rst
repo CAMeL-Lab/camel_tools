@@ -105,7 +105,7 @@ region dialects:
      - Morocco
      - Maghreb
    * - JED
-     - Jeddha
+     - Jeddah
      - Saudi Arabia
      - Gulf
    * - JER

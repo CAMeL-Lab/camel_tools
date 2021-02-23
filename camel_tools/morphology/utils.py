@@ -37,11 +37,13 @@ _CONCAT_FEATS_NONE = frozenset(['d3tok', 'd3seg', 'atbseg', 'd2seg', 'd1seg',
                                 'd1tok', 'd2tok', 'atbtok', 'bwtok'])
 _LOGPROB_FEATS = frozenset(['pos_logprob', 'lex_logprob', 'pos_lex_logprob'])
 
-# Tokenization schemes to which Sun letters and Fatha after Alif rewrite
-# rules apply
-_TOK_SCHEMES_1 = frozenset(['d1tok', 'd2tok', 'atbtok'])
-# Tokenization schemes to which only the Fatha after Alif rewrite rule apply
-_TOK_SCHEMES_2 = frozenset(['d3tok'])
+# Tokenization and segmentation schemes to which Sun letters and Fatha after 
+# Alif rewrite rules apply
+_TOK_SCHEMES_1 = frozenset(['d1tok', 'd2tok', 'atbtok', 'd1seg', 'd2seg',
+                            'd3seg', 'atbseg'])
+# Tokenization and segmentation schemes to which only the Fatha after Alif 
+# rewrite rule apply
+_TOK_SCHEMES_2 = frozenset(['d3tok', 'd3seg'])
 
 # Splits lemmas on '_' and '-'
 _STRIP_LEX_RE = re.compile('_|-')
