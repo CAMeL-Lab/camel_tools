@@ -41,7 +41,6 @@ _LABELS = ['B-LOC', 'B-ORG', 'B-PERS', 'B-MISC', 'I-LOC', 'I-ORG', 'I-PERS',
 
 class _PrepSentence:
     """A single input sentence for token classification.
-
     Args:
         guid (:obj:`str`): Unique id for the sentence.
         words (:obj:`list` of :obj:`str`): list of words of the sentence.
@@ -59,7 +58,6 @@ def _prepare_sentences(sentences):
     """
     Encapsulates the input sentences into PrepSentence
     objects.
-
     Args:
         sentences (:obj:`list` of :obj:`list` of :obj: `str): The input
             sentences.
@@ -84,7 +82,6 @@ def _prepare_sentences(sentences):
 
 class NERDataset(Dataset):
     """NER PyTorch Dataset
-
     Args:
         sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
             sentences.
@@ -117,7 +114,6 @@ class NERDataset(Dataset):
                         pad_token_label_id=-100, sequence_a_segment_id=0,
                         mask_padding_with_zero=True):
         """Featurizes the input which will be fed to the fine-tuned BERT model.
-
         Args:
             prepared_sentences (:obj:`list` of :obj:`PrepSentence`): list of
                 PrepSentence objects.
@@ -146,65 +142,140 @@ class NERDataset(Dataset):
         """
 
         label_map = {label: i for i, label in enumerate(label_list)}
-
         features = []
 
-        for sentence in prepared_sentences:
+        for sent_id, sentence in enumerate(prepared_sentences):
             tokens = []
             label_ids = []
+
             for word, label in zip(sentence.words, sentence.labels):
                 word_tokens = tokenizer.tokenize(word)
-
                 # bert-base-multilingual-cased sometimes output "nothing ([])
                 # when calling tokenize with just a space.
                 if len(word_tokens) > 0:
-                    tokens.extend(word_tokens)
+                    tokens.append(word_tokens)
                     # Use the real label id for the first token of the word,
                     # and padding ids for the remaining tokens
-                    label_ids.extend([label_map[label]] +
+                    label_ids.append([label_map[label]] +
                                      [pad_token_label_id] *
                                      (len(word_tokens) - 1))
 
-            tokens += [sep_token]
-            label_ids += [pad_token_label_id]
-            segment_ids = [sequence_a_segment_id] * len(tokens)
+            token_segments = []
+            token_segment = []
+            label_ids_segments = []
+            label_ids_segment = []
+            num_word_pieces = 0
+            seg_seq_length = max_seq_length - 2
 
-            tokens = [cls_token] + tokens
-            label_ids = [pad_token_label_id] + label_ids
-            segment_ids = [cls_token_segment_id] + segment_ids
+            # Dealing with empty sentences
+            if len(tokens) == 0:
+                data = self._add_special_tokens(token_segment,
+                                                label_ids_segment,
+                                                tokenizer,
+                                                max_seq_length,
+                                                cls_token,
+                                                sep_token, pad_token,
+                                                cls_token_segment_id,
+                                                pad_token_segment_id,
+                                                pad_token_label_id,
+                                                sequence_a_segment_id,
+                                                mask_padding_with_zero)
+                # Adding sentence id
+                data['sent_id'] = sent_id
+                features.append(data)
+            else:
+                # Chunking the tokenized sentence into multiple segments
+                # if it's longer than max_seq_length - 2
+                for idx, word_pieces in enumerate(tokens):
+                    if num_word_pieces + len(word_pieces) > seg_seq_length:
+                        data = self._add_special_tokens(token_segment,
+                                                        label_ids_segment,
+                                                        tokenizer,
+                                                        max_seq_length,
+                                                        cls_token,
+                                                        sep_token, pad_token,
+                                                        cls_token_segment_id,
+                                                        pad_token_segment_id,
+                                                        pad_token_label_id,
+                                                        sequence_a_segment_id,
+                                                        mask_padding_with_zero)
+                        # Adding sentence id
+                        data['sent_id'] = sent_id
+                        features.append(data)
 
-            input_ids = tokenizer.convert_tokens_to_ids(tokens)
+                        token_segments.append(token_segment)
+                        label_ids_segments.append(label_ids_segment)
+                        token_segment = list(word_pieces)
+                        label_ids_segment = list(label_ids[idx])
+                        num_word_pieces = len(word_pieces)
+                    else:
+                        token_segment.extend(word_pieces)
+                        label_ids_segment.extend(label_ids[idx])
+                        num_word_pieces += len(word_pieces)
 
-            # The mask has 1 for real tokens and 0 for padding tokens. Only
-            # real tokens are attended to.
-            input_mask = [1 if mask_padding_with_zero else 0] * len(input_ids)
+                # Adding the last segment
+                if len(token_segment) > 0:
+                    data = self._add_special_tokens(token_segment,
+                                                    label_ids_segment,
+                                                    tokenizer,
+                                                    max_seq_length,
+                                                    cls_token,
+                                                    sep_token, pad_token,
+                                                    cls_token_segment_id,
+                                                    pad_token_segment_id,
+                                                    pad_token_label_id,
+                                                    sequence_a_segment_id,
+                                                    mask_padding_with_zero)
+                    # Adding sentence id
+                    data['sent_id'] = sent_id
+                    features.append(data)
 
-            # Zero-pad up to the sequence length.
-            padding_length = max_seq_length - len(input_ids)
-            input_ids += [pad_token] * padding_length
-            input_mask += [0 if mask_padding_with_zero else 1] * padding_length
-            segment_ids += [pad_token_segment_id] * padding_length
-            label_ids += [pad_token_label_id] * padding_length
+                    token_segments.append(token_segment)
+                    label_ids_segments.append(label_ids_segment)
 
-            try:
-                assert len(input_ids) == max_seq_length
-                assert len(input_mask) == max_seq_length
-                assert len(segment_ids) == max_seq_length
-                assert len(label_ids) == max_seq_length
-            except Exception:
-                raise ValueError('Input sentence is too long')
+                # DEBUG: Making sure we got all segments correctly
+                # assert sum([len(_) for _ in label_ids_segments]) == \
+                #        sum([len(_) for _ in label_ids])
 
-            if "token_type_ids" not in tokenizer.model_input_names:
-                segment_ids = None
-
-            features.append({
-                'input_ids': torch.tensor(input_ids),
-                'attention_mask': torch.tensor(input_mask),
-                'token_type_ids': torch.tensor(segment_ids),
-                'label_ids': torch.tensor(label_ids)
-            })
+                # assert sum([len(_) for _ in token_segments]) == \
+                #        sum([len(_) for _ in tokens])
 
         return features
+
+    def _add_special_tokens(self, tokens, label_ids, tokenizer, max_seq_length,
+                            cls_token, sep_token, pad_token,
+                            cls_token_segment_id, pad_token_segment_id,
+                            pad_token_label_id, sequence_a_segment_id,
+                            mask_padding_with_zero):
+
+        _tokens = list(tokens)
+        _label_ids = list(label_ids)
+
+        _tokens += [sep_token]
+        _label_ids += [pad_token_label_id]
+        segment_ids = [sequence_a_segment_id] * len(_tokens)
+
+        _tokens = [cls_token] + _tokens
+        _label_ids = [pad_token_label_id] + _label_ids
+        segment_ids = [cls_token_segment_id] + segment_ids
+
+        input_ids = tokenizer.convert_tokens_to_ids(_tokens)
+
+        # The mask has 1 for real tokens and 0 for padding tokens. Only
+        # real tokens are attended to.
+        input_mask = [1 if mask_padding_with_zero else 0] * len(input_ids)
+
+        # Zero-pad up to the sequence length.
+        padding_length = max_seq_length - len(input_ids)
+        input_ids += [pad_token] * padding_length
+        input_mask += [0 if mask_padding_with_zero else 1] * padding_length
+        segment_ids += [pad_token_segment_id] * padding_length
+        _label_ids += [pad_token_label_id] * padding_length
+
+        return {'input_ids': torch.tensor(input_ids),
+                'attention_mask': torch.tensor(input_mask),
+                'token_type_ids': torch.tensor(segment_ids),
+                'label_ids': torch.tensor(_label_ids)}
 
     def __len__(self):
         return len(self.features)
@@ -215,25 +286,28 @@ class NERDataset(Dataset):
 
 class NERecognizer():
     """CAMeL Tools NER component.
-
     Args:
-        model_path(:obj:`str`): The path to the fine-tuned model.
+        model_path (:obj:`str`): The path to the fine-tuned model.
+        use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
+                Defaults to True.
     """
 
-    def __init__(self, model_path):
+    def __init__(self, model_path, use_gpu=True):
         self.model = BertForTokenClassification.from_pretrained(model_path)
         self.tokenizer = BertTokenizer.from_pretrained(model_path)
         self.labels_map = self.model.config.id2label
+        self.use_gpu = True
 
     @staticmethod
-    def pretrained(model_name=None):
+    def pretrained(model_name=None, use_gpu=True):
         """Load a pre-trained model provided with camel_tools.
-
         Args:
             model_name (:obj:`str`, optional): Name of pre-trained model to
                 load. One model is available: 'arabert'.
                 If None, the default model ('arabert') will be loaded.
                 Defaults to None.
+            use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
+                Defaults to True.
 
         Returns:
             :obj:`NERecognizer`: Instance with loaded pre-trained model.
@@ -243,27 +317,26 @@ class NERecognizer():
                                                     model_name)
         model_path = str(model_info.path)
 
-        return NERecognizer(model_path)
+        return NERecognizer(model_path, use_gpu)
 
     @staticmethod
     def labels():
         """Get the list of NER labels returned by predictions.
-
         Returns:
             :obj:`list` of :obj:`str`: List of NER labels.
         """
 
         return list(_LABELS)
 
-    def _align_predictions(self, predictions, label_ids):
+    def _align_predictions(self, predictions, label_ids, sent_ids):
         """Aligns the predictions of the model with the inputs
         and it takes care of getting rid of the padding token.
-
         Args:
             predictions (:obj:`np.ndarray`): The predictions of the model
             label_ids (:obj:`np.ndarray`): The label ids of the inputs. They
             will always be the ids of Os since we're dealing with a test
             dataset. Note that label_ids are also padded.
+            sent_ids (:obj:`np.ndarray`): The sent ids of the inputs.
 
         Returns:
             pred_list (:obj:`list` of :obj:`list` of :obj:`str`): The predicted
@@ -278,52 +351,69 @@ class NERecognizer():
                 if label_ids[i, j] != nn.CrossEntropyLoss().ignore_index:
                     preds_list[i].append(self.labels_map[preds[i][j]])
 
-        return preds_list
+        # Collating the predicted labels based on the sentence ids
+        final_preds_list = [[] for _ in range(len(set(sent_ids)))]
+        for i, id in enumerate(sent_ids):
+            final_preds_list[id].extend(preds_list[i])
 
-    def predict(self, sentences):
+        return final_preds_list
+
+    def predict(self, sentences, batch_size=32):
         """Predict the named entity labels of a list of sentences.
-
         Args:
             sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
             sentences.
+            batch_size (:obj:`int`): The batch size.
 
         Returns:
             :obj:`list` of :obj:`list` of :obj:`str`: The predicted
             named entity labels for the given sentences.
         """
 
+        if len(sentences) == 0:
+            return []
+
         test_dataset = NERDataset(sentences=sentences,
                                   tokenizer=self.tokenizer,
                                   labels=list(self.labels_map.values()),
                                   max_seq_length=256)
 
-        data_loader = DataLoader(test_dataset, batch_size=8,
+        data_loader = DataLoader(test_dataset, batch_size=batch_size,
                                  shuffle=False, drop_last=False)
 
         label_ids = None
         preds = None
-        self.model.eval()
+        sent_ids = None
 
+        device = ('cuda' if self.use_gpu and torch.cuda.is_available()
+                  else 'cpu')
+        self.model.to(device)
+        self.model.eval()
         with torch.no_grad():
             for batch in data_loader:
+                batch = {k: v.to(device) for k, v in batch.items()}
                 inputs = {'input_ids': batch['input_ids'],
                           'token_type_ids': batch['token_type_ids'],
                           'attention_mask': batch['attention_mask']}
 
                 label_ids = (batch['label_ids'] if label_ids is None
                              else torch.cat((label_ids, batch['label_ids'])))
+                sent_ids = (batch['sent_id'] if sent_ids is None
+                            else torch.cat((sent_ids, batch['sent_id'])))
+
                 logits = self.model(**inputs)[0]
+
                 preds = logits if preds is None else torch.cat((preds, logits),
                                                                dim=0)
 
         predictions = self._align_predictions(preds.cpu().numpy(),
-                                              label_ids.cpu().numpy())
+                                              label_ids.cpu().numpy(),
+                                              sent_ids.cpu().numpy())
 
         return predictions
 
     def predict_sentence(self, sentence):
         """Predict the named entity labels of a single sentence.
-
         Args:
             sentence (:obj:`list` of :obj:`str`): The input sentence.
 
