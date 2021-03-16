@@ -139,5 +139,9 @@ path. Below are the instructions to do so (on Windows 10):
 Next Steps
 ----------
 
+To get started, you can follow along
+`the Guided Tour <https://colab.research.google.com/drive/1Y3qCbD6Gw1KEw-lixQx1rI6WlyWnrnDS?usp=sharing>`_
+for a quick overview of the components provided by CAMeL Tools.
+
 See :doc:`cli_tools` for information on using the command-line tools or 
 :doc:`api` for information on using the Python API.
