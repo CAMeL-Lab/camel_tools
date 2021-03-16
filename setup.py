@@ -73,7 +73,7 @@ INSTALL_REQUIRES = [
     'scikit-learn',
     'dill',
     'torch>=1.3',
-    'transformers==3.0.2',
+    'transformers>=3.0.2',
     'editdistance',
     'requests',
 ]
