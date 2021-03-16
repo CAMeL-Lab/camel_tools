@@ -177,6 +177,10 @@ path. Below are the instructions to do so (on Windows 10):
 Documentation
 -------------
 
+To get started, you can follow along
+`the Guided Tour <https://colab.research.google.com/drive/1Y3qCbD6Gw1KEw-lixQx1rI6WlyWnrnDS?usp=sharing>`_
+for a quick overview of the components provided by CAMeL Tools.
+
 You can find the
 `full online documentation here <https://camel-tools.readthedocs.io>`_ for both
 the command-line tools and the Python API.
