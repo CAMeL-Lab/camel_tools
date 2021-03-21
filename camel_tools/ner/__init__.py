@@ -58,13 +58,13 @@ def _prepare_sentences(sentences):
     """
     Encapsulates the input sentences into PrepSentence
     objects.
+
     Args:
         sentences (:obj:`list` of :obj:`list` of :obj: `str): The input
             sentences.
 
     Returns:
-        prepared_sentences (:obj:`list` of :obj:`PrepSentence`): The list of
-        PrepSentence objects.
+    :obj:`list` of :obj:`PrepSentence`: The list of PrepSentence objects.
     """
 
     guid_index = 1
@@ -82,6 +82,7 @@ def _prepare_sentences(sentences):
 
 class NERDataset(Dataset):
     """NER PyTorch Dataset
+
     Args:
         sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
             sentences.
@@ -114,6 +115,7 @@ class NERDataset(Dataset):
                         pad_token_label_id=-100, sequence_a_segment_id=0,
                         mask_padding_with_zero=True):
         """Featurizes the input which will be fed to the fine-tuned BERT model.
+
         Args:
             prepared_sentences (:obj:`list` of :obj:`PrepSentence`): list of
                 PrepSentence objects.
@@ -137,8 +139,7 @@ class NERDataset(Dataset):
                 tokens with zero or not. Defaults to True.
 
         Returns:
-            features (:obj:`list` of :obj:`Dict`): list of dicts of the needed
-                features.
+            obj:`list` of :obj:`Dict`: list of dicts of the needed features.
         """
 
         label_map = {label: i for i, label in enumerate(label_list)}
@@ -286,10 +287,11 @@ class NERDataset(Dataset):
 
 class NERecognizer():
     """CAMeL Tools NER component.
+
     Args:
         model_path (:obj:`str`): The path to the fine-tuned model.
         use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
-                Defaults to True.
+            Defaults to True.
     """
 
     def __init__(self, model_path, use_gpu=True):
@@ -301,6 +303,7 @@ class NERecognizer():
     @staticmethod
     def pretrained(model_name=None, use_gpu=True):
         """Load a pre-trained model provided with camel_tools.
+
         Args:
             model_name (:obj:`str`, optional): Name of pre-trained model to
                 load. One model is available: 'arabert'.
@@ -322,6 +325,7 @@ class NERecognizer():
     @staticmethod
     def labels():
         """Get the list of NER labels returned by predictions.
+
         Returns:
             :obj:`list` of :obj:`str`: List of NER labels.
         """
@@ -329,18 +333,19 @@ class NERecognizer():
         return list(_LABELS)
 
     def _align_predictions(self, predictions, label_ids, sent_ids):
-        """Aligns the predictions of the model with the inputs
-        and it takes care of getting rid of the padding token.
+        """Aligns the predictions of the model with the inputs and it takes
+        care of getting rid of the padding token.
+
         Args:
             predictions (:obj:`np.ndarray`): The predictions of the model
-            label_ids (:obj:`np.ndarray`): The label ids of the inputs. They
-            will always be the ids of Os since we're dealing with a test
-            dataset. Note that label_ids are also padded.
+            label_ids (:obj:`np.ndarray`): The label ids of the inputs.
+                They will always be the ids of Os since we're dealing with a
+                test dataset. Note that label_ids are also padded.
             sent_ids (:obj:`np.ndarray`): The sent ids of the inputs.
 
         Returns:
-            pred_list (:obj:`list` of :obj:`list` of :obj:`str`): The predicted
-            labels for all the sentences in the batch
+            :obj:`list` of :obj:`list` of :obj:`str`: The predicted labels for
+            all the sentences in the batch
         """
 
         preds = np.argmax(predictions, axis=2)
@@ -360,14 +365,15 @@ class NERecognizer():
 
     def predict(self, sentences, batch_size=32):
         """Predict the named entity labels of a list of sentences.
+
         Args:
             sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
-            sentences.
+                sentences.
             batch_size (:obj:`int`): The batch size.
 
         Returns:
-            :obj:`list` of :obj:`list` of :obj:`str`: The predicted
-            named entity labels for the given sentences.
+            :obj:`list` of :obj:`list` of :obj:`str`: The predicted named
+            entity labels for the given sentences.
         """
 
         if len(sentences) == 0:
@@ -414,6 +420,7 @@ class NERecognizer():
 
     def predict_sentence(self, sentence):
         """Predict the named entity labels of a single sentence.
+
         Args:
             sentence (:obj:`list` of :obj:`str`): The input sentence.
 
