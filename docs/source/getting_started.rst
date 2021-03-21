@@ -85,7 +85,7 @@ Install using pip
    pip install camel-tools -f https://download.pytorch.org/whl/torch_stable.html
 
    # or run the following if you already have camel_tools installed
-   pip install --upgrade --force-reinstall -f https://download.pytorch.org/whl/torch_stable.html camel-tools
+   pip install --upgrade -f https://download.pytorch.org/whl/torch_stable.html camel-tools
 
 .. _windows-install-source:
 
@@ -100,7 +100,7 @@ Install from source
 
    # Install from source
    pip install -f https://download.pytorch.org/whl/torch_stable.html .
-   pip install --upgrade --force-reinstall -f https://download.pytorch.org/whl/torch_stable.html .
+   pip install --upgrade -f https://download.pytorch.org/whl/torch_stable.html .
 
 .. _windows-install-data:
 
