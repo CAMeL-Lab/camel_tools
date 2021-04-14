@@ -246,3 +246,23 @@ class MLEDisambiguator(Disambiguator):
         """
 
         return [self._disambiguate_word(w) for w in sentence]
+
+    def all_feats(self):
+        """Return a set of all features produced by this disambiguator.
+
+        Returns:
+            :obj:`frozenset` of :obj:`str`: The set all features produced by
+            this disambiguator.
+        """
+
+        return self._analyzer.all_feats()
+
+    def tok_feats(self):
+        """Return a set of tokenization features produced by this
+        disambiguator.
+
+        Returns:
+            :obj:`frozenset` of :obj:`str`: The set tokenization features
+            produced by this disambiguator.
+        """
+        return self._analyzer.tok_feats()

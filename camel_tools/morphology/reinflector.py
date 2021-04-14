@@ -170,3 +170,24 @@ class Reinflector(object):
         results  = [dict(y) for y in set(tuple(x.items()) for x in results)]
 
         return list(results)
+
+    def all_feats(self):
+        """Return a set of all features provided by the database used in this
+        reinflector instance.
+
+        Returns:
+            :obj:`frozenset` of :obj:`str`: The set all features provided by
+            the database used in this reinflector instance.
+        """
+
+        return self._db.all_feats()
+
+    def tok_feats(self):
+        """Return a set of tokenization features provided by the database used
+        in this reinflector instance.
+
+        Returns:
+            :obj:`frozenset` of :obj:`str`: The set tokenization features
+            provided by the database used in this reinflector instance.
+        """
+        return self._db.tok_feats()

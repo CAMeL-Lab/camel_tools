@@ -77,7 +77,7 @@ class Disambiguator(ABC):
         List of disambiguted words in **sentence**.
         """
 
-        return NotImplemented
+        raise NotImplementedError
 
     @abstractmethod
     def disambiguate_word(self, sentence, word_ndx, top=1):
@@ -97,4 +97,26 @@ class Disambiguator(ABC):
         disambiguated word at index **word_ndx** in **sentence**.
         """
 
-        return NotImplemented
+        raise NotImplementedError
+
+    @abstractmethod
+    def all_feats(self):
+        """Return a set of all features produced by this disambiguator.
+
+        Returns:
+            :obj:`frozenset` of :obj:`str`: The set all features produced by
+            this disambiguator.
+        """
+
+        raise NotImplementedError
+
+    @abstractmethod
+    def tok_feats(self):
+        """Return a set of tokenization features produced by this
+        disambiguator.
+
+        Returns:
+            :obj:`frozenset` of :obj:`str`: The set tokenization features
+            produced by this disambiguator.
+        """
+        raise NotImplementedError

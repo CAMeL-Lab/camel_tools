@@ -24,13 +24,13 @@
                 "calima-msa-r13": {
                     "description": "Database for analyzing Modern Standard Arabic",
                     "path": "morphology_db/calima-msa-r13",
-                    "version": "0.2.5",
+                    "version": "0.4.0",
                     "license": "GPL v2"
                 },
                 "calima-egy-r13": {
                     "description": "Database for analyzing Egyptian Arabic",
                     "path": "morphology_db/calima-egy-r13",
-                    "version": "0.1.0",
+                    "version": "0.2.0",
                     "license": "GPL v2"
                 }
             }

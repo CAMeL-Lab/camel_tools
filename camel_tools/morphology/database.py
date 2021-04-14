@@ -121,7 +121,8 @@ class MorphologyDB:
         self.defines = {}
         self.defaults = {}
         self.order = None
-        self.compute_feats = set()
+        self.tokenizations = set()
+        self.compute_feats = frozenset()
         self.stem_backoffs = {}
 
         self.prefix_hash = {}
@@ -246,8 +247,8 @@ class MorphologyDB:
             for line in dbfile:
                 line = force_unicode(line).strip()
 
-                if line == '###STEMBACKOFF###':
-                    self.compute_feats.update(self.order)
+                if line == '###TOKENIZATIONS###':
+                    self.compute_feats = frozenset(self.order)
                     break
 
                 toks = line.split(u' ')
@@ -263,6 +264,28 @@ class MorphologyDB:
                             repr(toks[1])))
 
                 self.order = toks[1:]
+
+            # Process TOKENIZATIONS
+            for line in dbfile:
+                line = force_unicode(line).strip()
+
+                if line == '###STEMBACKOFF###':
+                    self.tokenizations = frozenset(self.tokenizations)
+                    break
+
+                toks = line.split(u' ')
+
+                if (self.order is not None and len(toks) < 2 and
+                        toks[0] != 'TOKENIZATION'):
+                    raise DatabaseParseError(
+                        'invalid TOKENIZATION line {}'.format(repr(line)))
+
+                if toks[1] not in self.defines:
+                    raise DatabaseParseError(
+                        'invalid feature {} in TOKENIZATION line.'.format(
+                            repr(toks[1])))
+
+                self.tokenizations.update(toks[1:])
 
             # Process STEMBACKOFFS
             for line in dbfile:
@@ -434,3 +457,24 @@ class MorphologyDB:
                 for suffix in self.suffix_hash.keys():
                     self.max_suffix_size = max(self.max_suffix_size,
                                                len(suffix))
+
+    def all_feats(self):
+        """Return a set of all features provided by this database instance.
+
+        Returns:
+            :obj:`frozenset` of :obj:`str`: The set all features provided by
+            this database instance.
+        """
+
+        return frozenset(self.defines.keys())
+
+    def tok_feats(self):
+        """Return a set of tokenization features provided by this database
+        instance.
+
+        Returns:
+            :obj:`frozenset` of :obj:`str`: The set tokenization features
+            provided by this database instance.
+        """
+
+        return self.tokenizations

@@ -35,9 +35,6 @@ from camel_tools.utils.dediac import dediac_ar
 # Reduce consequitive '+'s to one
 _REMOVE_PLUSES = re.compile(r'(_\+|\+_)+')
 
-_SCHEME_SET = frozenset(['atbtok', 'atbseg', 'bwtok', 'd1tok', 'd1seg',
-                         'd2tok', 'd2seg', 'd3tok', 'd3seg'])
-
 def _default_dediac(tok):
     return dediac_ar(tok)
 
@@ -64,10 +61,11 @@ class MorphologicalTokenizer(object):
     Args:
         disambiguator (:obj:`~camel_tools.disambig.common.Disambiguator`): The
             disambiguator to use for tokenization.
-        scheme (:obj:`str`, optional): The tokenization scheme to use.
-            Defaults to 'atbtok'.
-            See :doc:`/reference/camel_morphology_features`
-            for more information on available tokenization schemes.
+        scheme (:obj:`str`): The tokenization scheme to use.
+            You can use the
+            :meth:`~camel_tools.disambig.common.Disambiguator.tok_feats`
+            method of your chosen disambiguator to get a list of tokenization
+            schemes it produces.
         split (:obj:`bool`, optional): If set to True, then morphological
             tokens will be split into separate strings, otherwise they will be
             delimited by an underscore. Defaults to False.
@@ -80,22 +78,12 @@ class MorphologicalTokenizer(object):
             morphemes that are standalone diacritics (e.g. case and mood).
     """
 
-    def __init__(self, disambiguator, scheme='atbtok', split=False,
+    def __init__(self, disambiguator, scheme, split=False,
                  diac=False):
         self._disambiguator = disambiguator
         self._scheme = scheme
         self._split = split
         self._diacf = lambda w: w if diac else _DIAC_TYPE[self._scheme](w)
-
-    @classmethod
-    def scheme_set(cls):
-        """Returns a set of supported tokenization schemes.
-
-        Returns:
-            :obj:`frozenset` of :obj:`str`: set of supported tokenization
-            schemes.
-        """
-        return _SCHEME_SET
 
     def tokenize(self, words):
         """Generate morphological tokens for a given list of words.
