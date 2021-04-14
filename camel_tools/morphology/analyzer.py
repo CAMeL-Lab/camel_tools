@@ -337,6 +337,12 @@ class Analyzer:
             result['lex_logprob'] = -99.0
             result['pos_lex_logprob'] = -99.0
 
+            if 'form_gen' in self._db.defines and result['gen'] == '-':
+                result['gen'] = result['form_gen']
+
+            if 'form_num' in self._db.defines and result['num'] == '-':
+                result['num'] = result['form_num']
+
             return [result]
 
         elif _is_punc(word):
@@ -365,6 +371,12 @@ class Analyzer:
             result['pos_logprob'] = -99.0
             result['lex_logprob'] = -99.0
             result['pos_lex_logprob'] = -99.0
+
+            if 'form_gen' in self._db.defines and result['gen'] == '-':
+                result['gen'] = result['form_gen']
+
+            if 'form_num' in self._db.defines and result['num'] == '-':
+                result['num'] = result['form_num']
 
             return [result]
 
@@ -398,6 +410,12 @@ class Analyzer:
             result['pos_logprob'] = -99.0
             result['lex_logprob'] = -99.0
             result['pos_lex_logprob'] = -99.0
+
+            if 'form_gen' in self._db.defines and result['gen'] == '-':
+                result['gen'] = result['form_gen']
+
+            if 'form_num' in self._db.defines and result['num'] == '-':
+                result['num'] = result['form_num']
 
             return [result]
 
