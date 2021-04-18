@@ -161,6 +161,7 @@ All these features have a closed set of possible values as described below.
   * **laHa_emphfut** - Emphatic *la* + future marker *Ha*
   * **laHa_rcfut** - Response conditional *la* + future marker *Ha*
   * **li_jus** - Jussive *li*
+  * **li_sub** - Subjunctive *li*
   * **li_prep** - Preposition *li*
   * **min_prep** - Preposition *min*
   * **sa_fut** - Future marker *sa*
