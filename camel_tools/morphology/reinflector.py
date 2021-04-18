@@ -83,8 +83,9 @@ class Reinflector(object):
         self._generator = Generator(db)
 
     def reinflect(self, word, feats):
-        """Generate analyses for a given word from a given set of inflectional
-        features.
+        """Generate surface forms and their associated analyses for a given 
+        word and a given set of (possibly underspecified) features. 
+        The surface form is accessed through the `diac` feature.
 
         Arguments:
             word (:obj:`str`): Word to reinflect.

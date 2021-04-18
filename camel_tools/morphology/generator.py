@@ -61,7 +61,9 @@ class Generator(object):
         self._db = db
 
     def generate(self, lemma, feats):
-        """Generate analyses for a given lemma and a given set of features.
+        """Generate surface forms and their associated analyses for a given 
+        lemma and a given set of (possibly underspecified) features. 
+        The surface form is accessed through the `diac` feature.
 
         Args:
             lemma (:obj:`str`): Lemma to generate from.
