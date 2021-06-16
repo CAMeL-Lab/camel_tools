@@ -281,6 +281,7 @@ class Analyzer:
                     merged['stem'] = stem_feats['diac']
                     merged['stemcat'] = stem_cat
                     merged['source'] = 'backoff'
+                    merged['pattern'] = 'backoff'
                     merged['gloss'] = stem_feats['gloss']
 
                     combined.append(merged)
