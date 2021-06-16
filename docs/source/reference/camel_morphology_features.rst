@@ -276,7 +276,7 @@ Other Features
     `See here <https://sites.google.com/a/nyu.edu/coda/phonology-reference>`_ for
     more information.
 
-* **catib6** - CATiB6 POS tag
+* **catib6** - CATiB6 POS tag (consistent with **atbtok**).
 
 * **gloss** - Concatinated English gloss
 
@@ -296,7 +296,7 @@ Other Features
   * **digit** - Digital number
   * **backoff** - Backoff analysis
 
-* **ud** - Universal Dependencies POS tag
+* **ud** - Universal Dependencies POS tag (consistent with **atbtok**).
 
 * **pos_logprob** - POS log probability
 
