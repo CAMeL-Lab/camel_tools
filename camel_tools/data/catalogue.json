@@ -3,7 +3,7 @@
         "full": {
             "type": "google-drive",
             "url": null,
-            "file_id": "13I9p9e-2brBMxPv9JfMnQj-bUV1dO4Hl",
+            "file_id": "1wznZY1nXIwKan5rLbvQjukozNrF-P0j3",
             "description": "Contains all data sets required by camel-tools components.",
             "size": "1.8 GB",
             "destination": "."
@@ -11,7 +11,7 @@
         "light": {
             "type": "google-drive",
             "url": null,
-            "file_id": "12y9QZvoi7Vu2vUbg_CBE7J5gueUY-fPR",
+            "file_id": "1819WzNAA8TYqk5ldHH8emajAeeqttBYj",
             "description": "Contains only data sets for morphology and MLE disambiguation.",
             "size": "19 MB",
             "destination": "."
