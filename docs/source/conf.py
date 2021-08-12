@@ -23,13 +23,13 @@ from recommonmark.parser import CommonMarkParser
 # -- Project information -----------------------------------------------------
 
 project = 'camel_tools'
-copyright = '2018-2020, New York University Abu Dhabi'
+copyright = '2018-2021, New York University Abu Dhabi'
 author = 'Ossama W. Obeid'
 
 # The short X.Y version
-version = '1.1'
+version = '1.2'
 # The full version, including alpha/beta/rc tags
-release = '1.1.0'
+release = '1.2.0'
 
 
 # -- General configuration ---------------------------------------------------
