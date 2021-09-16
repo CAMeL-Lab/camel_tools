@@ -298,7 +298,7 @@ class NERecognizer():
         self.model = BertForTokenClassification.from_pretrained(model_path)
         self.tokenizer = BertTokenizer.from_pretrained(model_path)
         self.labels_map = self.model.config.id2label
-        self.use_gpu = True
+        self.use_gpu = use_gpu
 
     @staticmethod
     def pretrained(model_name=None, use_gpu=True):
