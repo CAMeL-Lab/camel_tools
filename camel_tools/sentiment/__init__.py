@@ -27,9 +27,9 @@
 """This module contains the CAMeL Tools sentiment analyzer component.
 """
 
-
 import torch
 import torch.nn.functional as torch_fun
+from torch.utils.data import Dataset, DataLoader
 from transformers import BertTokenizer, BertForSequenceClassification
 
 from camel_tools.data import DataCatalogue
@@ -38,18 +38,36 @@ from camel_tools.data import DataCatalogue
 _LABELS = ('positive', 'negative', 'neutral')
 
 
+class SentimentDataset(Dataset):
+    def __init__(self, sentences, tokenizer, max_seq_length):
+        self.encoded_sents = tokenizer(sentences, add_special_tokens=True,
+                                       padding=True, max_length=max_seq_length,
+                                       truncation=True, return_tensors="pt")
+
+    def __getitem__(self, idx):
+        return {
+            'input_ids': self.encoded_sents.input_ids[idx],
+            'token_type_ids':  self.encoded_sents.token_type_ids[idx],
+            'attention_mask': self.encoded_sents.attention_mask[idx]
+        }
+
+    def __len__(self):
+        return self.encoded_sents.input_ids.shape[0]
+
+
 class SentimentAnalyzer:
     """A class for running a fine-tuned sentiment analysis model to predict
     the sentiment of given sentences.
     """
 
-    def __init__(self, model_path):
+    def __init__(self, model_path, use_gpu=True):
         self.model = BertForSequenceClassification.from_pretrained(model_path)
         self.tokenizer = BertTokenizer.from_pretrained(model_path)
         self.labels_map = self.model.config.id2label
+        self.use_gpu = use_gpu
 
     @staticmethod
-    def pretrained(model_name=None):
+    def pretrained(model_name=None, use_gpu=True):
         """Load a pre-trained model provided with camel_tools.
 
         Args:
@@ -58,6 +76,8 @@ class SentimentAnalyzer:
                 Two models are available: 'arabert' and 'mbert'.
                 If None, the default model ('arabert') will be loaded.
                 Defaults to None.
+            use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
+                Defaults to True.
 
         Returns:
             :obj:`SentimentAnalyzer`: Instance with loaded pre-trained model.
@@ -67,7 +87,7 @@ class SentimentAnalyzer:
                                                     model_name)
         model_path = str(model_info.path)
 
-        return SentimentAnalyzer(model_path)
+        return SentimentAnalyzer(model_path, use_gpu)
 
     @staticmethod
     def labels():
@@ -89,34 +109,42 @@ class SentimentAnalyzer:
             :obj:`str`: The predicted sentiment label for given sentence.
         """
 
-        # Add special tokens takes care of adding [CLS], [SEP] tokens
-        input_ids = torch.tensor(
-            self.tokenizer.encode(sentence, add_special_tokens=True,
-                                  truncation=True, max_length=512)).unsqueeze(0)
+        return self.predict([sentence])[0]
 
-        with torch.no_grad():
-            outputs = self.model(input_ids)
-
-        predictions = torch_fun.softmax(outputs[0].squeeze(), dim=0)
-        max_prediction = torch.argmax(predictions, dim=0)
-        predicted_label = self.labels_map[max_prediction.item()]
-
-        return predicted_label
-
-    def predict(self, sentences):
+    def predict(self, sentences, batch_size=32):
         """Predict the sentiment labels of a list of sentences.
 
         Args:
             sentences (:obj:`list` of :obj:`str`): Input sentences.
+            batch_size (:obj:`int`): The batch size.
 
         Returns:
             :obj:`list` of :obj:`str`: The predicted sentiment labels for given
             sentences.
         """
 
-        predicted_labels = []
-        for i, sentence in enumerate(sentences):
-            predicted_label = self.predict_sentence(sentence)
-            predicted_labels.append(predicted_label)
+        sentiment_dataset = SentimentDataset(sentences, self.tokenizer,
+                                             max_seq_length=512)
+
+        data_loader = DataLoader(sentiment_dataset, batch_size=batch_size,
+                                 shuffle=False, drop_last=False)
+
+        device = ('cuda' if self.use_gpu and torch.cuda.is_available() else
+                  'cpu')
+
+        self.model.to(device)
+        self.model.eval()
+
+        with torch.no_grad():
+            for batch in data_loader:
+                batch = {k: v.to(device) for k, v in batch.items()}
+                inputs = {'input_ids': batch['input_ids'],
+                          'token_type_ids': batch['token_type_ids'],
+                          'attention_mask': batch['attention_mask']}
+                logits = self.model(**inputs)[0]
+
+        predictions = torch_fun.softmax(logits, dim=-1)
+        max_predictions = torch.argmax(predictions, dim=-1)
+        predicted_labels = [self.labels_map[p.item()] for p in max_predictions]
 
         return predicted_labels
