@@ -39,6 +39,15 @@ _LABELS = ('positive', 'negative', 'neutral')
 
 
 class SentimentDataset(Dataset):
+    """Sentiment PyTorch Dataset
+
+    Args:
+        sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
+            sentences.
+        tokenizer (:obj:`PreTrainedTokenizer`): Bert's pretrained tokenizer.
+        max_seq_length (:obj:`int`):  Maximum sentence length.
+    """
+
     def __init__(self, sentences, tokenizer, max_seq_length):
         self.encoded_sents = tokenizer(sentences, add_special_tokens=True,
                                        padding=True, max_length=max_seq_length,
@@ -56,8 +65,12 @@ class SentimentDataset(Dataset):
 
 
 class SentimentAnalyzer:
-    """A class for running a fine-tuned sentiment analysis model to predict
-    the sentiment of given sentences.
+    """CAMeL Tools sentiment analysis component.
+
+    Args:
+        model_path (:obj:`str`): The path to the fine-tuned model.
+        use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
+            Defaults to True.
     """
 
     def __init__(self, model_path, use_gpu=True):
