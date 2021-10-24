@@ -385,7 +385,10 @@ class Analyzer:
             pass
 
         elif not _is_ar(word):
-            result = copy.copy(self._db.defaults['noun'])
+            # TODO: This is a temporary workaround until a 'foreign' entry is
+            # added to the databases.
+            result = copy.copy(self._db.defaults['latin'])
+            result['pos'] = 'foreign'
             result['diac'] = word
             result['stem'] = word
             result['stemgloss'] = word
