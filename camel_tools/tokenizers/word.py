@@ -62,7 +62,7 @@ def simple_word_tokenize(sentence, split_digits=False):
     Args:
         sentence (:obj:`str`): Sentence to tokenize.
         split_digits (:obj:`bool`, optional): The flag to split on number.
-        Defaults to False.
+            Defaults to False.
 
     Returns:
         :obj:`list` of :obj:`str`: The list of tokens.
