@@ -28,26 +28,44 @@ characters marked as symbols and punctuation.
 
 import unicodedata
 
-from six import unichr
+__all__ = [
+    'UNICODE_PUNCT_CHARSET', 'UNICODE_SYMBOL_CHARSET',
+    'UNICODE_LETTER_CHARSET', 'UNICODE_MARK_CHARSET', 'UNICODE_NUMBER_CHARSET',
+    'UNICODE_PUNCT_SYMBOL_CHARSET', 'UNICODE_LETTER_MARK_NUMBER_CHARSET',
+    'AR_LETTERS_CHARSET', 'AR_DIAC_CHARSET', 'AR_CHARSET',
+    'BW_LETTERS_CHARSET', 'BW_DIAC_CHARSET', 'BW_CHARSET',
+    'SAFEBW_LETTERS_CHARSET', 'SAFEBW_DIAC_CHARSET', 'SAFEBW_CHARSET',
+    'XMLBW_LETTERS_CHARSET', 'XMLBW_DIAC_CHARSET', 'XMLBW_CHARSET',
+    'HSB_LETTERS_CHARSET', 'HSB_DIAC_CHARSET', 'HSB_CHARSET',
+]
 
 
-UNICODE_PUNCT_CHARSET = frozenset(
-    [unichr(x) for x in range(0x110000) if unicodedata.category(
-        unichr(x))[0] == 'P'])
-UNICODE_SYMBOL_CHARSET = frozenset(
-    [unichr(x) for x in range(0x110000) if unicodedata.category(
-        unichr(x))[0] == 'S'])
+UNICODE_PUNCT_CHARSET = set()
+UNICODE_SYMBOL_CHARSET = set()
+UNICODE_LETTER_CHARSET = set()
+UNICODE_MARK_CHARSET = set()
+UNICODE_NUMBER_CHARSET = set()
+
+for x in range(0x110000):
+    x_chr = chr(x)
+    x_cat = unicodedata.category(x_chr)
+    if x_cat[0] == 'L':
+        UNICODE_LETTER_CHARSET.add(x_chr)
+    elif x_cat[0] == 'M':
+        UNICODE_MARK_CHARSET.add(x_chr)
+    elif x_cat[0] == 'N':
+        UNICODE_NUMBER_CHARSET.add(x_chr)
+    elif x_cat[0] == 'P':
+        UNICODE_PUNCT_CHARSET.add(x_chr)
+    elif x_cat[0] == 'S':
+        UNICODE_SYMBOL_CHARSET.add(x_chr)
+
+UNICODE_PUNCT_CHARSET = frozenset(UNICODE_PUNCT_CHARSET)
+UNICODE_SYMBOL_CHARSET = frozenset(UNICODE_SYMBOL_CHARSET)
+UNICODE_LETTER_CHARSET = frozenset(UNICODE_LETTER_CHARSET)
+UNICODE_MARK_CHARSET = frozenset(UNICODE_MARK_CHARSET)
+UNICODE_NUMBER_CHARSET = frozenset(UNICODE_NUMBER_CHARSET)
 UNICODE_PUNCT_SYMBOL_CHARSET = UNICODE_PUNCT_CHARSET | UNICODE_SYMBOL_CHARSET
-
-UNICODE_LETTER_CHARSET = frozenset(
-    [unichr(x) for x in range(0x110000) if unicodedata.category(
-        unichr(x))[0] == 'L'])
-UNICODE_MARK_CHARSET = frozenset(
-    [unichr(x) for x in range(0x110000) if unicodedata.category(
-        unichr(x))[0] == 'M'])
-UNICODE_NUMBER_CHARSET = frozenset(
-    [unichr(x) for x in range(0x110000) if unicodedata.category(
-        unichr(x))[0] == 'N'])
 UNICODE_LETTER_MARK_NUMBER_CHARSET = (UNICODE_LETTER_CHARSET |
                                       UNICODE_MARK_CHARSET |
                                       UNICODE_NUMBER_CHARSET)
