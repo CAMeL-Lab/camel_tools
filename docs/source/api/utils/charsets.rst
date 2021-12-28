@@ -13,6 +13,10 @@ The character sets available in this module are:
   symbols.
 * :obj:`UNICODE_PUNCT_SYMBOL_CHARSET` - A set of all Unicode characters marked as
   either punctuation or symbol.
+* :obj:`EMOJI_SINGLECHAR_CHARSET` - A set of all single-character emojis.
+* :obj:`EMOJI_MULTICHAR_CHARSET` - A set of all multi-character emojis.
+* :obj:`EMOJI_ALL_CHARSET` - A set of all emojis (union of 
+  :obj:`EMOJI_SINGLECHAR_CHARSET` and :obj:`EMOJI_MULTICHAR_CHARSET`).
 * :obj:`AR_CHARSET` - A set of all Unicode Arabic letters and diacritics.
 * :obj:`AR_LETTERS_CHARSET` - A set of all Unicode Arabic letters.
 * :obj:`AR_DIAC_CHARSET` - A set of all Unicode Arabic diacritics.
