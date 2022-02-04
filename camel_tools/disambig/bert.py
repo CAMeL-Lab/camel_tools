@@ -293,8 +293,8 @@ class BERTFactoredDisambiguator(Disambiguator):
 
         Args:
             sentences (:obj:`list` of :obj:`list` of :obj:`str`): The list of
-                space and punctuation seperated list of tokens comprising a given
-                sentence.
+                space and punctuation seperated list of tokens comprising a
+                given sentence.
 
         Returns:
             :obj:`list` of :obj:`~camel_tools.disambig.common.DisambiguatedWord`: The
@@ -615,8 +615,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         
         Args:
             sentences (:obj:`list` of :obj:`list` of :obj:`str`): The list of
-                space and punctuation seperated list of tokens comprising a given
-                sentence.
+                space and punctuation seperated list of tokens comprising a
+                given sentence.
 
         Returns:
             :obj:`list` of :obj:`~camel_tools.disambig.common.DisambiguatedWord`: The
@@ -815,7 +815,8 @@ class BERTFeatureTagger:
                 predictions.extend(prediction)
 
         sorted_predictions_pair = zip(sorted_sentences_idx, predictions)
-        sorted_predictions = sorted(sorted_predictions_pair, key=lambda x: x[0])
+        sorted_predictions = sorted(sorted_predictions_pair,
+                                    key=lambda x: x[0])
 
         return [i[1] for i in sorted_predictions]
 

@@ -33,8 +33,8 @@ _STRIP_LEX_RE = re.compile('_|-')
 # Morphological Analysis and Disambiguation for Gulf Arabic: The Interplay
 # between Resources and Methods
 FEATS_10 = [
-    'pos', 'per', 'form_gen', 'form_num', 'asp',
-    'prc0', 'prc1', 'prc2', 'prc3', 'enc0'
+    'pos', 'per', 'form_gen', 'form_num', 'asp', 'prc0', 'prc1', 'prc2',
+    'prc3', 'enc0'
 ]
 
 FEATS_14 = [
