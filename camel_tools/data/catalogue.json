@@ -52,6 +52,40 @@
                 }
             }
         },
+        "DisambigBertUnfactored": {
+            "default": "msa",
+            "datasets": {
+                "msa": {
+                    "description": "BERT unfactored model for disambiguating Modern Standard Arabic",
+                    "path": "disambig_bert_unfactored/msa",
+                    "version": "0.0.1",
+                    "license": "CAMeLBERT"
+                },
+                "egy": {
+                    "description": "BERT unfactored model for disambiguating Egyptian Arabic",
+                    "path": "disambig_bert_unfactored/egy",
+                    "version": "0.0.1",
+                    "license": "CAMeLBERT"
+                }
+            }
+        },
+        "DisambigBertFactored": {
+            "default": "msa",
+            "datasets": {
+                "msa": {
+                    "description": "BERT factored model for disambiguating Modern Standard Arabic",
+                    "path": "disambig_bert_factored/msa",
+                    "version": "0.0.1",
+                    "license": "CAMeLBERT"
+                },
+                "egy": {
+                    "description": "BERT factored model for disambiguating Egyptian Arabic",
+                    "path": "disambig_bert_factored/egy",
+                    "version": "0.0.1",
+                    "license": "CAMeLBERT"
+                }
+            }
+        },
         "DialectID": {
             "default": "default",
             "datasets": {
