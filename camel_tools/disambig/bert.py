@@ -158,7 +158,7 @@ class BERTFactoredDisambiguator(Disambiguator):
                                          batch_size=batch_size,
                                          ranking_cache=ranking_cache)
 
-def pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
+    def pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
                    cache_size=10000):
         """Load a pre-trained model with custom config file.
 
