@@ -182,7 +182,7 @@ class BERTFactoredDisambiguator(Disambiguator):
         model_config = read_json(config)
         model_path = model_config['model_path']
         features = FEATURE_SET_MAP[model_config['feature']]
-        db = MorphologyDB.builtin_db(model_config['db_name'], 'a')
+        db = MorphologyDB(model_config['db_path'], 'a')
         analyzer = Analyzer(db,
                             backoff=model_config['backoff'],
                             cache_size=cache_size)
@@ -546,7 +546,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             model_config = read_json(config)
             model_path = model_config['model_path']
             features = FEATURE_SET_MAP[model_config['feature']]
-            db = MorphologyDB.builtin_db(model_config['db_name'], 'a')
+            db = MorphologyDB(model_config['db_path'], 'a')
             analyzer = Analyzer(db,
                                 backoff=model_config['backoff'],
                                 cache_size=cache_size)
