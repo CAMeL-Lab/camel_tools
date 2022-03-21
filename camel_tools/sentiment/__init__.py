@@ -3,7 +3,7 @@
 
 # MIT License
 #
-# Copyright 2018-2021 New York University Abu Dhabi
+# Copyright 2018-2022 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import torch.nn.functional as torch_fun
 from torch.utils.data import Dataset, DataLoader
 from transformers import BertTokenizer, BertForSequenceClassification
 
-from camel_tools.data import DataCatalogue
+from camel_tools.data import CATALOGUE
 
 
 _LABELS = ('positive', 'negative', 'neutral')
@@ -96,8 +96,11 @@ class SentimentAnalyzer:
             :obj:`SentimentAnalyzer`: Instance with loaded pre-trained model.
         """
 
-        model_info = DataCatalogue.get_dataset_info('SentimentAnalysis',
-                                                    model_name)
+        if model_name is None:
+            model_name = CATALOGUE.components['SentimentAnalysis'].default
+
+        model_info = (CATALOGUE.components['SentimentAnalysis']
+                      .datasets[model_name])
         model_path = str(model_info.path)
 
         return SentimentAnalyzer(model_path, use_gpu)

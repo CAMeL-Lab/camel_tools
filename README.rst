@@ -81,19 +81,19 @@ Install from source
 Installing data
 ^^^^^^^^^^^^^^^
 
-To install the data sets required by CAMeL Tools components run one of the
+To install the datasets required by CAMeL Tools components run one of the
 following:
 
 .. code-block:: bash
 
-   # To install all data sets
-   camel_data full
+   # To install all datasets
+   camel_data -i all
 
-   # or for a light weight package for morphology and MLE disambiguation only
-   camel_data light
+   # or just the default datasets for each component
+   camel_data -i defaults
 
-See `Available Packages <https://camel-tools.readthedocs.io/en/latest/cli/camel_data.html#available-packages>`_
-for a comparison.
+See `Available Packages <https://camel-tools.readthedocs.io/en/latest/reference/packages.html>`_
+for a list of all available datasets.
 
 By default, data is stored in ``~/.camel_tools``.
 Alternatively, if you would like to install the data in a different location,
@@ -150,14 +150,14 @@ following commands:
 
 .. code-block:: bash
 
-   # To install all data sets
-   camel_data full
+   # To install all datasets
+   camel_data -i all
 
-   # or for a light weight package for morphology and MLE disambiguation only
-   camel_data light
+   # or just the default datasets for each component
+   camel_data -i defaults
 
-See `Available Packages <https://camel-tools.readthedocs.io/en/latest/cli/camel_data.html#available-packages>`_
-for a comparison.
+See `Available Packages <https://camel-tools.readthedocs.io/en/latest/reference/packages.html>`_
+for a list of all available datasets.
 
 By default, data is stored in
 ``C:\Users\your_user_name\AppData\Roaming\camel_tools``.

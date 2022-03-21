@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2021 New York University Abu Dhabi
+# Copyright 2018-2022 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ from sklearn.metrics import accuracy_score, f1_score, recall_score
 from sklearn.metrics import precision_score
 import dill
 
-from camel_tools.data import DataCatalogue
+from camel_tools.data import CATALOGUE
 from camel_tools.tokenizers.word import simple_word_tokenize
 from camel_tools.utils.dediac import dediac_ar
 
@@ -161,7 +161,7 @@ _LABEL_TO_REGION_MAP = {
     'TUN': 'Maghreb'
 }
 
-_DATA_DIR = DataCatalogue.get_dataset_info('DialectID').path
+_DATA_DIR = CATALOGUE.components['DialectID'].datasets['default'].path
 _CHAR_LM_DIR = Path(_DATA_DIR, 'lm', 'char')
 _WORD_LM_DIR = Path(_DATA_DIR, 'lm', 'word')
 _TRAIN_DATA_PATH = Path(_DATA_DIR, 'corpus_26_train.tsv')

@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2021 New York University Abu Dhabi
+# Copyright 2018-2022 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,6 @@ CLASSIFIERS = [
     'Natural Language :: Arabic',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
@@ -78,6 +77,9 @@ INSTALL_REQUIRES = [
     'editdistance',
     'requests',
     'emoji',
+    'pyrsistent',
+    'tabulate',
+    'tqdm'
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [
@@ -134,5 +136,5 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
-    python_requires='>=3.6.0'
+    python_requires='>=3.7.0'
 )
