@@ -27,7 +27,7 @@
 """The CAMeL Tools data download utility.
 
 Usage:
-    camel_data (-i | --install) <PACKAGE>
+    camel_data (-i | --install) [-f | --force] <PACKAGE>
     camel_data (-l | --list)
     camel_data (-u | --update)
     camel_data (-v | --version)
@@ -38,6 +38,8 @@ Options:
         Show a list of packages available for download.
   -i --install
         Install package.
+  -f --force
+        Force install package and dependencies.
   -u --update
         Update package list.
   -h --help
@@ -130,7 +132,10 @@ def main():  # pragma: no cover
             package_name = arguments.get('<PACKAGE>', None)
 
             try:
-                CATALOGUE.download_package(package_name, True, True)
+                CATALOGUE.download_package(package_name,
+                                           recursive=True,
+                                           force=arguments['--force'],
+                                           print_status=True)
                 sys.exit(0)
             except CatalogueError as c:
                 sys.stderr.write(f'Error: {c.msg}')

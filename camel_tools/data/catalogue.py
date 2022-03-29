@@ -64,6 +64,8 @@ if os.environ.get('CAMELTOOLS_DATA') is not None:
     CT_DATA_DIR = Path(
         os.environ.get('CAMELTOOLS_DATA')).expanduser().absolute()
 
+CT_VERSIONS_PATH = Path(CT_DATA_DIR, 'versions.json')
+
 
 def _init_progress(progress_bar, desc, total):
     progress_bar[0] = tqdm(desc=desc,
@@ -197,7 +199,7 @@ class CatalogueError(Exception):
     """Exception raised when an error occurs during data download.
     """
 
-    def __init__(self, msg):
+    def __init__(self, msg: str):
         self.msg = msg
 
     def __str__(self):
@@ -419,6 +421,7 @@ class Catalogue:
     def download_package(self,
                          package: str,
                          recursive: bool=True,
+                         force: bool=False,
                          print_status: bool=False):
         """Download and install package with a given name.
 
@@ -427,18 +430,43 @@ class Catalogue:
             recursive (:obj:`bool`, Optional): If `True`, dependencies are
                 recursively installed. Otherwise, only the package contents are
                 installed. Defaults to `True`.
+            force (:obj:`bool`, Optional): If `True`, packages that are
+                already installed and up-to-date will be reinstalled, otherwise
+                they are ignored. Defaults to `False`.
             print_status (:obj:`bool`, Optional): If `True`, prints out the
                 download status to standard output.
                 Defaults to `False`.
         """
+
+        if package not in self.packages:
+            raise CatalogueError(f'Invalid package name {repr(package)}')
 
         if recursive:
             deps = self._get_dependencies(package)
         else:
             deps = [package]
 
+        if CT_VERSIONS_PATH.exists():
+            with CT_VERSIONS_PATH.open('r', encoding='utf-8') as versions_fp:
+                ct_versions = json.load(versions_fp)
+        else:
+            ct_versions = {}
+
+        if not force:
+            new_deps = []
+            for dep in deps:
+                dep_ver = self.packages[dep].version
+                if dep not in ct_versions or dep_ver != ct_versions[dep]:
+                    new_deps.append(dep)
+            deps = new_deps
+
+        if len(deps) == 0:
+            if print_status:
+                print(f'No new packages will be installed.')
+            return
+
         if print_status:
-            pkg_repr = ', '.join([repr(p) for p in deps])
+            pkg_repr = ', '.join([repr(d) for d in deps])
             print(f'The following packages will be installed: {pkg_repr}')
 
         for dep in deps:
@@ -481,3 +509,8 @@ class Catalogue:
                                        on_unzip_start=on_uz_start,
                                        on_unzip_update=on_uz_update,
                                        on_unzip_finish=on_uz_finish)
+
+            # Update versions file
+            ct_versions[dep] = dep_pkg.version
+            with CT_VERSIONS_PATH.open('w', encoding='utf-8') as versions_fp:
+                json.dump(ct_versions, versions_fp)
