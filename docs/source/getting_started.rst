@@ -53,6 +53,9 @@ following:
    # To install all datasets
    camel_data -i all
 
+   # or just the datasets for morphology and MLE disambiguation only
+   camel_data -i light
+
    # or just the default datasets for each component
    camel_data -i defaults
 
@@ -115,6 +118,9 @@ following commands:
 
    # To install all datasets
    camel_data -i all
+
+   # or just the datasets for morphology and MLE disambiguation only
+   camel_data -i light
 
    # or just the default datasets for each component
    camel_data -i defaults
