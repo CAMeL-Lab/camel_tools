@@ -23,9 +23,11 @@
 # SOFTWARE.
 
 
+from genericpath import exists
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from os import urandom, replace
+from os import urandom, remove
+from shutil import move, rmtree
 import binascii
 import zipfile
 
@@ -83,6 +85,9 @@ class HTTPDownloader:
                                          on_error=on_download_error)
 
             if is_zip:
+                if dst.exists():
+                    rmtree(dst)
+
                 # Extract data to destination directory
                 HTTPDownloader._extract_content(tmp_data_path,
                                                 dst,
@@ -91,7 +96,10 @@ class HTTPDownloader:
                                                 on_finish=on_unzip_finish,
                                                 on_error=on_unzip_error)
             else:
-                replace(tmp_data_path, dst)
+                if dst.exists():
+                    remove(dst)
+
+                move(tmp_data_path, dst)
 
     @staticmethod
     def _save_content(url,
