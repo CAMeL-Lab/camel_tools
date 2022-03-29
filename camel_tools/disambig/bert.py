@@ -158,6 +158,48 @@ class BERTFactoredDisambiguator(Disambiguator):
                                          batch_size=batch_size,
                                          ranking_cache=ranking_cache)
 
+    def pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
+                   cache_size=10000):
+        """Load a pre-trained model with custom config file.
+
+        Args:
+            config (:obj:`str`): Config file that defines the model details.
+                Defaults to None.
+            top (:obj:`int`, optional): The maximum number of top analyses to
+                return. Defaults to 1.
+            use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
+                Defaults to True.
+            batch_size (:obj:`int`): The batch size. Defaults to 32.
+            cache_size (:obj:`int`, optional): The number of unique word
+                disambiguations to cache. The cache uses a
+                least-frequently-used eviction policy. Defaults to 100000.
+
+        Returns:
+            :obj:`BERTFactoredDisambiguator`: Instance with loaded
+            pre-trained model.
+        """
+
+        model_config = read_json(config)
+        model_path = model_config['model_path']
+        features = FEATURE_SET_MAP[model_config['feature']]
+        db = MorphologyDB(model_config['db_path'], 'a')
+        analyzer = Analyzer(db,
+                            backoff=model_config['backoff'],
+                            cache_size=cache_size)
+        scorer = model_config['scorer']
+        tie_breaker = model_config['tie_breaker']
+        ranking_cache = model_config['ranking_cache']
+
+        return BERTFactoredDisambiguator(model_path,
+                                         analyzer,
+                                         top=top,
+                                         features=features,
+                                         scorer=scorer,
+                                         tie_breaker=tie_breaker,
+                                         use_gpu=use_gpu,
+                                         batch_size=batch_size,
+                                         ranking_cache=ranking_cache)
+
     def predict_sentences(self, sentences):
         """Predict the morphosyntactic labels of multiple sentences.
 
@@ -479,6 +521,48 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                                            use_gpu=use_gpu,
                                            batch_size=batch_size,
                                            ranking_cache=ranking_cache)
+
+    def pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
+                    cache_size=10000):
+            """Load a pre-trained model with custom config file.
+
+            Args:
+                config (:obj:`str`): Config file that defines the model details.
+                    Defaults to None.
+                top (:obj:`int`, optional): The maximum number of top analyses to
+                    return. Defaults to 1.
+                use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
+                    Defaults to True.
+                batch_size (:obj:`int`): The batch size. Defaults to 32.
+                cache_size (:obj:`int`, optional): The number of unique word
+                    disambiguations to cache. The cache uses a
+                    least-frequently-used eviction policy. Defaults to 100000.
+
+            Returns:
+                :obj:`BERTUnfactoredDisambiguator`: Instance with loaded
+                pre-trained model.
+            """
+
+            model_config = read_json(config)
+            model_path = model_config['model_path']
+            features = FEATURE_SET_MAP[model_config['feature']]
+            db = MorphologyDB(model_config['db_path'], 'a')
+            analyzer = Analyzer(db,
+                                backoff=model_config['backoff'],
+                                cache_size=cache_size)
+            scorer = model_config['scorer']
+            tie_breaker = model_config['tie_breaker']
+            ranking_cache = model_config['ranking_cache']
+
+            return BERTUnfactoredDisambiguator(model_path,
+                                               analyzer,
+                                               top=top,
+                                               features=features,
+                                               scorer=scorer,
+                                               tie_breaker=tie_breaker,
+                                               use_gpu=use_gpu,
+                                               batch_size=batch_size,
+                                               ranking_cache=ranking_cache)
 
     def predict_sentences(self, sentences):
         """Predict the morphosyntactic labels of multiple sentences.
