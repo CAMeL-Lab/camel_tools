@@ -22,6 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 import os
 from setuptools import setup
 import sys
@@ -45,6 +46,7 @@ CLASSIFIERS = [
     'Natural Language :: Arabic',
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3 :: Only'
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
@@ -109,7 +111,6 @@ setup(
               'camel_tools.ner'],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
-        'camel_tools.data': ['catalogue.json']
     },
     include_package_data=True,
     entry_points={
@@ -136,5 +137,5 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
-    python_requires='>=3.7.0'
+    python_requires='>=3.7.0, <3.10.*'
 )
