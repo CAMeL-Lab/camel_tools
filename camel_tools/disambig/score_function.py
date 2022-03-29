@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2021 New York University Abu Dhabi
+# Copyright 2018-2022 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,6 @@
 import re
 from functools import reduce
 
-from camel_tools.utils.charmap import CharMapper
-
-_STRIP_LEX_RE = re.compile('_|-')
 
 # 10 features described in Khalifa et al., 2020
 # Morphological Analysis and Disambiguation for Gulf Arabic: The Interplay
@@ -54,13 +51,6 @@ FEATURE_SET_MAP = {
 }
 
 
-ar2bw = CharMapper.builtin_mapper('ar2bw')
-
-
-def strip_lex(lex):
-    return _STRIP_LEX_RE.split(lex)[0]
-
-
 def score_analysis_uniform(analysis, reference, mle_model=None,
                            tie_breaker=None, features=FEATS_16):
     """Calculate the score of matches given the predictions from the classifier
@@ -79,28 +69,6 @@ def score_analysis_uniform(analysis, reference, mle_model=None,
 
     if tie_breaker == 'tag':
         score += _tie_breaker_tag(analysis, reference, mle_model)
-    elif tie_breaker == 'tag_lex':
-        score += _tie_breaker_tag_lex(analysis, reference, mle_model)
-
-    return score
-
-
-def score_analysis_lex(analysis, reference, mle_model=None, tie_breaker=None,
-                       features=FEATS_16):
-    """Calculate the score of matches given the MLE model of the lex feature
-    and the analyses from the morphological analyzer.
-    """
-
-    # for GLF and LEV analyzers that use num for form_num, and gen for form_gen
-    if 'form_num' not in analysis.keys():
-        analysis['form_num'] = analysis['num']
-    if 'form_gen' not in analysis.keys():
-        analysis['form_gen'] = analysis['gen']
-
-    score = 0
-
-    lex_bw = ar2bw(strip_lex(analysis.get('lex', '')))
-    score += mle_model['lex_bw'].get(lex_bw, 0)
 
     return score
 
@@ -121,21 +89,3 @@ def _tie_breaker_tag(analysis, reference, mle_model):
     score_unfactored_tag = mle_model['unfactored'].get(unfactored_tag, 0)
 
     return (score_factored_tag + score_unfactored_tag) / 2
-
-
-def _tie_breaker_tag_lex(analysis, reference, mle_model):
-    """Calculate the tie breaker score using factored tag, unfactored tag, and
-    the lex feature probabilities in the training data.
-    """
-
-    ordered_feats = mle_model['info']['features']
-    score_factored_tag = reduce(lambda x, y: x*y,
-                                [mle_model[x].get(analysis.get(x, ''), 0)
-                                for x in ordered_feats])
-    unfactored_tag = ' '.join(
-        f'{x}:{analysis.get(x, "")}' for x in ordered_feats
-    )
-    score_unfactored_tag = mle_model['unfactored'].get(unfactored_tag, 0)
-    score_lex = score_analysis_lex(analysis, reference, mle_model)
-
-    return (score_factored_tag + score_unfactored_tag + score_lex) / 3
