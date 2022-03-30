@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2021 New York University Abu Dhabi
+# Copyright 2018-2022 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from transformers import BertForTokenClassification, BertTokenizer
 
-from camel_tools.data import DataCatalogue
+from camel_tools.data import CATALOGUE
 
 
 _LABELS = ['B-LOC', 'B-ORG', 'B-PERS', 'B-MISC', 'I-LOC', 'I-ORG', 'I-PERS',
@@ -316,8 +316,12 @@ class NERecognizer():
             :obj:`NERecognizer`: Instance with loaded pre-trained model.
         """
 
-        model_info = DataCatalogue.get_dataset_info('NamedEntityRecognition',
-                                                    model_name)
+        if model_name is None:
+            model_name = CATALOGUE.components['NamedEntityRecognition'].default
+
+        model_info = (CATALOGUE.components['NamedEntityRecognition']
+                      .datasets[model_name])
+
         model_path = str(model_info.path)
 
         return NERecognizer(model_path, use_gpu)

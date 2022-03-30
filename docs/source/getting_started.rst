@@ -4,7 +4,7 @@ Getting Started
 Installation
 ------------
 
-You will need Python 3.6 and above (64-bit) as well as
+You will need Python 3.7 and above (64-bit) as well as
 `the Rust compiler <https://www.rust-lang.org/learn/get-started>`_ installed.
 
 Linux/macOS
@@ -50,13 +50,16 @@ following:
 
 .. code-block:: bash
 
-   # To install all data sets
-   camel_data full
+   # To install all datasets
+   camel_data -i all
 
-   # or for a light weight package for morphology and MLE disambiguation only
-   camel_data light
+   # or just the datasets for morphology and MLE disambiguation only
+   camel_data -i light
 
-See :ref:`available_packages` for a comparison.
+   # or just the default datasets for each component
+   camel_data -i defaults
+
+See :doc:`reference/packages` for a list of all available datasets.
 
 By default, data is stored in ``~/.camel_tools``.
 Alternatively, if you would like to install the data in a different location,
@@ -113,13 +116,16 @@ following commands:
 
 .. code-block:: bash
 
-   # To install all data sets
-   camel_data full
+   # To install all datasets
+   camel_data -i all
 
-   # or for a light weight package for morphology and MLE disambiguation only
-   camel_data light
+   # or just the datasets for morphology and MLE disambiguation only
+   camel_data -i light
 
-See :ref:`available_packages` for a comparison.
+   # or just the default datasets for each component
+   camel_data -i defaults
+
+See :doc:`reference/packages` for a list of all available datasets.
 
 By default, data is stored in
 ``C:\Users\your_user_name\AppData\Roaming\camel_tools``.

@@ -110,7 +110,7 @@ Naming Conventions
 Python 2 and 3 Support
 ----------------------
 
-Ideally, CAMeL Tools should be able to run on Python 3.6+.
+Ideally, CAMeL Tools should be able to run on Python 3.7+.
 `Here's a nice cheat-sheet <http://python-future.org/compatible_idioms.html>`_ of
 how to do that.
 

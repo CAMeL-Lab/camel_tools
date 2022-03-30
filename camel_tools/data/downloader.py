@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2021 New York University Abu Dhabi
+# Copyright 2018-2022 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,22 @@
 # SOFTWARE.
 
 
+from genericpath import exists
 from pathlib import Path
-import requests
-from sys import stdout
 from tempfile import TemporaryDirectory
-from os import makedirs
-from os.path import dirname, exists
-import warnings
+from os import urandom, remove
+from shutil import move, rmtree
+import binascii
 import zipfile
 
-from camel_tools.data import CT_DATA_DIR
+import requests
 
 
 _STREAM_CHUNK_SIZE = 32768
-_GDRIVE_URL = 'https://docs.google.com/uc?export=download'
 
 
 class DownloaderError(Exception):
-    """Error raised when an error occurs during data download.
+    """Exception raised when an error occurs during data download.
     """
 
     def __init__(self, msg):
@@ -50,142 +48,132 @@ class DownloaderError(Exception):
         return str(self.msg)
 
 
-class URLDownloader:
-    """Class to download shared files from a URL. This is a modified
-    version of
-    `google-drive-downloader https://github.com/ndrplz/google-drive-downloader`_.
+class HTTPDownloader:
+    """Class to download shared files from a URL.
     """
 
     @staticmethod
-    def download(url, destination):
-        """Downloads a shared file from google drive into a given folder.
-        Optionally unzips it.
-
-        Args:
-            url (:obj:`str`): The file url.
-            destination (:obj:`str`): The destination directory where the
-                downloaded data will be saved.
-        """
-
-        if destination.exists() and not destination.is_dir():
-            raise DownloaderError(
-                'Destination directory {} is a pre-existing file.'.format(
-                    repr(str(destination))))
-        else:
-            destination.mkdir(parents=True, exist_ok=True)
+    def download(url,
+                 dst,
+                 is_zip=False,
+                 on_download_start=None,
+                 on_download_update=None,
+                 on_download_finish=None,
+                 on_download_error=None,
+                 on_unzip_start=None,
+                 on_unzip_update=None,
+                 on_unzip_finish=None,
+                 on_unzip_error=None):
+        if is_zip:
+            if dst.exists() and not dst.is_dir():
+                raise DownloaderError(
+                    'Destination directory {} is a pre-existing file.'.format(
+                        repr(str(dst))))
+            else:
+                dst.mkdir(parents=True, exist_ok=True)
 
         with TemporaryDirectory() as tmp_dir:
-            # Download data zip to temporary directory
-            try:
-                session = requests.Session()
-                response = session.get(url, stream=True)
+            # Download data to temporary directory
+            fname = str(binascii.b2a_hex(urandom(15)), encoding='utf-8')
+            tmp_data_path = Path(tmp_dir, fname)
 
-                curr_dl_size = [0]
-                tmp_zip_path = Path(tmp_dir, 'data.zip')
-                GoogleDriveDownloader._save_content(response,
-                                                    tmp_zip_path,
-                                                    curr_dl_size)
-            except:
-                raise DownloaderError(
-                    'An error occured while downloading data.')
+            HTTPDownloader._save_content(url,
+                                         tmp_data_path,
+                                         on_start=on_download_start,
+                                         on_update=on_download_update,
+                                         on_finish=on_download_finish,
+                                         on_error=on_download_error)
 
-            # Extract data to destination directory
-            try:
-                with zipfile.ZipFile(tmp_zip_path, 'r') as zip_fp:
-                    zip_fp.extractall(destination)
-            except:
-                raise DownloaderError(
-                    'An error occured while extracting downloaded data.')
+            if is_zip:
+                if dst.exists():
+                    rmtree(dst)
 
-    @staticmethod
-    def _save_content(response, destination, curr_size):
-        with open(destination, 'wb') as fp:
-            for chunk in response.iter_content(_STREAM_CHUNK_SIZE):
-                if chunk:  # filter out keep-alive new chunks
-                    fp.write(chunk)
-                    curr_size[0] += len(chunk)
+                # Extract data to destination directory
+                HTTPDownloader._extract_content(tmp_data_path,
+                                                dst,
+                                                on_start=on_unzip_start,
+                                                on_update=on_unzip_update,
+                                                on_finish=on_unzip_finish,
+                                                on_error=on_unzip_error)
+            else:
+                if dst.exists():
+                    remove(dst)
 
-
-class GoogleDriveDownloader:
-    """Class to download shared files from Google Drive. This is a modified
-    version of
-    `google-drive-downloader https://github.com/ndrplz/google-drive-downloader`_.
-    """
+                move(tmp_data_path, dst)
 
     @staticmethod
-    def download(file_id, destination):
-        """Downloads a shared file from google drive into a given folder.
-        Optionally unzips it.
+    def _save_content(url,
+                      destination,
+                      on_start=None,
+                      on_update=None,
+                      on_finish=None,
+                      on_error=None):
 
-        Args:
-            file_id (:obj:`str`): The file identifier.
-            destination (:obj:`str`): The destination directory where the
-                downloaded data will be saved.
-        """
+        try:
+            session = requests.Session()
+            response = session.get(url, stream=True)
 
-        if destination.exists() and not destination.is_dir():
+            curr_size = 0
+            total_size = int(response.headers.get('content-length', 0))
+
+            if on_start is not None:
+                on_start(total_size)
+
+            with open(destination, 'wb') as fp:
+                for chunk in response.iter_content(_STREAM_CHUNK_SIZE):
+                    if chunk:  # filter out keep-alive new chunks
+                        fp.write(chunk)
+                        chunk_size = len(chunk)
+                        curr_size += chunk_size
+
+                        if on_update is not None:
+                            on_update(chunk_size)
+
+            if curr_size < total_size:
+                if on_error is not None:
+                    on_error()
+                raise DownloaderError(
+                    'Download could not be completed.')
+
+            if on_finish is not None:
+                on_finish()
+
+        except OSError:
+            if on_error is not None:
+                on_error()
+
             raise DownloaderError(
-                'Destination directory {} is a pre-existing file.'.format(
-                    repr(str(destination))))
-        else:
-            destination.mkdir(parents=True, exist_ok=True)
-
-        with TemporaryDirectory() as tmp_dir:
-            # Download data zip to temporary directory
-            try:
-                session = requests.Session()
-                response = session.get(_GDRIVE_URL, params={ 'id': file_id },
-                                       stream=True)
-
-                token = None
-                for key, value in response.cookies.items():
-                    if key.startswith('download_warning'):
-                        token = value
-                        break
-
-                if token:
-                    params = {'id': file_id, 'confirm': token}
-                    response = session.get(_GDRIVE_URL, params=params,
-                                           stream=True)
-
-                curr_dl_size = [0]
-                tmp_zip_path = Path(tmp_dir, 'data.zip')
-                GoogleDriveDownloader._save_content(response,
-                                                    tmp_zip_path,
-                                                    curr_dl_size)
-            except:
-                raise DownloaderError(
-                    'An error occured while downloading data.')
-
-            # Extract data to destination directory
-            try:
-                with zipfile.ZipFile(tmp_zip_path, 'r') as zip_fp:
-                    zip_fp.extractall(destination)
-            except:
-                raise DownloaderError(
-                    'An error occured while extracting downloaded data.')
+                'An error occured while downloading data.')
 
     @staticmethod
-    def _save_content(response, destination, curr_size):
-        with open(destination, 'wb') as fp:
-            for chunk in response.iter_content(_STREAM_CHUNK_SIZE):
-                if chunk:  # filter out keep-alive new chunks
-                    fp.write(chunk)
-                    curr_size[0] += len(chunk)
+    def _extract_content(source,
+                         destination,
+                         on_start=None,
+                         on_update=None,
+                         on_finish=None,
+                         on_error=None):
 
+        try:
+            with zipfile.ZipFile(source, 'r') as zip_fp:
+                uncompress_size = sum(
+                    (file.file_size for file in zip_fp.infolist()))
+                
+                if on_start is not None:
+                    on_start(uncompress_size)
 
-class DataDownloader(object):
-    """Class for downloading data described by a :obj:`DownloadInfo` object.
-    """
+                # zip_fp.extractall(destination)
+                for file in zip_fp.infolist():
+                    file_size = file.file_size
+                    zip_fp.extract(file, destination)
+                    
+                    if on_update is not None:
+                        on_update(file_size)
+        except:
+            if on_error is not None:
+                on_error()
 
-    @staticmethod
-    def download(dl_info):
-        destination = Path(CT_DATA_DIR, dl_info.destination)
-
-        if dl_info.type == 'url':
-            URLDownloader.download(dl_info.url, destination)
-        elif dl_info.type == 'google-drive':
-            GoogleDriveDownloader.download(dl_info.file_id, destination)
-        else:
             raise DownloaderError(
-                'Invalid download type {}'.format(repr(dl_info.type)))
+                'An error occured while extracting data.')
+
+        if on_finish is not None:
+            on_finish()

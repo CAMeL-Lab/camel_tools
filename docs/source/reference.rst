@@ -7,3 +7,4 @@ Reference
 
    reference/encoding_schemes
    reference/camel_morphology_features
+   reference/packages

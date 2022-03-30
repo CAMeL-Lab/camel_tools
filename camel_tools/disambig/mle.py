@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2021 New York University Abu Dhabi
+# Copyright 2018-2022 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ from camel_tools.disambig.common import ScoredAnalysis
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
 from camel_tools.morphology.utils import strip_lex
-from camel_tools.data import DataCatalogue
+from camel_tools.data import CATALOGUE
 
 
 def _calima_msa_r13_analyzer():
@@ -163,7 +163,10 @@ class MLEDisambiguator(Disambiguator):
             :obj:`MLEDisambiguator`: The loaded MLE disambiguator.
         """
 
-        model_info = DataCatalogue.get_dataset_info('DisambigMLE', model_name)
+        if model_name is None:
+            model_name = CATALOGUE.components['DisambigMLE'].default
+
+        model_info = CATALOGUE.components['DisambigMLE'].datasets[model_name]
         mle_path = model_info.path / 'model.json'
 
         if analyzer is None:

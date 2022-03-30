@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2021 New York University Abu Dhabi
+# Copyright 2018-2022 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ from camel_tools.utils.stringutils import force_unicode
 from camel_tools.morphology.utils import strip_lex
 from camel_tools.morphology.errors import InvalidDatabaseFlagError
 from camel_tools.morphology.errors import DatabaseParseError
-from camel_tools.data import DataCatalogue
+from camel_tools.data import CATALOGUE
 
 
 MorphologyDBFlags = namedtuple('MorphologyDBFlags', ['analysis', 'generation',
@@ -64,14 +64,14 @@ class MorphologyDB:
         """Returns a list of builtin databases provided with CAMeL Tools.
 
         Returns:
-            :obj:`list` of :obj:`~camel_tools.data.DatasetInfo`: List of
+            :obj:`list` of :obj:`~camel_tools.data.DatasetEntry`: List of
             builtin databases.
         """
 
-        return list(DataCatalogue.get_component_info('MorphologyDB').datasets)
+        return list(CATALOGUE.get_component('MorphologyDB').datasets)
 
     @staticmethod
-    def builtin_db(db_name='calima-msa-r13', flags='a'):
+    def builtin_db(db_name=None, flags='a'):
         """Create a :obj:`MorphologyDB` instance from one of the builtin
         databases provided.
 
@@ -87,7 +87,10 @@ class MorphologyDB:
             :obj:`MorphologyDB`: Instance of builtin database with given flags.
         """
 
-        db_info = DataCatalogue.get_dataset_info('MorphologyDB', db_name)
+        if db_name is None:
+            db_name = CATALOGUE.components['MorphologyDB'].default
+
+        db_info = CATALOGUE.components['MorphologyDB'].datasets[db_name]
 
         return MorphologyDB(str(Path(db_info.path, 'morphology.db')), flags)
 
