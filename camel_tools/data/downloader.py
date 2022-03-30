@@ -32,6 +32,7 @@ import binascii
 import zipfile
 
 import requests
+from requests.structures import CaseInsensitiveDict
 
 
 _STREAM_CHUNK_SIZE = 32768
@@ -111,7 +112,13 @@ class HTTPDownloader:
 
         try:
             session = requests.Session()
-            response = session.get(url, stream=True)
+
+            headers = CaseInsensitiveDict()
+            headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            headers["Pragma"] = "no-cache"
+            headers["Expires"] = "0"
+
+            response = session.get(url, stream=True, headers=headers)
 
             curr_size = 0
             total_size = int(response.headers.get('content-length', 0))
