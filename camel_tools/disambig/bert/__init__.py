@@ -190,7 +190,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                                                batch_size=batch_size,
                                                ranking_cache=ranking_cache)
 
-    def predict_sentences(self, sentences):
+    def _predict_sentences(self, sentences):
         """Predict the morphosyntactic labels of multiple sentences.
 
         Args:
@@ -221,8 +221,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
 
         return parsed_predictions
 
-    def predict_sentence(self, sentence):
-        """Predict the morphosyntactic labels of a single sentence.
+    def _predict_sentence(self, sentence):
+        """Predict morphosyntactic labels of a single sentence.
 
         Args:
             sentence (:obj:`list` of :obj:`str`): The input sentence.
@@ -315,7 +315,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             list of disambiguations for each word in the given sentence.
         """
 
-        predictions = self.predict_sentence(sentence)
+        predictions = self._predict_sentence(sentence)
 
         return [self._disambiguate_word(w, p)
                 for (w, p) in zip(sentence, predictions)]
@@ -333,7 +333,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             list of disambiguations for each word in the given sentence.
         """
 
-        predictions = self.predict_sentences(sentences)
+        predictions = self._predict_sentences(sentences)
 
         disambiguated_sentences = []
         for sentence, prediction in zip(sentences, predictions):
@@ -361,7 +361,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         """
 
         if not use_analyzer:
-            return self.predict_sentences(sentences)
+            return self._predict_sentences(sentences)
 
         top = 0
         tagged_sentences = []
@@ -388,7 +388,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         """
 
         if not use_analyzer:
-            return self.predict_sentence(sentence)
+            return self._predict_sentence(sentence)
 
         top = 0
         return [a.analyses[top].analysis for a in self.disambiguate(sentence)]
