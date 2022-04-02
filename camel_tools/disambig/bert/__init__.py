@@ -33,16 +33,19 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from transformers import BertForTokenClassification, BertTokenizer
 
+from camel_tools.data import CATALOGUE
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
-
-from camel_tools.data import CATALOGUE
 from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
-
 from camel_tools.disambig.bert.bert_morph_dataset import MorphDataset
 from camel_tools.disambig.score_function import score_analysis_uniform
 from camel_tools.disambig.score_function import FEATURE_SET_MAP
+
+
+__all__ = [
+    'BERTUnfactoredDisambiguator',
+]
 
 
 _SCORING_FUNCTION_MAP = {
@@ -219,8 +222,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                 for feat in pred.split('__'):
                     f, v = feat.split(':')
                     d[f] = v
-                d['lex'] = word # copy the word when analyzer is not used
-                d['diac'] = word # copy the word when analyzer is not used
+                d['lex'] = word  # Copy the word when analyzer is not used
+                d['diac'] = word  # Copy the word when analyzer is not used
                 parsed_prediction.append(d)
             parsed_predictions.append(parsed_prediction)
 
@@ -246,8 +249,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             for feat in pred.split('__'):
                 f, v = feat.split(':')
                 d[f] = v
-            d['lex'] = word # copy the word when analyzer is not used
-            d['diac'] = word # copy the word when analyzer is not used
+            d['lex'] = word  # Copy the word when analyzer is not used
+            d['diac'] = word  # Copy the word when analyzer is not used
             parsed_predictions.append(d)
 
         return parsed_predictions
@@ -257,7 +260,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         analyses = self._analyzer.analyze(word_dd)
 
         if len(analyses) == 0:
-            # if the word is not found in the analyzer,
+            # If the word is not found in the analyzer,
             # return the predictions from BERT
             return [ScoredAnalysis(0, bert_analysis)]
 
@@ -273,13 +276,13 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             scored_analyses = [ScoredAnalysis(s[0] / max_score, s[1])
                                for s in scored]
         else:
-            # if the max score is 0, do not divide
+            # If the max score is 0, do not divide
             scored_analyses = [ScoredAnalysis(s[0], s[1]) for s in scored]
 
         return scored_analyses[:self._top]
 
     def _disambiguate_word(self, word, pred):
-        # create a key for caching scored analysis given word and bert
+        # Create a key for caching scored analysis given word and bert
         # predictions
         key = (word, tuple(pred[feat] for feat in self.features))
         if key in self.ranking_cache:
@@ -363,10 +366,9 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         if not use_analyzer:
             return self._predict_sentences(sentences)
 
-        top = 0
         tagged_sentences = []
         for prediction in self.disambiguate_sentences(sentences):
-            tagged_sentence = [a.analyses[top].analysis for a in prediction]
+            tagged_sentence = [a.analyses[0].analysis for a in prediction]
             tagged_sentences.append(tagged_sentence)
 
         return tagged_sentences
@@ -390,8 +392,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         if not use_analyzer:
             return self._predict_sentence(sentence)
 
-        top = 0
-        return [a.analyses[top].analysis for a in self.disambiguate(sentence)]
+        return [a.analyses[0].analysis for a in self.disambiguate(sentence)]
 
     def all_feats(self):
         """Return a set of all features produced by this disambiguator.
@@ -430,8 +431,7 @@ class BERTFeatureTagger:
         self.labels_map = self.model.config.id2label
         self.use_gpu = use_gpu
 
-    @staticmethod
-    def labels():
+    def labels(self):
         """Get the list of Morph labels returned by predictions.
 
         Returns:
