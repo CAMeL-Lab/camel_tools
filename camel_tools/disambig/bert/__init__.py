@@ -36,7 +36,7 @@ from transformers import BertForTokenClassification, BertTokenizer
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
 
-from camel_tools.data import Catalogue
+from camel_tools.data import CATALOGUE
 from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
 
@@ -107,15 +107,14 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         self._mle = _read_json(f'{model_path}/mle_model.json')
 
     @staticmethod
-    def pretrained(model_name=None, top=1, use_gpu=True, batch_size=32,
+    def pretrained(model_name='msa', top=1, use_gpu=True, batch_size=32,
                    cache_size=10000):
         """Load a pre-trained model provided with camel_tools.
 
         Args:
             model_name (:obj:`str`, optional): Name of pre-trained model to
                 load. Three models are available: 'msa', 'egy', and 'glf.
-                If `None`, the default model ('msa') will be loaded.
-                Defaults to `None`.
+                Defaults to `msa`.
             top (:obj:`int`, optional): The maximum number of top analyses to
                 return. Defaults to 1.
             use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
@@ -131,7 +130,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             pre-trained model.
         """
 
-        model_info = Catalogue.get_dataset('DisambigBertUnfactored',
+        model_info = CATALOGUE.get_dataset('DisambigBertUnfactored',
                                            model_name)
         model_config = _read_json(Path(model_info.path, 'default_config.json'))
         model_path = str(model_info.path)
@@ -357,8 +356,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                 Defaults to True.
 
         Returns:
-            :obj:`list` of :obj:`list` of :obj:`dict`: The predicted The list of feature tags
-            for each word in the given sentences
+            :obj:`list` of :obj:`list` of :obj:`dict`: The predicted The list
+            of feature tags for each word in the given sentences
         """
 
         if not use_analyzer:
