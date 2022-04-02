@@ -36,7 +36,7 @@ from transformers import BertForTokenClassification, BertTokenizer
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
 
-from camel_tools.data import DataCatalogue
+from camel_tools.data import Catalogue
 from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
 
@@ -56,34 +56,35 @@ def _read_json(f_path):
 
 
 class BERTUnfactoredDisambiguator(Disambiguator):
-    """A disambiguator using a BERT model that predicts unfactored tag.
+    """A disambiguator using an unfactored BERT model. This model is based on
+    *Morphosyntactic Tagging with Pre-trained Language Models for Arabic and
+    its Dialects* by Inoue, Khalifa, and Habash. Findings of ACL 2022.
+    (https://arxiv.org/abs/2110.06852)
 
     Args:
         model_path (:obj:`str`): The path to the fine-tuned model.
         analyzer (:obj:`~camel_tools.morphology.analyzer.Analyzer`): Analyzer
-            to use to provide full morphological analysis of a word.
-        features: :obj:`list`, optional): The list of features used in the
-            feature match function. Defaults to a list of all the 16 features.
+            to use for providing full morphological analysis of a word.
+        features: :obj:`list`, optional): A list of morphological features
+            used in the model. Defaults to 14 features.
         top (:obj:`int`, optional): The maximum number of top analyses to
             return. Defaults to 1.
         scorer (:obj:`str`, optional): The scoring function that matches the
             predicted features from the model and the values in the analyses.
             If uniform, the scoring based on the uniform weight is used.
-            Defaults to uniform.
+            Defaults to `uniform`.
         tie_breaker (:obj:`str`, optional): The tie breaker used in the feature
-            match function.
-            If tag, tie breaking based on the tag MLE and factored tag MLE is
-            used.
-            Defaults to tag.
+            match function. If `tag`, tie breaking based on the tag MLE and
+            factored tag MLE is used. Defaults to `tag`.
         use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
             Defaults to True.
-        batch_size (:obj:`int`): The batch size. Defaults to 32.
-        ranking_cache (:obj: `dict`): The cache dictionary of pre-computed 
-            scored analyses. Defaults to None.
+        batch_size (:obj:`int`, optional): The batch size. Defaults to 32.
+        ranking_cache (:obj:`dict`, optional): The cache dictionary of
+            pre-computed scored analyses. Defaults to `None`.
     """
 
     def __init__(self, model_path, analyzer,
-                 features=FEATURE_SET_MAP['feats_16'], top=1,
+                 features=FEATURE_SET_MAP['feats_14'], top=1,
                  scorer='uniform', tie_breaker='tag', use_gpu=True,
                  batch_size=32, ranking_cache=None):
         self.model = {
@@ -112,25 +113,26 @@ class BERTUnfactoredDisambiguator(Disambiguator):
 
         Args:
             model_name (:obj:`str`, optional): Name of pre-trained model to
-                load. Two models are available: 'msa', and 'egy'.
-                If None, the default model ('msa') will be loaded. Defaults to
-                None.
+                load. Three models are available: 'msa', 'egy', and 'glf.
+                If `None`, the default model ('msa') will be loaded.
+                Defaults to `None`.
             top (:obj:`int`, optional): The maximum number of top analyses to
                 return. Defaults to 1.
             use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
                 Defaults to True.
-            batch_size (:obj:`int`): The batch size. Defaults to 32.
-            cache_size (:obj:`int`, optional): The number of unique word
-                disambiguations to cache. The cache uses a
-                least-frequently-used eviction policy. Defaults to 100000.
+            batch_size (:obj:`int`, optional): The batch size. Defaults to 32.
+            cache_size (:obj:`int`, optional): If greater than zero, then
+                the analyzer will cache the analyses for the cache_size most
+                frequent words, otherwise no analyses will be cached.
+                Defaults to 100000.
 
         Returns:
             :obj:`BERTUnfactoredDisambiguator`: Instance with loaded
             pre-trained model.
         """
 
-        model_info = DataCatalogue.get_dataset_info('DisambigBertUnfactored',
-                                                    model_name)
+        model_info = Catalogue.get_dataset('DisambigBertUnfactored',
+                                           model_name)
         model_config = _read_json(Path(model_info.path, 'default_config.json'))
         model_path = str(model_info.path)
         features = FEATURE_SET_MAP[model_config['feature']]
@@ -153,18 +155,22 @@ class BERTUnfactoredDisambiguator(Disambiguator):
 
     def pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
                                cache_size=10000):
-            """Load a pre-trained model with custom config file.
+            """Load a pre-trained model from a config file.
+
             Args:
                 config (:obj:`str`): Config file that defines the model
-                    details. Defaults to None.
+                    details. Defaults to `None`.
                 top (:obj:`int`, optional): The maximum number of top analyses
                     to return. Defaults to 1.
                 use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
                     Defaults to True.
-                batch_size (:obj:`int`): The batch size. Defaults to 32.
-                cache_size (:obj:`int`, optional): The number of unique word
-                    disambiguations to cache. The cache uses a
-                    least-frequently-used eviction policy. Defaults to 10000.
+                batch_size (:obj:`int`, optional): The batch size.
+                    Defaults to 32.
+                cache_size (:obj:`int`, optional): If greater than zero, then
+                    the analyzer will cache the analyses for the cache_size
+                    most frequent words, otherwise no analyses will be cached.
+                    Defaults to 100000.
+
             Returns:
                 :obj:`BERTUnfactoredDisambiguator`: Instance with loaded
                 pre-trained model.
@@ -191,7 +197,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                                                ranking_cache=ranking_cache)
 
     def _predict_sentences(self, sentences):
-        """Predict the morphosyntactic labels of multiple sentences.
+        """Predict the morphosyntactic labels of a list of sentences.
 
         Args:
             sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
@@ -222,14 +228,14 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         return parsed_predictions
 
     def _predict_sentence(self, sentence):
-        """Predict morphosyntactic labels of a single sentence.
+        """Predict the morphosyntactic labels of a single sentence.
 
         Args:
             sentence (:obj:`list` of :obj:`str`): The input sentence.
 
         Returns:
-            :obj:`list` of :obj:`dict`: The predicted morphosyntactic
-            labels for the given sentence.
+            :obj:`list` of :obj:`dict`: The predicted morphosyntactic labels
+            for the given sentence.
         """
 
         parsed_predictions = []
@@ -286,12 +292,10 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         return DisambiguatedWord(word, scored_analyses)
 
     def disambiguate_word(self, sentence, word_ndx):
-        """Disambiguates a single word in a sentence.
+        """Disambiguates a single word of a sentence.
 
         Args:
-            sentence (:obj:`list` of :obj:`str`): The list of space and
-                punctuation seperated list of tokens comprising a given
-                sentence.
+            sentence (:obj:`list` of :obj:`str`): The input sentence.
             word_ndx (:obj:`int`): The index of the word token in `sentence` to
                 disambiguate.
 
@@ -303,16 +307,14 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         return self.disambiguate(sentence)[word_ndx]
 
     def disambiguate(self, sentence):
-        """Disambiguate all words given a sentence.
+        """Disambiguate all words of a single sentence.
 
         Args:
-            sentence (:obj:`list` of :obj:`str`): The list of space and
-                punctuation seperated list of tokens comprising a given
-                sentence.
+            sentence (:obj:`list` of :obj:`str`): The input sentence.
 
         Returns:
             :obj:`list` of :obj:`~camel_tools.disambig.common.DisambiguatedWord`: The
-            list of disambiguations for each word in the given sentence.
+            disambiguated analyses for the given sentence.
         """
 
         predictions = self._predict_sentence(sentence)
@@ -321,16 +323,15 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                 for (w, p) in zip(sentence, predictions)]
 
     def disambiguate_sentences(self, sentences):
-        """Disambiguate all words given a list of sentences.
+        """Disambiguate all words of a list of sentences.
         
         Args:
-            sentences (:obj:`list` of :obj:`list` of :obj:`str`): The list of
-                space and punctuation seperated list of tokens comprising a
-                given sentence.
+            sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
+                sentences.
 
         Returns:
-            :obj:`list` of :obj:`~camel_tools.disambig.common.DisambiguatedWord`: The
-            list of disambiguations for each word in the given sentence.
+            :obj:`list` of :obj:`list` of :obj:`~camel_tools.disambig.common.DisambiguatedWord`: The
+            disambiguated analyses for the given sentences.
         """
 
         predictions = self._predict_sentences(sentences)
@@ -346,7 +347,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         return disambiguated_sentences
 
     def tag_sentences(self, sentences, use_analyzer=True):
-        """Tag morphosyntactic features given a list of sentences. 
+        """Predict the morphosyntactic labels of a list of sentences. 
 
         Args:
             sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
@@ -356,7 +357,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                 Defaults to True.
 
         Returns:
-            :obj:`list` of :obj:`list` of :obj:`dict`: The list of feature tags
+            :obj:`list` of :obj:`list` of :obj:`dict`: The predicted The list of feature tags
             for each word in the given sentences
         """
 
@@ -372,7 +373,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         return tagged_sentences
 
     def tag_sentence(self, sentence, use_analyzer=True):
-        """Tag morphosyntactic features given a sentence. 
+        """Predict the morphosyntactic labels of a ssingle entence. 
 
         Args:
             sentence (:obj:`list` of :obj:`str`): The list of space and
@@ -421,7 +422,7 @@ class BERTFeatureTagger:
         Args:
             model_path (:obj:`str`): The path to the fine-tuned model.
             use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
-            Defaults to True.
+                Defaults to True.
     """
 
     def __init__(self, model_path, use_gpu=True):
