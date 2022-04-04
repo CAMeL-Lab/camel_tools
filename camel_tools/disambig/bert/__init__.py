@@ -23,8 +23,7 @@
 # SOFTWARE.
 
 
-from  camel_tools.disambig.bert.unfactored import BERTUnfactoredDisambiguator
-
+from camel_tools.disambig.bert.unfactored import BERTUnfactoredDisambiguator
 
 __all__ = [
     'BERTUnfactoredDisambiguator',

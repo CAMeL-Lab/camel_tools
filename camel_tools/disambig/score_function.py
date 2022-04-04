@@ -22,8 +22,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import re
+
 from functools import reduce
+
+
+__all__ = [
+    'FEATS_10',
+    'FEATS_14',
+    'FEATS_16',
+    'FEATURE_SET_MAP',
+    'score_analysis_uniform'
+]
 
 
 # 10 features described in Khalifa et al., 2020

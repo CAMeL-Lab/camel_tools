@@ -38,7 +38,7 @@ from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
 from camel_tools.disambig.common import Disambiguator, DisambiguatedWord
 from camel_tools.disambig.common import ScoredAnalysis
-from camel_tools.disambig.bert.bert_morph_dataset import MorphDataset
+from camel_tools.disambig.bert._bert_morph_dataset import MorphDataset
 from camel_tools.disambig.score_function import score_analysis_uniform
 from camel_tools.disambig.score_function import FEATURE_SET_MAP
 
@@ -51,6 +51,157 @@ _SCORING_FUNCTION_MAP = {
 def _read_json(f_path):
     with open(f_path) as f:
         return json.load(f)
+
+
+class _BERTFeatureTagger:
+    """A feature tagger based on the fine-tuned BERT architecture.
+
+        Args:
+            model_path (:obj:`str`): The path to the fine-tuned model.
+            use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
+                Defaults to True.
+    """
+
+    def __init__(self, model_path, use_gpu=True):
+        self._model = BertForTokenClassification.from_pretrained(model_path)
+        self._tokenizer = BertTokenizer.from_pretrained(model_path)
+        self._labels_map = self._model.config.id2label
+        self._use_gpu = use_gpu
+
+    def labels(self):
+        """Get the list of Morph labels returned by predictions.
+
+        Returns:
+            :obj:`list` of :obj:`str`: List of Morph labels.
+        """
+
+        return list(self._labels_map.values())
+
+    def _align_predictions(self, predictions, label_ids, sent_ids):
+        """Aligns the predictions of the model with the inputs and it takes
+        care of getting rid of the padding token.
+
+        Args:
+            predictions (:obj:`np.ndarray`): The predictions of the model
+            label_ids (:obj:`np.ndarray`): The label ids of the inputs.
+                They will always be the ids of Os since we're dealing with a
+                test dataset. Note that label_ids are also padded.
+            sent_ids (:obj:`np.ndarray`): The sent ids of the inputs.
+
+        Returns:
+            :obj:`list` of :obj:`list` of :obj:`str`: The predicted labels for
+            all the sentences in the batch
+        """
+
+        preds = np.argmax(predictions, axis=2)
+        batch_size, seq_len = preds.shape
+        preds_list = [[] for _ in range(batch_size)]
+
+        for i in range(batch_size):
+            for j in range(seq_len):
+                if label_ids[i, j] != nn.CrossEntropyLoss().ignore_index:
+                    preds_list[i].append(self._labels_map[preds[i][j]])
+
+        # Collating the predicted labels based on the sentence ids
+        final_preds_list = [[] for _ in range(len(set(sent_ids)))]
+        for i, id in enumerate(sent_ids):
+            id = id - sent_ids[0]
+            final_preds_list[id].extend(preds_list[i])
+
+        return final_preds_list
+
+    def predict(self, sentences, batch_size=32, max_seq_length=512):
+        """Predict the morphosyntactic labels of a list of sentences.
+
+        Args:
+            sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
+                sentences.
+            batch_size (:obj:`int`): The batch size.
+            max_seq_length (:obj:`int`): The max sequence size.
+
+        Returns:
+            :obj:`list` of :obj:`list` of :obj:`str`: The predicted
+            morphosyntactic labels for the given sentences.
+        """
+
+        if len(sentences) == 0:
+            return []
+
+        sorted_sentences = list(enumerate(sentences))
+        sorted_sentences = sorted(sorted_sentences, key=lambda x: len(x[1]))
+        sorted_sentences_idx = [i[0] for i in sorted_sentences]
+        sorted_sentences_text = [i[1] for i in sorted_sentences]
+
+        test_dataset = MorphDataset(sentences=sorted_sentences_text,
+                                    tokenizer=self._tokenizer,
+                                    labels=list(self._labels_map.values()),
+                                    max_seq_length=max_seq_length)
+
+        data_loader = DataLoader(test_dataset, batch_size=batch_size,
+                                 shuffle=False, drop_last=False,
+                                 collate_fn=self._collate_fn)
+
+        predictions = []
+        device = ('cuda' if self._use_gpu and torch.cuda.is_available()
+                  else 'cpu')
+        self._model.to(device)
+        self._model.eval()
+
+        with torch.no_grad():
+            for batch in data_loader:
+                batch = {k: v.to(device) for k, v in batch.items()}
+                inputs = {'input_ids': batch['input_ids'],
+                          'token_type_ids': batch['token_type_ids'],
+                          'attention_mask': batch['attention_mask']}
+
+                label_ids = batch['label_ids']
+                sent_ids = batch['sent_id']
+                logits = self._model(**inputs)[0]
+                preds = logits
+                prediction = self._align_predictions(preds.cpu().numpy(),
+                                                     label_ids.cpu().numpy(),
+                                                     sent_ids.cpu().numpy())
+                predictions.extend(prediction)
+
+        sorted_predictions_pair = zip(sorted_sentences_idx, predictions)
+        sorted_predictions = sorted(sorted_predictions_pair,
+                                    key=lambda x: x[0])
+
+        return [i[1] for i in sorted_predictions]
+
+    def _collate_fn(self, batch):
+        input_ids = []
+        token_type_ids = []
+        attention_mask = []
+        label_ids = []
+        sent_id = []
+
+        # Find max length within the batch
+        max_seq_length = 0
+        for sent in batch:
+            l = len(sent['input_ids'][sent['input_ids'].nonzero()].squeeze())
+            max_seq_length = max(max_seq_length, l)
+
+        # Truncate the unnecessary paddings
+        for sent in batch:
+            for _, t in sent.items():
+                if _ != 'sent_id':
+                    sent[_] = t[:max_seq_length]
+
+        for sent in batch:
+            input_ids.append(sent['input_ids'])
+            token_type_ids.append(sent['token_type_ids'])
+            attention_mask.append(sent['attention_mask'])
+            label_ids.append(sent['label_ids'])
+            sent_id.append(sent['sent_id'])
+
+        return {
+            'input_ids': torch.stack(input_ids),
+            'token_type_ids': torch.stack(token_type_ids),
+            'attention_mask': torch.stack(attention_mask),
+            'label_ids': torch.stack(label_ids),
+            'sent_id': torch.tensor(sent_id, dtype=torch.int32),
+        }
 
 
 class BERTUnfactoredDisambiguator(Disambiguator):
@@ -85,22 +236,22 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                  features=FEATURE_SET_MAP['feats_14'], top=1,
                  scorer='uniform', tie_breaker='tag', use_gpu=True,
                  batch_size=32, ranking_cache=None):
-        self.model = {
-            'unfactored': BERTFeatureTagger(model_path)
-            }
+        self._model = {
+            'unfactored': _BERTFeatureTagger(model_path)
+        }
         self._analyzer = analyzer
-        self.features = features
+        self._features = features
         self._top = max(top, 1)
         self._scorer = _SCORING_FUNCTION_MAP.get(scorer, None)
         self._tie_breaker = tie_breaker
-        self.use_gpu = use_gpu
-        self.batch_size = batch_size
+        self._use_gpu = use_gpu
+        self._batch_size = batch_size
 
         if ranking_cache is not None:
             with open(ranking_cache, 'rb') as f:
-                self.ranking_cache = pickle.load(f)
+                self._ranking_cache = pickle.load(f)
         else:
-            self.ranking_cache = {}
+            self._ranking_cache = {}
 
         self._mle = _read_json(f'{model_path}/mle_model.json')
 
@@ -177,7 +328,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             model_path = model_config['model_path']
             features = FEATURE_SET_MAP[model_config['feature']]
             db = MorphologyDB(model_config['db_path'], 'a')
-            analyzer = Analyzer(db, backoff=model_config['backoff'],
+            analyzer = Analyzer(db,
+                                backoff=model_config['backoff'],
                                 cache_size=cache_size)
             scorer = model_config['scorer']
             tie_breaker = model_config['tie_breaker']
@@ -205,21 +357,23 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             morphosyntactic labels for the given sentences.
         """
 
-        predictions = self.model['unfactored'].predict(
-            sentences,
-            batch_size=self.batch_size)
-
+        preds = self._model['unfactored'].predict(sentences, self._batch_size)
         parsed_predictions = []
-        for sent, pred in zip(sentences, predictions):
+
+        for sent, pred in zip(sentences, preds):
             parsed_prediction = []
+
             for word, pred in zip(sent, pred):
                 d = {}
                 for feat in pred.split('__'):
                     f, v = feat.split(':')
                     d[f] = v
+
                 d['lex'] = word  # Copy the word when analyzer is not used
                 d['diac'] = word  # Copy the word when analyzer is not used
+
                 parsed_prediction.append(d)
+
             parsed_predictions.append(parsed_prediction)
 
         return parsed_predictions
@@ -236,16 +390,18 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         """
 
         parsed_predictions = []
-        model = self.model['unfactored']
-        for word, pred in zip(
-            sentence,
-            model.predict([sentence], batch_size=self.batch_size)[0]):
+        model = self._model['unfactored']
+        preds =  model.predict([sentence], self._batch_size)[0]
+
+        for word, pred in zip(sentence, preds):
             d = {}
             for feat in pred.split('__'):
                 f, v = feat.split(':')
                 d[f] = v
+
             d['lex'] = word  # Copy the word when analyzer is not used
             d['diac'] = word  # Copy the word when analyzer is not used
+
             parsed_predictions.append(d)
 
         return parsed_predictions
@@ -259,9 +415,11 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             # return the predictions from BERT
             return [ScoredAnalysis(0, bert_analysis)]
 
-        scored = [(self._scorer(a, bert_analysis, self._mle,
+        scored = [(self._scorer(a,
+                                bert_analysis,
+                                self._mle,
                                 tie_breaker=self._tie_breaker,
-                                features=self.features), a)
+                                features=self._features), a)
                   for a in analyses]
         scored.sort(key=lambda s: (-s[0], s[1]['diac']))
 
@@ -272,19 +430,20 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                                for s in scored]
         else:
             # If the max score is 0, do not divide
-            scored_analyses = [ScoredAnalysis(s[0], s[1]) for s in scored]
+            scored_analyses = [ScoredAnalysis(0, s[1]) for s in scored]
 
         return scored_analyses[:self._top]
 
     def _disambiguate_word(self, word, pred):
         # Create a key for caching scored analysis given word and bert
         # predictions
-        key = (word, tuple(pred[feat] for feat in self.features))
-        if key in self.ranking_cache:
-            scored_analyses = self.ranking_cache[key]
+        key = (word, tuple(pred[feat] for feat in self._features))
+
+        if key in self._ranking_cache:
+            scored_analyses = self._ranking_cache[key]
         else:
             scored_analyses = self._scored_analyses(word, pred)
-            self.ranking_cache[key] = scored_analyses
+            self._ranking_cache[key] = scored_analyses
 
         return DisambiguatedWord(word, scored_analyses)
 
@@ -332,8 +491,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         """
 
         predictions = self._predict_sentences(sentences)
-
         disambiguated_sentences = []
+
         for sentence, prediction in zip(sentences, predictions):
             disambiguated_sentence = [
                 self._disambiguate_word(w, p)
@@ -358,15 +517,15 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             of feature tags for each word in the given sentences
         """
 
-        if not use_analyzer:
-            return self._predict_sentences(sentences)
+        if use_analyzer:
+            tagged_sentences = []
+            for prediction in self.disambiguate_sentences(sentences):
+                tagged_sentence = [a.analyses[0].analysis for a in prediction]
+                tagged_sentences.append(tagged_sentence)
 
-        tagged_sentences = []
-        for prediction in self.disambiguate_sentences(sentences):
-            tagged_sentence = [a.analyses[0].analysis for a in prediction]
-            tagged_sentences.append(tagged_sentence)
+            return tagged_sentences
 
-        return tagged_sentences
+        return self._predict_sentences(sentences)
 
     def tag_sentence(self, sentence, use_analyzer=True):
         """Predict the morphosyntactic labels of a ssingle entence. 
@@ -384,10 +543,11 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             in the given sentence
         """
 
-        if not use_analyzer:
-            return self._predict_sentence(sentence)
+        if use_analyzer:
+            return [a.analyses[0].analysis
+                    for a in self.disambiguate(sentence)]
 
-        return [a.analyses[0].analysis for a in self.disambiguate(sentence)]
+        return self._predict_sentence(sentence)
 
     def all_feats(self):
         """Return a set of all features produced by this disambiguator.
@@ -409,152 +569,3 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         """
 
         return self._analyzer.tok_feats()
-
-
-class BERTFeatureTagger:
-    """A feature tagger based on the fine-tuned BERT architecture.
-
-        Args:
-            model_path (:obj:`str`): The path to the fine-tuned model.
-            use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
-                Defaults to True.
-    """
-
-    def __init__(self, model_path, use_gpu=True):
-        self.model = BertForTokenClassification.from_pretrained(model_path)
-        self.tokenizer = BertTokenizer.from_pretrained(model_path)
-        self.labels_map = self.model.config.id2label
-        self.use_gpu = use_gpu
-
-    def labels(self):
-        """Get the list of Morph labels returned by predictions.
-
-        Returns:
-            :obj:`list` of :obj:`str`: List of Morph labels.
-        """
-
-        return list(self.labels_map.values())
-
-    def _align_predictions(self, predictions, label_ids, sent_ids):
-        """Aligns the predictions of the model with the inputs and it takes
-        care of getting rid of the padding token.
-
-        Args:
-            predictions (:obj:`np.ndarray`): The predictions of the model
-            label_ids (:obj:`np.ndarray`): The label ids of the inputs.
-                They will always be the ids of Os since we're dealing with a
-                test dataset. Note that label_ids are also padded.
-            sent_ids (:obj:`np.ndarray`): The sent ids of the inputs.
-
-        Returns:
-            :obj:`list` of :obj:`list` of :obj:`str`: The predicted labels for
-            all the sentences in the batch
-        """
-
-        preds = np.argmax(predictions, axis=2)
-        batch_size, seq_len = preds.shape
-        preds_list = [[] for _ in range(batch_size)]
-        for i in range(batch_size):
-            for j in range(seq_len):
-                if label_ids[i, j] != nn.CrossEntropyLoss().ignore_index:
-                    preds_list[i].append(self.labels_map[preds[i][j]])
-
-        # Collating the predicted labels based on the sentence ids
-        final_preds_list = [[] for _ in range(len(set(sent_ids)))]
-        for i, id in enumerate(sent_ids):
-            id = id - sent_ids[0]
-            final_preds_list[id].extend(preds_list[i])
-
-        return final_preds_list
-
-    def predict(self, sentences, batch_size=32, max_seq_length=512):
-        """Predict the morphosyntactic labels of a list of sentences.
-
-        Args:
-            sentences (:obj:`list` of :obj:`list` of :obj:`str`): The input
-                sentences.
-            batch_size (:obj:`int`): The batch size.
-            max_seq_length (:obj:`int`): The max sequence size.
-
-        Returns:
-            :obj:`list` of :obj:`list` of :obj:`str`: The predicted
-            morphosyntactic labels for the given sentences.
-        """
-
-        if len(sentences) == 0:
-            return []
-
-        sorted_sentences = list(enumerate(sentences))
-        sorted_sentences = sorted(sorted_sentences, key=lambda x: len(x[1]))
-        sorted_sentences_idx = [i[0] for i in sorted_sentences]
-        sorted_sentences_text = [i[1] for i in sorted_sentences]
-
-        test_dataset = MorphDataset(sentences=sorted_sentences_text,
-                                    tokenizer=self.tokenizer,
-                                    labels=list(self.labels_map.values()),
-                                    max_seq_length=max_seq_length)
-
-        data_loader = DataLoader(test_dataset, batch_size=batch_size,
-                                 shuffle=False, drop_last=False,
-                                 collate_fn=self._collate_fn)
-
-        predictions = []
-        device = ('cuda' if self.use_gpu and torch.cuda.is_available()
-                  else 'cpu')
-        self.model.to(device)
-        self.model.eval()
-        with torch.no_grad():
-            for batch in data_loader:
-                batch = {k: v.to(device) for k, v in batch.items()}
-                inputs = {'input_ids': batch['input_ids'],
-                          'token_type_ids': batch['token_type_ids'],
-                          'attention_mask': batch['attention_mask']}
-
-                label_ids = batch['label_ids']
-                sent_ids = batch['sent_id']
-                logits = self.model(**inputs)[0]
-                preds = logits
-                prediction = self._align_predictions(preds.cpu().numpy(),
-                                                    label_ids.cpu().numpy(),
-                                                    sent_ids.cpu().numpy())
-                predictions.extend(prediction)
-
-        sorted_predictions_pair = zip(sorted_sentences_idx, predictions)
-        sorted_predictions = sorted(sorted_predictions_pair,
-                                    key=lambda x: x[0])
-
-        return [i[1] for i in sorted_predictions]
-
-    def _collate_fn(self, batch):
-        input_ids = []
-        token_type_ids = []
-        attention_mask = []
-        label_ids = []
-        sent_id = []
-
-        # Find max length within the batch
-        max_seq_length = 0
-        for sent in batch:
-            l = len(sent['input_ids'][sent['input_ids'].nonzero()].squeeze())
-            max_seq_length = max(max_seq_length, l)
-
-        # Truncate the unnecessary paddings
-        for sent in batch:
-            for _, t in sent.items():
-                if _ != 'sent_id':
-                    sent[_] = t[:max_seq_length]
-
-        for sent in batch:
-            input_ids.append(sent['input_ids'])
-            token_type_ids.append(sent['token_type_ids'])
-            attention_mask.append(sent['attention_mask'])
-            label_ids.append(sent['label_ids'])
-            sent_id.append(sent['sent_id'])
-
-        return {
-            'input_ids': torch.stack(input_ids),
-            'token_type_ids': torch.stack(token_type_ids),
-            'attention_mask': torch.stack(attention_mask),
-            'label_ids': torch.stack(label_ids),
-            'sent_id': torch.tensor(sent_id, dtype=torch.int32),
-        }
