@@ -218,13 +218,13 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             used in the model. Defaults to 14 features.
         top (:obj:`int`, optional): The maximum number of top analyses to
             return. Defaults to 1.
-        scorer (:obj:`str`, optional): The scoring function that matches the
-            predicted features from the model and the values in the analyses.
-            If uniform, the scoring based on the uniform weight is used.
-            Defaults to `uniform`.
+        scorer (:obj:`str`, optional): The scoring function that computes
+            matches between the predicted features from the model and the
+            output from the analyzer. If `uniform`, the scoring based on the
+            uniform weight is used. Defaults to `uniform`.
         tie_breaker (:obj:`str`, optional): The tie breaker used in the feature
-            match function. If `tag`, tie breaking based on the tag MLE and
-            factored tag MLE is used. Defaults to `tag`.
+            match function. If `tag`, tie breaking based on the unfactored tag
+            MLE and factored tag MLE is used. Defaults to `tag`.
         use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
             Defaults to True.
         batch_size (:obj:`int`, optional): The batch size. Defaults to 32.
@@ -528,7 +528,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         return self._predict_sentences(sentences)
 
     def tag_sentence(self, sentence, use_analyzer=True):
-        """Predict the morphosyntactic labels of a ssingle entence. 
+        """Predict the morphosyntactic labels of a single sentence. 
 
         Args:
             sentence (:obj:`list` of :obj:`str`): The list of space and
