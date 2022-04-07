@@ -56,3 +56,4 @@ coverage.xml
 
 # VS Code
 .vscode/
+docs/source/_build
