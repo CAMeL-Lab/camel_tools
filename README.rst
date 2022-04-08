@@ -189,7 +189,7 @@ To get started, you can follow along
 for a quick overview of the components provided by CAMeL Tools.
 
 You can find the
-`full online documentation here <https://camel-tools.readthedocs.io>`_ for both
+`full online documentation here <https://camel-tools.readthedocs.io/en/stable/>`_ for both
 the command-line tools and the Python API.
 
 Alternatively, you can build your own local copy of the documentation as
