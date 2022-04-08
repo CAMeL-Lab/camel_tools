@@ -513,4 +513,4 @@ class Catalogue:
             # Update versions file
             ct_versions[dep] = dep_pkg.version
             with CT_VERSIONS_PATH.open('w', encoding='utf-8') as versions_fp:
-                json.dump(ct_versions, versions_fp)
+                json.dump(ct_versions, versions_fp, indent=4)
