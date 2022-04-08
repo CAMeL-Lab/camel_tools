@@ -9,3 +9,4 @@ camel_tools.disambig
 
    disambig/common
    disambig/mle
+   disambig/bert
