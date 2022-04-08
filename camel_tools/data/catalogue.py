@@ -43,7 +43,7 @@ from camel_tools.data.downloader import HTTPDownloader
 
 
 HASH_BLOCK_SIZE = 65536
-CATALOGUE_URL = "https://raw.githubusercontent.com/CAMeL-Lab/camel-tools-data/main/catalogue-1.3.json"
+CATALOGUE_URL = "https://raw.githubusercontent.com/CAMeL-Lab/camel-tools-data/main/catalogue-1.4.json"
 
 
 def _get_appdatadir():
