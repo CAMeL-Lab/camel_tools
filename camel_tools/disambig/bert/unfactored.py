@@ -257,7 +257,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
 
     @staticmethod
     def pretrained(model_name='msa', top=1, use_gpu=True, batch_size=32,
-                   cache_size=10000):
+                   cache_size=10000, pretrained_cache=True):
         """Load a pre-trained model provided with camel_tools.
 
         Args:
@@ -289,7 +289,12 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                             cache_size=cache_size)
         scorer = model_config['scorer']
         tie_breaker = model_config['tie_breaker']
-        ranking_cache = model_config['ranking_cache']
+        if pretrained_cache:
+            cache_info = CATALOGUE.get_dataset('DisambigRankingCache',
+                                               model_config['ranking_cache'])
+            ranking_cache = Path(cache_info.path, 'default_cache.pickle')
+        else:
+            ranking_cache = None
 
         return BERTUnfactoredDisambiguator(model_path,
                                            analyzer,
