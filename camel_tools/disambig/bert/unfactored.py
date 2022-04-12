@@ -246,13 +246,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         self._tie_breaker = tie_breaker
         self._use_gpu = use_gpu
         self._batch_size = batch_size
-
-        if ranking_cache is not None:
-            with open(ranking_cache, 'rb') as f:
-                self._ranking_cache = pickle.load(f)
-        else:
-            self._ranking_cache = {}
-
+        self._ranking_cache = ranking_cache
         self._mle = _read_json(f'{model_path}/mle_model.json')
 
     @staticmethod
@@ -273,6 +267,9 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                 the analyzer will cache the analyses for the cache_size most
                 frequent words, otherwise no analyses will be cached.
                 Defaults to 100000.
+            pretrained_cache (:obj:`bool`, optional): The flag to use a
+                    pretrained cache that stores ranked analyses.
+                    Defaults to True.
 
         Returns:
             :obj:`BERTUnfactoredDisambiguator`: Instance with loaded
@@ -292,9 +289,9 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         if pretrained_cache:
             cache_info = CATALOGUE.get_dataset('DisambigRankingCache',
                                                model_config['ranking_cache'])
-            ranking_cache = Path(cache_info.path, 'default_cache.pickle')
-        else:
-            ranking_cache = None
+            cache_path = Path(cache_info.path, 'default_cache.pickle')
+            with open(cache_path, 'rb') as f:
+                ranking_cache = pickle.load(f)
 
         return BERTUnfactoredDisambiguator(model_path,
                                            analyzer,
@@ -307,7 +304,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                                            ranking_cache=ranking_cache)
 
     def pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
-                               cache_size=10000):
+                               cache_size=10000, pretrained_cache=True):
             """Load a pre-trained model from a config file.
 
             Args:
@@ -323,6 +320,9 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                     the analyzer will cache the analyses for the cache_size
                     most frequent words, otherwise no analyses will be cached.
                     Defaults to 100000.
+                pretrained_cache (:obj:`bool`, optional): The flag to use a
+                    pretrained cache that stores ranked analyses.
+                    Defaults to True.
 
             Returns:
                 :obj:`BERTUnfactoredDisambiguator`: Instance with loaded
@@ -338,7 +338,10 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                                 cache_size=cache_size)
             scorer = model_config['scorer']
             tie_breaker = model_config['tie_breaker']
-            ranking_cache = model_config['ranking_cache']
+            if pretrained_cache:
+                cache_path = model_config['ranking_cache']
+                with open(cache_path, 'rb') as f:
+                    ranking_cache = pickle.load(f)
 
             return BERTUnfactoredDisambiguator(model_path,
                                                analyzer,
