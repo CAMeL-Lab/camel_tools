@@ -292,6 +292,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             cache_path = Path(cache_info.path, 'default_cache.pickle')
             with open(cache_path, 'rb') as f:
                 ranking_cache = pickle.load(f)
+        else:
+            ranking_cache = {}
 
         return BERTUnfactoredDisambiguator(model_path,
                                            analyzer,
@@ -342,6 +344,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                 cache_path = model_config['ranking_cache']
                 with open(cache_path, 'rb') as f:
                     ranking_cache = pickle.load(f)
+            else:
+                ranking_cache = {}
 
             return BERTUnfactoredDisambiguator(model_path,
                                                analyzer,
