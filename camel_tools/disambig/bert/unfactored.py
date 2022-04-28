@@ -229,8 +229,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
             Defaults to True.
         batch_size (:obj:`int`, optional): The batch size. Defaults to 32.
-        ranking_cache (:obj:`LFUCache`, optional): The cache dictionary of
-            pre-computed scored analyses. Defaults to `None`.
+        ranking_cache (:obj:`LFUCache`, optional): The cache of pre-computed
+            scored analyses. Defaults to `None`.
         ranking_cache_size (:obj:`int`, optional): The number of unique word
             disambiguations to cache. If 0, no ranked analyses will be cached.
             The cache uses a least-frequently-used eviction policy.
@@ -289,6 +289,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             ranking_cache_size (:obj:`int`, optional): The number of unique
                 word disambiguations to cache. If 0, no ranked analyses will be
                 cached. The cache uses a least-frequently-used eviction policy.
+                This argument is ignored if pretrained_cache is True.
                 Defaults to 100000.
 
         Returns:
@@ -328,7 +329,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             ranking_cache_size=ranking_cache_size)
 
     @staticmethod
-    def pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
+    def _pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
                                cache_size=10000, pretrained_cache=True,
                                ranking_cache_size=100000):
         """Load a pre-trained model from a config file.
@@ -351,6 +352,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             ranking_cache_size (:obj:`int`, optional): The number of unique
                 word disambiguations to cache. If 0, no ranked analyses will be
                 cached. The cache uses a least-frequently-used eviction policy.
+                This argument is ignored if pretrained_cache is True.
                 Defaults to 100000.
 
         Returns:
