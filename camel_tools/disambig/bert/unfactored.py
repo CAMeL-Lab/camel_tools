@@ -27,6 +27,7 @@ import json
 from pathlib import Path
 import pickle
 
+from cachetools import LFUCache
 import numpy as np
 import torch
 import torch.nn as nn
@@ -228,14 +229,18 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
             Defaults to True.
         batch_size (:obj:`int`, optional): The batch size. Defaults to 32.
-        ranking_cache (:obj:`dict`, optional): The cache dictionary of
-            pre-computed scored analyses. Defaults to `None`.
+        ranking_cache (:obj:`LFUCache`, optional): The cache of pre-computed
+            scored analyses. Defaults to `None`.
+        ranking_cache_size (:obj:`int`, optional): The number of unique word
+            disambiguations to cache. If 0, no ranked analyses will be cached.
+            The cache uses a least-frequently-used eviction policy.
+            Defaults to 100000.
     """
 
     def __init__(self, model_path, analyzer,
                  features=FEATURE_SET_MAP['feats_14'], top=1,
                  scorer='uniform', tie_breaker='tag', use_gpu=True,
-                 batch_size=32, ranking_cache=None):
+                 batch_size=32, ranking_cache=None, ranking_cache_size=100000):
         self._model = {
             'unfactored': _BERTFeatureTagger(model_path)
         }
@@ -246,18 +251,23 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         self._tie_breaker = tie_breaker
         self._use_gpu = use_gpu
         self._batch_size = batch_size
-
-        if ranking_cache is not None:
-            with open(ranking_cache, 'rb') as f:
-                self._ranking_cache = pickle.load(f)
-        else:
-            self._ranking_cache = {}
-
         self._mle = _read_json(f'{model_path}/mle_model.json')
+
+        if ranking_cache is None:
+            if ranking_cache_size <= 0:
+                self._ranking_cache = None
+                self._disambiguate_word_fn = self._disambiguate_word
+            else:
+                self._ranking_cache = LFUCache(ranking_cache_size)
+                self._disambiguate_word_fn = self._disambiguate_word_cached
+        else:
+            self._ranking_cache = ranking_cache
+            self._disambiguate_word_fn = self._disambiguate_word_cached
 
     @staticmethod
     def pretrained(model_name='msa', top=1, use_gpu=True, batch_size=32,
-                   cache_size=10000):
+                   cache_size=10000, pretrained_cache=True,
+                   ranking_cache_size=100000):
         """Load a pre-trained model provided with camel_tools.
 
         Args:
@@ -272,6 +282,14 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             cache_size (:obj:`int`, optional): If greater than zero, then
                 the analyzer will cache the analyses for the cache_size most
                 frequent words, otherwise no analyses will be cached.
+                Defaults to 100000.
+            pretrained_cache (:obj:`bool`, optional): The flag to use a
+                    pretrained cache that stores ranked analyses.
+                    Defaults to True.
+            ranking_cache_size (:obj:`int`, optional): The number of unique
+                word disambiguations to cache. If 0, no ranked analyses will be
+                cached. The cache uses a least-frequently-used eviction policy.
+                This argument is ignored if pretrained_cache is True.
                 Defaults to 100000.
 
         Returns:
@@ -289,61 +307,86 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                             cache_size=cache_size)
         scorer = model_config['scorer']
         tie_breaker = model_config['tie_breaker']
-        ranking_cache = model_config['ranking_cache']
+        if pretrained_cache:
+            cache_info = CATALOGUE.get_dataset('DisambigRankingCache',
+                                               model_config['ranking_cache'])
+            cache_path = Path(cache_info.path, 'default_cache.pickle')
+            with open(cache_path, 'rb') as f:
+                ranking_cache = pickle.load(f)
+        else:
+            ranking_cache = None
 
-        return BERTUnfactoredDisambiguator(model_path,
-                                           analyzer,
-                                           top=top,
-                                           features=features,
-                                           scorer=scorer,
-                                           tie_breaker=tie_breaker,
-                                           use_gpu=use_gpu,
-                                           batch_size=batch_size,
-                                           ranking_cache=ranking_cache)
+        return BERTUnfactoredDisambiguator(
+            model_path,
+            analyzer,
+            top=top,
+            features=features,
+            scorer=scorer,
+            tie_breaker=tie_breaker,
+            use_gpu=use_gpu,
+            batch_size=batch_size,
+            ranking_cache=ranking_cache,
+            ranking_cache_size=ranking_cache_size)
 
-    def pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
-                               cache_size=10000):
-            """Load a pre-trained model from a config file.
+    @staticmethod
+    def _pretrained_from_config(config, top=1, use_gpu=True, batch_size=32,
+                               cache_size=10000, pretrained_cache=True,
+                               ranking_cache_size=100000):
+        """Load a pre-trained model from a config file.
 
-            Args:
-                config (:obj:`str`): Config file that defines the model
-                    details. Defaults to `None`.
-                top (:obj:`int`, optional): The maximum number of top analyses
-                    to return. Defaults to 1.
-                use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
-                    Defaults to True.
-                batch_size (:obj:`int`, optional): The batch size.
-                    Defaults to 32.
-                cache_size (:obj:`int`, optional): If greater than zero, then
-                    the analyzer will cache the analyses for the cache_size
-                    most frequent words, otherwise no analyses will be cached.
-                    Defaults to 100000.
+        Args:
+            config (:obj:`str`): Config file that defines the model details.
+                Defaults to `None`.
+            top (:obj:`int`, optional): The maximum number of top analyses
+                to return. Defaults to 1.
+            use_gpu (:obj:`bool`, optional): The flag to use a GPU or not.
+                Defaults to True.
+            batch_size (:obj:`int`, optional): The batch size. Defaults to 32.
+            cache_size (:obj:`int`, optional): If greater than zero, then
+                the analyzer will cache the analyses for the cache_size
+                most frequent words, otherwise no analyses will be cached.
+                Defaults to 100000.
+            pretrained_cache (:obj:`bool`, optional): The flag to use a
+                pretrained cache that stores ranked analyses.
+                Defaults to True.
+            ranking_cache_size (:obj:`int`, optional): The number of unique
+                word disambiguations to cache. If 0, no ranked analyses will be
+                cached. The cache uses a least-frequently-used eviction policy.
+                This argument is ignored if pretrained_cache is True.
+                Defaults to 100000.
 
-            Returns:
-                :obj:`BERTUnfactoredDisambiguator`: Instance with loaded
-                pre-trained model.
-            """
+        Returns:
+            :obj:`BERTUnfactoredDisambiguator`: Instance with loaded
+            pre-trained model.
+        """
 
-            model_config = _read_json(config)
-            model_path = model_config['model_path']
-            features = FEATURE_SET_MAP[model_config['feature']]
-            db = MorphologyDB(model_config['db_path'], 'a')
-            analyzer = Analyzer(db,
-                                backoff=model_config['backoff'],
-                                cache_size=cache_size)
-            scorer = model_config['scorer']
-            tie_breaker = model_config['tie_breaker']
-            ranking_cache = model_config['ranking_cache']
+        model_config = _read_json(config)
+        model_path = model_config['model_path']
+        features = FEATURE_SET_MAP[model_config['feature']]
+        db = MorphologyDB(model_config['db_path'], 'a')
+        analyzer = Analyzer(db,
+                            backoff=model_config['backoff'],
+                            cache_size=cache_size)
+        scorer = model_config['scorer']
+        tie_breaker = model_config['tie_breaker']
+        if pretrained_cache:
+            cache_path = model_config['ranking_cache']
+            with open(cache_path, 'rb') as f:
+                ranking_cache = pickle.load(f)
+        else:
+            ranking_cache = None
 
-            return BERTUnfactoredDisambiguator(model_path,
-                                               analyzer,
-                                               top=top,
-                                               features=features,
-                                               scorer=scorer,
-                                               tie_breaker=tie_breaker,
-                                               use_gpu=use_gpu,
-                                               batch_size=batch_size,
-                                               ranking_cache=ranking_cache)
+        return BERTUnfactoredDisambiguator(
+            model_path,
+            analyzer,
+            top=top,
+            features=features,
+            scorer=scorer,
+            tie_breaker=tie_breaker,
+            use_gpu=use_gpu,
+            batch_size=batch_size,
+            ranking_cache=ranking_cache,
+            ranking_cache_size=ranking_cache_size)
 
     def _predict_sentences(self, sentences):
         """Predict the morphosyntactic labels of a list of sentences.
@@ -435,6 +478,11 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         return scored_analyses[:self._top]
 
     def _disambiguate_word(self, word, pred):
+        scored_analyses = self._scored_analyses(word, pred)
+
+        return DisambiguatedWord(word, scored_analyses)
+
+    def _disambiguate_word_cached(self, word, pred):
         # Create a key for caching scored analysis given word and bert
         # predictions
         key = (word, tuple(pred[feat] for feat in self._features))
@@ -475,7 +523,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
 
         predictions = self._predict_sentence(sentence)
 
-        return [self._disambiguate_word(w, p)
+        return [self._disambiguate_word_fn(w, p)
                 for (w, p) in zip(sentence, predictions)]
 
     def disambiguate_sentences(self, sentences):
@@ -495,7 +543,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
 
         for sentence, prediction in zip(sentences, predictions):
             disambiguated_sentence = [
-                self._disambiguate_word(w, p)
+                self._disambiguate_word_fn(w, p)
                 for (w, p) in zip(sentence, prediction)
             ]
             disambiguated_sentences.append(disambiguated_sentence)
