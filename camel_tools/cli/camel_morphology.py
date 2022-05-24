@@ -91,7 +91,7 @@ __version__ = camelt.__version__
 _ANALYSIS_BACKOFFS = frozenset(('NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
                                 'ADD_PROP'))
 _GENARATION_BACKOFFS = frozenset(('NONE', 'REINFLECT'))
-_BUILTIN_DBS = frozenset([db.name for db in MorphologyDB.list_builtin_dbs()])
+_BUILTIN_DBS = frozenset(MorphologyDB.list_builtin_dbs())
 _DEFAULT_DB = 'calima-msa-r13'
 
 _DIAC_RE = re.compile(r'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + r']')
