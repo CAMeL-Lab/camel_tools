@@ -103,6 +103,7 @@ setup(
               'camel_tools.utils',
               'camel_tools.morphology',
               'camel_tools.disambig',
+              'camel_tools.disambig.bert',
               'camel_tools.tokenizers',
               'camel_tools.tagger',
               'camel_tools.data',
