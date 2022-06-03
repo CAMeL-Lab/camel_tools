@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+    main:
+        build: .
+        image: ksaa_nlp/camel_tools
+        volumes:
+            - type: bind
+              source: $HOME/.camel_tools/data
+              target: /root/.camel_tools/data
+            - type: bind
+              source: .
+              target: /opt/service
+        ports:
+            - "${PORT}:${PORT}"
+        environment:
+            - PORT=${PORT}
+            - FLASK_APP=${FLASK_APP}
+            - FLASK_ENV=${FLASK_ENV}
+        tty: true
+        entrypoint: flask run -h 0.0.0.0 -p ${PORT}

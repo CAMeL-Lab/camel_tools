@@ -7,8 +7,8 @@ WORKDIR /opt/service/
 
 FROM builder as worker
 RUN --mount=type=cache,target=/root/.cache/pip pip install --no-cache-dir .
-RUN --mount=type=cache,target=/root/.cache/camel_data camel_data -i all
+# RUN --mount=type=cache,target=/root/.cache/camel_data camel_data -i all
 
 FROM worker as final
 
-RUN python server.py
+ENTRYPOINT ["flask", "run"]

@@ -81,6 +81,7 @@ INSTALL_REQUIRES = [
     'emoji',
     'pyrsistent',
     'tabulate',
+    'flask',
     'tqdm'
 ]
 
