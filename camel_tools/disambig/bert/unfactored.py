@@ -464,7 +464,12 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                                 tie_breaker=self._tie_breaker,
                                 features=self._features), a)
                   for a in analyses]
-        scored.sort(key=lambda s: (-s[0], s[1]['diac']))
+
+        if 'lex_logprob' in scored[0][1]:
+            scored.sort(key=lambda s: (-s[0], s[1]['diac'],
+                                       -s[1]['lex_logprob']))
+        else:
+            scored.sort(key=lambda s: (-s[0], s[1]['diac']))
 
         max_score = max(s[0] for s in scored)
 
