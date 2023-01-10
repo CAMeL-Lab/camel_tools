@@ -49,10 +49,6 @@ def lemmaList():
 
 @app.route("/lemmaOfLists", methods=['POST'])
 def lemmeOfLists():
-    class Obj():
-        def __init__(self, lex, word):   # constructor function using self
-            self.lex = lex  # variable using self.
-            self.word = word  # variable using self
 
     lemmaArray = []
     content = request.get_json()
