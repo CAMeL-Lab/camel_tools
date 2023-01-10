@@ -35,16 +35,37 @@ def lemma():
     return jsonify({"text": disam('lex', sentence), "type": 'lex'})
 
 
+# @app.route("/lemmaList", methods=['POST'])
+# def lemmaList():
+#     lemmaArray = []
+#     content = request.get_json()
+#     sentence = content['text'].split()
+#     print("sentence", sentence)
+#     analyses = analyzer.analyze(sentence[0])
+#     for analysis in analyses:
+#         lemmaArray.append(analysis["lex"])
+#     return jsonify({"text": list(set(lemmaArray)), "type": 'lex'})
+
+
 @app.route("/lemmaList", methods=['POST'])
 def lemmaList():
+    class Obj():
+        def __init__(self, lex, word):   # constructor function using self
+            self.lex = lex  # variable using self.
+            self.word = None  # variable using self
+
     lemmaArray = []
     content = request.get_json()
-    sentence = content['text'].split()
-    print("sentence", sentence)
-    analyses = analyzer.analyze(sentence[0])
-    for analysis in analyses:
-        lemmaArray.append(analysis["lex"])
-    return jsonify({"text": list(set(lemmaArray)), "type": 'lex'})
+    words = content['text'].split(',')
+
+    for word in words:
+
+        analyses = analyzer.analyze(word)
+        for analysis in analyses:
+            dict = {'lex': analysis["lex"], 'word': word}
+            lemmaArray.append(dict)
+
+    return jsonify({"text": list(lemmaArray), "type": 'lex'})
 
 
 @app.route("/morph", methods=['POST'])
