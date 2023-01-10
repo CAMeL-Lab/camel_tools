@@ -1,9 +1,9 @@
 version: "3"
 
 services:
-  camel_tools:
+  main:
     build: .
-    image: .
+    image: ksaa_nlp/camel_tools
     volumes:
       - type: bind
         source: $HOME/.camel_tools/data
