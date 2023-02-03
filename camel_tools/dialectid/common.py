@@ -30,14 +30,8 @@ as well as Modern Standard Arabic. It is based on the system described by
 """
 
 
-from camel_tools.dialectid.common import DIDPred, DialectIdError
-from camel_tools.dialectid.common import UntrainedModelError
-from camel_tools.dialectid.common import InvalidDataSetError
-from camel_tools.dialectid.common import PretrainedModelError
-from camel_tools.dialectid.model6 import DIDModel6
-from camel_tools.dialectid.model26 import DIDModel26
+import collections
 
-DialectIdentifier = DIDModel26
 
 __all__ = [
     'DIDPred',
@@ -45,7 +39,54 @@ __all__ = [
     'UntrainedModelError',
     'InvalidDataSetError',
     'PretrainedModelError',
-    'DialectIdentifier',
-    'DIDModel26',
-    'DIDModel6',
 ]
+
+
+class DIDPred(collections.namedtuple('DIDPred', ['top', 'scores'])):
+    """A named tuple containing dialect ID prediction results.
+
+    Attributes:
+        top (:obj:`str`): The dialect label with the highest score. See
+            :ref:`dialectid_labels` for a list of output labels.
+        scores (:obj:`dict`): A dictionary mapping each dialect label to it's
+            computed score.
+    """
+
+
+class DialectIdError(Exception):
+    """Base class for all CAMeL Dialect ID errors.
+    """
+
+    def __init__(self, msg):
+        self.msg = msg
+
+    def __str__(self):
+        return str(self.msg)
+
+
+class UntrainedModelError(DialectIdError):
+    """Error thrown when attempting to use an untrained DialectIdentifier
+    instance.
+    """
+
+    def __init__(self, msg):
+        DialectIdError.__init__(self, msg)
+
+
+class InvalidDataSetError(DialectIdError, ValueError):
+    """Error thrown when an invalid data set name is given to eval.
+    """
+
+    def __init__(self, dataset):
+        msg = ('Invalid data set name {}. Valid names are "DEV" and '
+               '"TEST"'.format(repr(dataset)))
+        DialectIdError.__init__(self, msg)
+
+
+class PretrainedModelError(DialectIdError):
+    """Error thrown when attempting to load a pretrained model provided with
+    camel-tools.
+    """
+
+    def __init__(self, msg):
+        DialectIdError.__init__(self, msg)

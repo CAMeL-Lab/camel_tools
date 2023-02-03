@@ -24,6 +24,7 @@
 
 
 from functools import reduce
+import sys
 
 
 __all__ = [
@@ -34,6 +35,7 @@ __all__ = [
     'score_analysis_uniform'
 ]
 
+_BACKOFF_PENALTY = float(f'1e-{sys.float_info.dig}')
 
 # 10 features described in Khalifa et al., 2020
 # Morphological Analysis and Disambiguation for Gulf Arabic: The Interplay
@@ -81,6 +83,9 @@ def score_analysis_uniform(analysis, reference, mle_model=None,
     
     if analysis['source'] == 'backoff':
         score -= 1e-15
+
+    if analysis['source'] == 'backoff':
+        score -= _BACKOFF_PENALTY
 
     return score
 

@@ -81,7 +81,8 @@ INSTALL_REQUIRES = [
     'emoji',
     'pyrsistent',
     'tabulate',
-    'tqdm'
+    'tqdm',
+    'muddler',
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [
