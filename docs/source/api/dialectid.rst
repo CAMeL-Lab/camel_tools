@@ -14,27 +14,18 @@ Classes
 .. autoclass:: camel_tools.dialectid.DIDPred
    :members:
 .. autoclass:: camel_tools.dialectid.DialectIdentifier
+.. autoclass:: camel_tools.dialectid.DIDModel26
+   :members: predict, pretrained
+.. autoclass:: camel_tools.dialectid.DIDModel6
    :members: predict, pretrained
 .. autoclass:: camel_tools.dialectid.DialectIdError
    :members:
 .. autoclass:: camel_tools.dialectid.UntrainedModelError
    :members:
-..
-  .. autoclass:: camel_tools.dialectid.InvalidDataSetError
+.. autoclass:: camel_tools.dialectid.InvalidDataSetError
     :members:
 .. autoclass:: camel_tools.dialectid.PretrainedModelError
    :members:
-
-
-Functions
----------
-
-.. autofunction:: camel_tools.dialectid.label_to_city
-.. autofunction:: camel_tools.dialectid.label_to_country
-.. autofunction:: camel_tools.dialectid.label_to_region
-.. autofunction:: camel_tools.dialectid.label_city_pairs
-.. autofunction:: camel_tools.dialectid.label_country_pairs
-.. autofunction:: camel_tools.dialectid.label_region_pairs
 
 
 .. _dialectid_labels:
