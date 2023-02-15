@@ -83,6 +83,7 @@ INSTALL_REQUIRES = [
     'tabulate',
     'flask',
     'tqdm'
+    'muddler'
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [
