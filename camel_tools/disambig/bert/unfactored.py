@@ -42,6 +42,7 @@ from camel_tools.disambig.common import ScoredAnalysis
 from camel_tools.disambig.bert._bert_morph_dataset import MorphDataset
 from camel_tools.disambig.score_function import score_analysis_uniform
 from camel_tools.disambig.score_function import FEATURE_SET_MAP
+from camel_tools.utils.dediac import dediac_ar
 
 
 _SCORING_FUNCTION_MAP = {
@@ -52,6 +53,17 @@ _SCORING_FUNCTION_MAP = {
 def _read_json(f_path):
     with open(f_path) as f:
         return json.load(f)
+
+
+def _dediac_sentence(sentence):
+    dediaced_sentence = []
+    for word in sentence:
+        dediaced = dediac_ar(word)
+        if len(dediaced) > 0:
+            dediaced_sentence.append(dediaced)
+        else:
+            dediaced_sentence.append(word)
+    return dediaced_sentence
 
 
 class _BERTFeatureTagger:
@@ -521,7 +533,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             disambiguated analyses for the given sentence.
         """
 
-        predictions = self._predict_sentence(sentence)
+        dediaced_sentence = _dediac_sentence(sentence)
+        predictions = self._predict_sentence(dediaced_sentence)
 
         return [self._disambiguate_word_fn(w, p)
                 for (w, p) in zip(sentence, predictions)]
@@ -538,7 +551,8 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             disambiguated analyses for the given sentences.
         """
 
-        predictions = self._predict_sentences(sentences)
+        dediaced_sentences = [_dediac_sentence(s) for s in sentences]
+        predictions = self._predict_sentences(dediaced_sentences)
         disambiguated_sentences = []
 
         for sentence, prediction in zip(sentences, predictions):
