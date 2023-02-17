@@ -301,17 +301,17 @@ Other Features
 * **pos_logprob** - POS log probability
 
   * **None** - No log probability
-  * The natural log (base 10) of the probability of the associated **pos** value
+  * The log (base 10) of the probability of the associated **pos** value
     in the database.
 
 * **lex_logprob** - Lemma log probability
 
   * **None** - No log probability
-  * The natural log (base 10) of the probability of the associated **lex** value
+  * The log (base 10) of the probability of the associated **lex** value
     in the database.
 
 * **pos_lex_logprob** - POS-lemma log probability
 
   * **None** - No log probability
-  * The natural log (base 10) of the probability of the associated
+  * The log (base 10) of the probability of the associated
     **pos**\ -\ **lex** pair values in the database.
