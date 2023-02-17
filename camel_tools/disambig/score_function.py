@@ -80,9 +80,6 @@ def score_analysis_uniform(analysis, reference, mle_model=None,
 
     if tie_breaker == 'tag':
         score += _tie_breaker_tag(analysis, reference, mle_model)
-    
-    if analysis['source'] == 'backoff':
-        score -= 1e-15
 
     if analysis['source'] == 'backoff':
         score -= _BACKOFF_PENALTY
