@@ -204,9 +204,17 @@ class MLEDisambiguator(Disambiguator):
 
             scored_analyses = [ScoredAnalysis(p / max_prob, a)
                                for a, p in zip(analyses, probabilities)]
-            scored_analyses.sort(key=lambda w: (-w.score,
-                                                len(w.analysis['bw']),
-                                                w.analysis['diac']))
+
+            scored_analyses = [
+                ScoredAnalysis(
+                    p / max_prob,                   # score
+                    a,                              # analysis
+                    a['diac'],                      # diac
+                    a.get('pos_lex_logprob', -99),  # pos_lex_logprob
+                    a.get('lex_logprob', -99),      # lex_logprob
+                ) for a, p in zip(analyses, probabilities)]
+
+            scored_analyses.sort()
 
             return scored_analyses[0:self._top]
         

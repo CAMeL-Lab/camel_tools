@@ -32,16 +32,48 @@ from abc import ABC, abstractmethod
 from collections import namedtuple
 
 
-class ScoredAnalysis(namedtuple('ScoredAnalysis', ['score', 'analysis'])):
+class ScoredAnalysis(namedtuple('ScoredAnalysis',
+                                [
+                                    'score',
+                                    'analysis',
+                                    'diac',
+                                    'pos_lex_logprob',
+                                    'lex_logprob'
+                                ])):
     """A named tuple containing an analysis and its score.
 
     Attributes:
-        score (:obj:`float`): The score of a given analysis.
+        score (:obj:`float`): The overall score of the analysis.
 
         analysis (:obj:`dict`): The analysis dictionary.
-            See :doc:`/reference/camel_morphology_features` for more information on
-            features and their values.
+            See :doc:`/reference/camel_morphology_features` for more
+            information on features and their values.
+
+        diac (:obj:`str`): The diactrized form of the associated analysis.
+            Used for tie-breaking equally scored analyses.
+
+        pos_lex_log_prob (:obj:`float`): The log (base 10) of the probability
+            of the associated pos-lex pair values.
+            Used for tie-breaking equally scored analyses.
+
+        lex_log_prob (:obj:`float`): The log (base 10) of the probability of
+            the associated lex value.
+            Used for tie-breaking equally scored analyses.
     """
+
+    def __lt__(self, other):
+        if self.score > other.score:
+            return True
+        elif self.score == other.score:
+            if self.pos_lex_logprob > other.pos_lex_logprob:
+                return True
+            elif self.pos_lex_logprob == other.pos_lex_logprob:
+                if self.lex_logprob > other.lex_logprob:
+                    return True
+                elif self.lex_logprob == other.lex_logprob:
+                    return self.diac < other.diac
+
+        return False
 
 
 class DisambiguatedWord(namedtuple('DisambiguatedWord', ['word', 'analyses'])):
