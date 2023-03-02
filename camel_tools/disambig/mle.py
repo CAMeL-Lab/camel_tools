@@ -188,8 +188,17 @@ class MLEDisambiguator(Disambiguator):
 
             max_score = max([s[0] for s in scored])
 
-            scored_analyses = [ScoredAnalysis(s[0] / max_score, s[1])
-                               for s in scored]
+            if max_score == 0:
+                max_score = 1
+
+            scored_analyses = [
+                ScoredAnalysis(
+                    s / max_score,                  # score
+                    a,                              # analysis
+                    a['diac'],                      # diac
+                    a.get('pos_lex_logprob', -99),  # pos_lex_logprob
+                    a.get('lex_logprob', -99),      # lex_logprob
+                ) for s, a in scored]
 
             return scored_analyses[0:self._top]
 
@@ -201,9 +210,6 @@ class MLEDisambiguator(Disambiguator):
 
             probabilities = [10 ** _get_pos_lex_logprob(a) for a in analyses]
             max_prob = max(probabilities)
-
-            scored_analyses = [ScoredAnalysis(p / max_prob, a)
-                               for a, p in zip(analyses, probabilities)]
 
             scored_analyses = [
                 ScoredAnalysis(

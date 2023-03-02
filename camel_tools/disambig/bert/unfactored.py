@@ -468,7 +468,12 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         if len(analyses) == 0:
             # If the word is not found in the analyzer,
             # return the predictions from BERT
-            return [ScoredAnalysis(0, bert_analysis)]
+            return [ScoredAnalysis(0,                      # score
+                                   bert_analysis,          # analysis
+                                   bert_analysis['diac'],  # diac
+                                   -99,                    # pos_lex_logprob
+                                   -99,                    # lex_logprob
+                                   )]
 
         scored = [(self._scorer(a,
                                 bert_analysis,
