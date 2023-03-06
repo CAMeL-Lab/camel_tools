@@ -470,7 +470,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             # return the predictions from BERT
             return [ScoredAnalysis(0,                      # score
                                    bert_analysis,          # analysis
-                                   bert_analysis['diac'],  # diac
+                                   word_dd,                # diac
                                    -99,                    # pos_lex_logprob
                                    -99,                    # lex_logprob
                                    )]
