@@ -40,7 +40,7 @@ at `New York University Abu Dhabi <http://nyuad.nyu.edu/>`_.
 Installation
 ------------
 
-You will need Python 3.7 and above (64-bit) as well as
+You will need Python 3.7 - 3.10 (64-bit) as well as
 `the Rust compiler <https://www.rust-lang.org/learn/get-started>`_ installed.
 
 Linux/macOS
