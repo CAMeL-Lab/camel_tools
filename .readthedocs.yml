@@ -5,6 +5,7 @@ build:
   apt_packages:
     - cmake
     - libboost-dev
+    - libeigen3-dev
   tools:
     python: "3.7"
 
