@@ -498,12 +498,12 @@ class BERTUnfactoredDisambiguator(Disambiguator):
 
         scored_analyses.sort()
 
-        return scored_analyses[:self._top]
+        return scored_analyses
 
     def _disambiguate_word(self, word, pred):
         scored_analyses = self._scored_analyses(word, pred)
 
-        return DisambiguatedWord(word, scored_analyses)
+        return DisambiguatedWord(word, scored_analyses[:self._top])
 
     def _disambiguate_word_cached(self, word, pred):
         # Create a key for caching scored analysis given word and bert
@@ -516,7 +516,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
             scored_analyses = self._scored_analyses(word, pred)
             self._ranking_cache[key] = scored_analyses
 
-        return DisambiguatedWord(word, scored_analyses)
+        return DisambiguatedWord(word, scored_analyses[:self._top])
 
     def disambiguate_word(self, sentence, word_ndx):
         """Disambiguates a single word of a sentence.
