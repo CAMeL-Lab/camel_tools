@@ -50,6 +50,7 @@ You will need to install some additional dependencies on Linux and macOS.
 Primarily CMake, and Boost.
 
 On Ubuntu/Debian you can install these dependencies by running:
+
 .. code-block:: bash
 
    sudo apt-get install cmake libboost-all-dev
