@@ -254,7 +254,7 @@ class BERTUnfactoredDisambiguator(Disambiguator):
                  scorer='uniform', tie_breaker='tag', use_gpu=True,
                  batch_size=32, ranking_cache=None, ranking_cache_size=100000):
         self._model = {
-            'unfactored': _BERTFeatureTagger(model_path)
+            'unfactored': _BERTFeatureTagger(model_path, use_gpu=use_gpu)
         }
         self._analyzer = analyzer
         self._features = features
