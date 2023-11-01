@@ -1,2 +1,65 @@
 [build-system]
 requires = ["setuptools", "wheel"]
+
+[tool.poetry]
+name = "camel_tools"
+version = "0.1.0"
+description = "A suite of Arabic natural language processing tools developed by the CAMeL Lab at New York University Abu Dhabi."
+readme = "README.rst"
+authors = [
+    "Ossama W. Obeid <oobeid@nyu.edu>",
+]
+maintainers = [
+    "Ossama W. Obeid <oobeid@nyu.edu>",
+]
+license = "MIT"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",           
+    "Intended Audience :: Information Technpology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: Arabic",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Text Processing",
+    "Topic :: Text Processing :: Linguistic",
+]
+homepage = "https://github.com/CAMeL-Lab/CAMeL_Tools"
+
+[tool.poetry.scripts]
+camel_transliterate = "camel_tools.cli.camel_transliterate:main"
+camel_arclean = "camel_tools.cli.camel_arclean:main"
+camel_morphology = "camel_tools.cli.camel_morphology:main"
+camel_dediac = "camel_tools.cli.camel_dediac:main"
+camel_word_tokenize = "camel_tools.cli.camel_word_tokenize:main"
+camel_diac = "camel_tools.cli.camel_diac:main"
+camel_data = "camel_tools.cli.camel_data:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "*"
+scipy = "*"
+pandas = "*"
+scikit-learn = "*"
+dill = "*"
+torch = ">=1.3"
+transformers = ">=3.0.2"
+editdistance = "*"
+requests = "*"
+emoji = "*"
+pyrsistent = "*"
+tabulate = "*"
+tqdm = "*"
+muddler = "*"
+camel-kenlm = {version = ">=2023.3.17.2", markers = "sys_platform != 'win32'"}
