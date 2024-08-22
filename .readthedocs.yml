@@ -7,7 +7,7 @@ build:
     - libboost-all-dev
     - libeigen3-dev
   tools:
-    python: "3.7"
+    python: "3.8"
 
 sphinx:
   configuration: docs/source/conf.py

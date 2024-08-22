@@ -4,7 +4,7 @@ Getting Started
 Installation
 ------------
 
-You will need Python 3.7 - 3.11 (64-bit) as well as
+You will need Python 3.8 - 3.11 (64-bit) as well as
 `the Rust compiler <https://www.rust-lang.org/learn/get-started>`_ installed.
 
 Linux/macOS
