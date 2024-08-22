@@ -42,7 +42,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx',
-    'recommonmark'
+    'myst_parser'
 ]
 
 intersphinx_mapping = {
