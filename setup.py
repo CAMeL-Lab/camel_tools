@@ -47,10 +47,10 @@ CLASSIFIERS = [
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
     'Topic :: Scientific/Engineering',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
     'Topic :: Scientific/Engineering :: Information Analysis',
@@ -70,13 +70,13 @@ INSTALL_REQUIRES = [
     'six',
     'docopt',
     'cachetools',
-    'numpy',
+    'numpy<2',
     'scipy',
     'pandas',
     'scikit-learn',
     'dill',
-    'torch>=1.3',
-    'transformers>=3.0.2',
+    'torch>=2.0',
+    'transformers>=4.0,<4.44.0',
     'editdistance',
     'requests',
     'emoji',
@@ -87,7 +87,7 @@ INSTALL_REQUIRES = [
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [
-    'camel-kenlm >= 2023.3.17.2 ; platform_system!="Windows"'
+    'camel-kenlm >= 2024.5.6 ; platform_system!="Windows"'
 ]
 
 if sys.platform != 'win32':
@@ -140,5 +140,5 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
-    python_requires='>=3.7.0, <3.11'
+    python_requires='>=3.8.0, <3.12'
 )
