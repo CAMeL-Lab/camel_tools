@@ -19,7 +19,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'camel_tools'
-copyright = '2018-2022, New York University Abu Dhabi'
+copyright = '2018-2024, New York University Abu Dhabi'
 author = 'Ossama W. Obeid'
 
 # The short X.Y version
