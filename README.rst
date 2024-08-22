@@ -221,7 +221,7 @@ follows:
 .. code-block:: bash
 
    # Install dependencies
-   pip install sphinx recommonmark sphinx-rtd-theme
+   pip install sphinx myst-parser sphinx-rtd-theme
 
    # Go to docs subdirectory
    cd docs
