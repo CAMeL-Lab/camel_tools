@@ -110,7 +110,7 @@ Naming Conventions
 Python 2 and 3 Support
 ----------------------
 
-Ideally, CAMeL Tools should be able to run on Python 3.8 - 3.11.
+Ideally, CAMeL Tools should be able to run on Python 3.8 - 3.12.
 `Here's a nice cheat-sheet <http://python-future.org/compatible_idioms.html>`_ of
 how to do that.
 
@@ -135,10 +135,11 @@ versions used for testing by running the following commands:
    pyenv install 3.9.19
    pyenv install 3.10.14
    pyenv install 3.11.9
+   pyenv install 3.12.4
 
    # This generates a .python-version file that helps pyenv automatically determine
    # which python versions are associated with the application.
-   pyenv local 3.8.19 3.9.19 3.10.14 3.11.9
+   pyenv local 3.8.19 3.9.19 3.10.14 3.11.9 3.12.4
 
 You also need to install tox:
 
