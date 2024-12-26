@@ -225,7 +225,13 @@ class MLEDisambiguator(Disambiguator):
             return scored_analyses[0:self._top]
         
     def _scored_analyses_cached(self, word_dd):
-        return self._cache.get(word_dd, self._scored_analyses(word_dd))
+        if word_dd in self._cache:
+            scored_analyses = self._cache[word_dd]
+        else:
+            scored_analyses = self._scored_analyses(word_dd)
+            self._cache[word_dd] = scored_analyses
+
+        return scored_analyses
 
     def _disambiguate_word(self, word):
         word_dd = dediac_ar(word)
