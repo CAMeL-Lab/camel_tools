@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2024 New York University Abu Dhabi
+# Copyright 2018-2025 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +27,22 @@ different encodings. See :doc:`/reference/encoding_schemes` for more
 information on encodings.
 """
 
-from __future__ import absolute_import
+# from __future__ import absolute_import
 
 import re
 
 from camel_tools.utils.charsets import AR_DIAC_CHARSET, BW_DIAC_CHARSET
 from camel_tools.utils.charsets import SAFEBW_DIAC_CHARSET, XMLBW_DIAC_CHARSET
 from camel_tools.utils.charsets import HSB_DIAC_CHARSET
+
+
+__all__ = (
+    'dediac_bw',
+    'dediac_safebw',
+    'dediac_xmlbw',
+    'dediac_hsb',
+    'dediac_ar',
+)
 
 
 _DIAC_RE_BW = re.compile(u'[' +
@@ -53,7 +62,7 @@ _DIAC_RE_AR = re.compile(u'[' +
                          u']')
 
 
-def dediac_bw(s):
+def dediac_bw(s: str) -> str:
     """Dediacritize Buckwalter encoded string.
 
     Args:
@@ -66,7 +75,7 @@ def dediac_bw(s):
     return _DIAC_RE_BW.sub(u'', s)
 
 
-def dediac_safebw(s):
+def dediac_safebw(s: str) -> str:
     """Dediacritize Safe Buckwalter encoded string.
 
     Args:
@@ -79,7 +88,7 @@ def dediac_safebw(s):
     return _DIAC_RE_SAFEBW.sub(u'', s)
 
 
-def dediac_xmlbw(s):
+def dediac_xmlbw(s: str) -> str:
     """Dediacritize XML Buckwalter encoded string.
 
     Args:
@@ -92,7 +101,7 @@ def dediac_xmlbw(s):
     return _DIAC_RE_XMLBW.sub(u'', s)
 
 
-def dediac_hsb(s):
+def dediac_hsb(s: str) -> str:
     """Dediacritize Habash-Soudi-Buckwalter encoded string.
 
     Args:
@@ -105,7 +114,7 @@ def dediac_hsb(s):
     return _DIAC_RE_HSB.sub(u'', s)
 
 
-def dediac_ar(s):
+def dediac_ar(s: str) -> str:
     """Dediacritize Unicode Arabic string.
 
     Args:

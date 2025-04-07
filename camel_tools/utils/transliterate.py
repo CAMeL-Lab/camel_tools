@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2024 New York University Abu Dhabi
+# Copyright 2018-2025 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -35,31 +35,31 @@ import six
 from camel_tools.utils.charmap import CharMapper
 
 
+__all__ = ('Transliterator',)
+
+
 _WHITESPACE_RE = re.compile(r'\s')
 
 
 class Transliterator(object):
-    """A class for transliterating text using a
-    :obj:`~camel_tools.utils.charmap.CharMapper`. This class adds the extra
-    utility of marking individual tokens to not be transliterated. It assumes
-    that tokens are whitespace seperated.
+    """A class for transliterating text using a :obj:`~camel_tools.utils.charmap.CharMapper`.
+    This class adds the extra utility of marking individual tokens to not be transliterated.
+    It assumes that tokens are whitespace seperated.
 
     Args:
-        mapper (:obj:`~camel_tools.utils.charmap.CharMapper`): The
-            :obj:`~camel_tools.utils.charmap.CharMapper` instance to be used
-            for transliteration.
-        marker (:obj:`str`, optional): A string that is prefixed to all
-            tokens that shouldn't be transliterated. Should not contain any
-            whitespace characters. Defaults to  '@@IGNORE@@'.
+        mapper: The :obj:`~camel_tools.utils.charmap.CharMapper` instance to be used for
+            transliteration.
+        marker: A string that is prefixed to all tokens that shouldn't be transliterated.
+            Should not contain any whitespace characters.
+            Defaults to  '@@IGNORE@@'.
 
     Raises:
-        :obj:`TypeError`: If mapper is not a
-            :obj:`~camel_tools.utils.charmap.CharMapper` instance or marker is
-            not a string.
+        :obj:`TypeError`: If mapper is not a :obj:`~camel_tools.utils.charmap.CharMapper` instance
+            or marker is not a string.
         :obj:`ValueError`: If marker contains whitespace or is an empty string.
     """
 
-    def __init__(self, mapper, marker='@@IGNORE@@'):
+    def __init__(self, mapper: CharMapper, marker: str='@@IGNORE@@'):
         self._mapper = mapper
 
         if not isinstance(mapper, CharMapper):
@@ -80,26 +80,25 @@ class Transliterator(object):
             re.UNICODE | re.MULTILINE
         )
 
-    def transliterate(self, s, strip_markers=False, ignore_markers=False):
+    def transliterate(self, s: str, strip_markers: bool=False, ignore_markers: bool=False) -> str:
         """Transliterate a given string.
 
         Args:
-            s (:obj:`str`): The string to transliterate.
-            strip_markers (:obj:`bool`, optional): Output is stripped of
-                markers if `True`, otherwise markers are kept in the output.
+            s: The string to transliterate.
+            strip_markers: Output is stripped of markers if `True`, otherwise markers are kept in
+                the output.
                 Defaults to `False`.
-            ignore_markers (:obj:`bool`, optional): If set to `True`, all text,
-                including marked tokens are transliterated as well excluding
-                the markers. If you would like to transliterate the markers as
-                well, use :obj:`~camel_tools.utils.charmap.CharMapper`
-                directly instead. Defaults to `False`.
+            ignore_markers: If set to `True`, all text, including marked tokens are transliterated
+                as well excluding the markers.
+                If you would like to transliterate the markers as well, use
+                :obj:`~camel_tools.utils.charmap.CharMapper` directly instead.
+                Defaults to `False`.
 
         Returns:
-            :obj:`str`: The transliteration of **s** with the exception of
-            marked words.
+            The transliteration of **s** with the exception of marked words.
         """
 
-        buff = deque()
+        buff: deque[str] = deque()
 
         splits = self._markerre.split(s)
         for spl in splits:

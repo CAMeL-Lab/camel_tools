@@ -1,53 +1,87 @@
 camel_tools.utils.charsets
 ==========================
 
-This module provides a comprehensive list of character sets useful for Arabic
-text processing.
-
-The character sets available in this module are:
-
-
-* :obj:`UNICODE_PUNCT_CHARSET` - A set of all Unicode characters marked as
-  punctuation.
-* :obj:`UNICODE_SYMBOL_CHARSET` - A set of all Unicode characters marked as
-  symbols.
-* :obj:`UNICODE_PUNCT_SYMBOL_CHARSET` - A set of all Unicode characters marked as
-  either punctuation or symbol.
-* :obj:`EMOJI_SINGLECHAR_CHARSET` - A set of all single-character emojis.
-* :obj:`EMOJI_MULTICHAR_CHARSET` - A set of all multi-character emojis.
-* :obj:`EMOJI_ALL_CHARSET` - A set of all emojis (union of 
-  :obj:`EMOJI_SINGLECHAR_CHARSET` and :obj:`EMOJI_MULTICHAR_CHARSET`).
-* :obj:`AR_CHARSET` - A set of all Unicode Arabic letters and diacritics.
-* :obj:`AR_LETTERS_CHARSET` - A set of all Unicode Arabic letters.
-* :obj:`AR_DIAC_CHARSET` - A set of all Unicode Arabic diacritics.
-* :obj:`BW_CHARSET` - A set of all Arabic letters and diacritics in Buckwalter
-  encoding.
-* :obj:`BW_LETTERS_CHARSET` - A set of all Arabic letters in Buckwalter
-  encoding.
-* :obj:`BW_DIAC_CHARSET` - A set of all Arabic diacritics in Buckwalter
-  encoding.
-* :obj:`SAFEBW_CHARSET` - A set of all Arabic letters and diacritics in Safe
-  Buckwalter encoding.
-* :obj:`SAFEBW_LETTERS_CHARSET` - A set of all Arabic letters in Safe
-  Buckwalter encoding.
-* :obj:`SAFEBW_DIAC_CHARSET` - A set of all Arabic diacritics in Safe Buckwalter
-  encoding.
-* :obj:`XMLBW_CHARSET` - A set of all Arabic letters and diacritics in XML
-  Buckwalter encoding.
-* :obj:`XMLBW_LETTERS_CHARSET` - A set of all Arabic letters in XML Buckwalter
-  encoding.
-* :obj:`XMLBW_DIAC_CHARSET` - A set of all Arabic diacritics in XML Buckwalter
-  encoding.
-* :obj:`HSB_CHARSET` - A set of all Arabic letters and diacritics in
-  Habash-Soudi-Buckwalter encoding.
-* :obj:`HSB_LETTERS_CHARSET` - A set of all Arabic letters in
-  Habash-Soudi-Buckwalter encoding.
-* :obj:`HSB_DIAC_CHARSET` - A set of all Arabic diacritics in
-  Habash-Soudi-Buckwalter encoding.
-
+This module provides a comprehensive list of character sets useful for Arabic text processing.
 All character sets are implemented as Python
-`frozensets <https://docs.python.org/3.6/library/stdtypes.html#frozenset>`_
+`frozensets <https://docs.python.org/3.9/library/stdtypes.html#frozenset>`_
 and therefore support all frozenset operations.
+
+
+.. autodata:: camel_tools.utils.charsets.UNICODE_PUNCT_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.UNICODE_SYMBOL_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.UNICODE_LETTER_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.UNICODE_MARK_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.UNICODE_NUMBER_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.UNICODE_PUNCT_SYMBOL_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.UNICODE_LETTER_MARK_NUMBER_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.EMOJI_ALL_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.EMOJI_SINGLECHAR_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.EMOJI_MULTICHAR_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.AR_LETTERS_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.AR_DIAC_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.AR_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.BW_LETTERS_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.BW_DIAC_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.BW_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.SAFEBW_LETTERS_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.SAFEBW_DIAC_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.SAFEBW_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.XMLBW_LETTERS_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.XMLBW_DIAC_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.XMLBW_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.HSB_LETTERS_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.HSB_DIAC_CHARSET
+   :no-value:
+
+.. autodata:: camel_tools.utils.charsets.HSB_CHARSET
+   :no-value:
+
 
 Using Character Sets
 --------------------

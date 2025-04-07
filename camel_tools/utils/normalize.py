@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2024 New York University Abu Dhabi
+# Copyright 2018-2025 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,26 @@ import unicodedata
 from camel_tools.utils.charmap import CharMapper
 
 
+__all__ = (
+    'normalize_unicode',
+    'normalize_alef_maksura_bw',
+    'normalize_alef_maksura_safebw',
+    'normalize_alef_maksura_xmlbw',
+    'normalize_alef_maksura_hsb',
+    'normalize_alef_maksura_ar',
+    'normalize_teh_marbuta_bw',
+    'normalize_teh_marbuta_safebw',
+    'normalize_teh_marbuta_xmlbw',
+    'normalize_teh_marbuta_hsb',
+    'normalize_teh_marbuta_ar',
+    'normalize_alef_bw',
+    'normalize_alef_safebw',
+    'normalize_alef_xmlbw',
+    'normalize_alef_hsb',
+    'normalize_alef_ar',
+)
+
+
 _ALEF_NORMALIZE_BW_RE = re.compile(u'[<>{|]')
 _ALEF_NORMALIZE_SAFEBW_RE = re.compile(u'[IOLM]')
 _ALEF_NORMALIZE_XMLBW_RE = re.compile(u'[IO{|]')
@@ -45,7 +65,7 @@ _UNICODE_CHAR_FIX = CharMapper({
                     })
 
 
-def normalize_unicode(s, compatibility=True):
+def normalize_unicode(s: str, compatibility: bool=True) -> str:
     """Normalize Unicode strings into their canonically composed form or
     (i.e. characters that can be written as a combination of unicode characters
     are converted to their single character form).
@@ -69,7 +89,7 @@ def normalize_unicode(s, compatibility=True):
     return unicodedata.normalize('NFC', s)
 
 
-def normalize_alef_maksura_bw(s):
+def normalize_alef_maksura_bw(s: str) -> str:
     """Normalize all occurences of Alef Maksura characters to a Yeh character
     in a Buckwalter encoded string.
 
@@ -83,7 +103,7 @@ def normalize_alef_maksura_bw(s):
     return s.replace(u'Y', u'y')
 
 
-def normalize_alef_maksura_safebw(s):
+def normalize_alef_maksura_safebw(s: str) -> str:
     """Normalize all occurences of Alef Maksura characters to a Yeh character
     in a Safe Buckwalter encoded string.
 
@@ -97,7 +117,7 @@ def normalize_alef_maksura_safebw(s):
     return s.replace(u'Y', u'y')
 
 
-def normalize_alef_maksura_xmlbw(s):
+def normalize_alef_maksura_xmlbw(s: str) -> str:
     """Normalize all occurences of Alef Maksura characters to a Yeh character
     in a XML Buckwalter encoded string.
 
@@ -111,7 +131,7 @@ def normalize_alef_maksura_xmlbw(s):
     return s.replace(u'Y', u'y')
 
 
-def normalize_alef_maksura_hsb(s):
+def normalize_alef_maksura_hsb(s: str) -> str:
     """Normalize all occurences of Alef Maksura characters to a Yeh character
     in a Habash-Soudi-Buckwalter encoded string.
 
@@ -125,7 +145,7 @@ def normalize_alef_maksura_hsb(s):
     return s.replace(u'\u00fd', u'y')
 
 
-def normalize_alef_maksura_ar(s):
+def normalize_alef_maksura_ar(s: str) -> str:
     """Normalize all occurences of Alef Maksura characters to a Yeh character
     in an Arabic string.
 
@@ -139,7 +159,7 @@ def normalize_alef_maksura_ar(s):
     return s.replace(u'\u0649', u'\u064a')
 
 
-def normalize_teh_marbuta_bw(s):
+def normalize_teh_marbuta_bw(s: str) -> str:
     """Normalize all occurences of Teh Marbuta characters to a Heh character
     in a Buckwalter encoded string.
 
@@ -153,7 +173,7 @@ def normalize_teh_marbuta_bw(s):
     return s.replace(u'p', u'h')
 
 
-def normalize_teh_marbuta_safebw(s):
+def normalize_teh_marbuta_safebw(s: str) -> str:
     """Normalize all occurences of Teh Marbuta characters to a Heh character
     in a Safe Buckwalter encoded string.
 
@@ -167,7 +187,7 @@ def normalize_teh_marbuta_safebw(s):
     return s.replace(u'p', u'h')
 
 
-def normalize_teh_marbuta_xmlbw(s):
+def normalize_teh_marbuta_xmlbw(s: str) -> str:
     """Normalize all occurences of Teh Marbuta characters to a Heh character
     in a XML Buckwalter encoded string.
 
@@ -181,7 +201,7 @@ def normalize_teh_marbuta_xmlbw(s):
     return s.replace(u'p', u'h')
 
 
-def normalize_teh_marbuta_hsb(s):
+def normalize_teh_marbuta_hsb(s: str) -> str:
     """Normalize all occurences of Teh Marbuta characters to a Heh character
     in a Habash-Soudi-Buckwalter encoded string.
 
@@ -195,7 +215,7 @@ def normalize_teh_marbuta_hsb(s):
     return s.replace(u'\u0127', u'h')
 
 
-def normalize_teh_marbuta_ar(s):
+def normalize_teh_marbuta_ar(s: str) -> str:
     """Normalize all occurences of Teh Marbuta characters to a Heh character
     in an Arabic string.
 
@@ -209,7 +229,7 @@ def normalize_teh_marbuta_ar(s):
     return s.replace(u'\u0629', u'\u0647')
 
 
-def normalize_alef_bw(s):
+def normalize_alef_bw(s: str) -> str:
     """Normalize various Alef variations to plain a Alef character in a
     Buckwalter encoded string.
 
@@ -223,7 +243,7 @@ def normalize_alef_bw(s):
     return _ALEF_NORMALIZE_BW_RE.sub(u'A', s)
 
 
-def normalize_alef_safebw(s):
+def normalize_alef_safebw(s: str) -> str:
     """Normalize various Alef variations to plain a Alef character in a
     Safe Buckwalter encoded string.
 
@@ -237,7 +257,7 @@ def normalize_alef_safebw(s):
     return _ALEF_NORMALIZE_SAFEBW_RE.sub(u'A', s)
 
 
-def normalize_alef_xmlbw(s):
+def normalize_alef_xmlbw(s: str) -> str:
     """Normalize various Alef variations to plain a Alef character in a
     XML Buckwalter encoded string.
 
@@ -251,7 +271,7 @@ def normalize_alef_xmlbw(s):
     return _ALEF_NORMALIZE_XMLBW_RE.sub(u'A', s)
 
 
-def normalize_alef_hsb(s):
+def normalize_alef_hsb(s: str) -> str:
     """Normalize various Alef variations to plain a Alef character in a
     Habash-Soudi-Buckwalter encoded string.
 
@@ -265,7 +285,7 @@ def normalize_alef_hsb(s):
     return _ALEF_NORMALIZE_HSB_RE.sub(u'A', s)
 
 
-def normalize_alef_ar(s):
+def normalize_alef_ar(s: str) -> str:
     """Normalize various Alef variations to plain a Alef character in an
     Arabic string.
 

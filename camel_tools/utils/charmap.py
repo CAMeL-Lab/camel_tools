@@ -2,7 +2,7 @@
 
 # MIT License
 #
-# Copyright 2018-2024 New York University Abu Dhabi
+# Copyright 2018-2025 New York University Abu Dhabi
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Contains the CharMapper class (for mapping characters in a Unicode string to
-other strings) and custom exceptions raised by CharMapper.
+
+"""Contains the CharMapper class (for mapping characters in a Unicode string to other strings) and
+custom exceptions raised by CharMapper.
 """
+
 
 from __future__ import absolute_import
 
@@ -36,9 +38,16 @@ import json
 from .stringutils import isunicode
 
 
+__all__ = (
+    'InvalidCharMapKeyError',
+    'BuiltinCharMapNotFoundError',
+    'CharMapper',
+)
+
+
 class InvalidCharMapKeyError(ValueError):
-    """Exception raised when an invalid key is found in a charmap used to
-    initialize :obj:`CharMapper`.
+    """Exception raised when an invalid key is found in a charmap used to initialize
+    :obj:`CharMapper`.
     """
 
     def __init__(self, key, message):
@@ -56,8 +65,8 @@ class InvalidCharMapKeyError(ValueError):
 
 
 class BuiltinCharMapNotFoundError(ValueError):
-    """Exception raised when a specified map name passed to
-    :func:`CharMapper.builtin_mapper` is not in the list of builtin maps.
+    """Exception raised when a specified map name passed to :func:`CharMapper.builtin_mapper` is
+    not in the list of builtin maps.
     """
 
     def __init__(self, map_name, message):
@@ -78,19 +87,18 @@ class CharMapper(object):
     """A class for mapping characters in a Unicode string to other strings.
 
     Args:
-        charmap (:obj:`dict`): A dictionary or any other dictionary-like
-            obeject (implementing collections.Mapping) mapping characters
-            or range of characters to a string. Keys in the dictionary
-            should be Unicode strings of length 1 or 3. Strings of length 1
-            indicate a single character to be mapped, while strings of
-            length 3 indicate a range. Range strings should have the format
-            'a-b' where is the starting character in the range and 'b' is
-            the last character in the range (inclusive). 'b' should have a
+        charmap: A dictionary or any other dictionary-like object (implementing collections.Mapping)
+            mapping characters or range of characters to a string.
+            Keys in the dictionary should be Unicode strings of length 1 or 3.
+            Strings of length 1 indicate a single character to be mapped, while strings of length 3
+            indicate a range.
+            Range strings should have the format 'a-b' where is the starting character in the range
+            and 'b' is the last character in the range (inclusive). 'b' should have a
             strictly larger ordinal number than 'a'. Dictionary values
             should be either strings or `None`, where `None` indicates that
             characters are mapped to themselves. Use an empty string to
             indicate deletion.
-        default (:obj:`str`, optional): The default value to map characters
+        default: The default value to map characters
             not in **charmap** to. `None` indicates that characters map to
             themselves. Defaults to `None`.
 
@@ -128,19 +136,21 @@ class CharMapper(object):
     ))
 
     @staticmethod
-    def _expand_char_map(charmap):
-        """Creates a new dictionary from charmap where character ranges are
-        expanded and given their own dictionary entry.
+    def _expand_char_map(charmap: Mapping[str, str]) -> dict[str, str]:
+        """Creates a new dictionary from charmap where character ranges are expanded and given their
+        own dictionary entry.
 
         Args:
-            charmap (:obj:`dict`): The character map to be expanded.
+            charmap: The character map to be expanded.
+
+        Returns:
+            A dictionary with the expanded charmap ranges.
 
         Raises:
-            :obj:`InvalidCharMapKeyError`: If a key in **charmap** is not a
-                Unicode string containing either a single character or a valid
-                character range.
-            :obj:`TypeError`: If a value for a key in **charmap** is neither
-                `None` nor a Unicode string.
+            :obj:`InvalidCharMapKeyError`: If a key in **charmap** is not a Unicode string
+                containing either a single character or a valid character range.
+            :obj:`TypeError`: If a value for a key in **charmap** is neither `None` nor a Unicode
+                string.
         """
 
         # TODO: Implement a space efficient character map data structure
@@ -188,7 +198,7 @@ class CharMapper(object):
 
         return new_map
 
-    def __init__(self, charmap, default=None):
+    def __init__(self, charmap: Mapping[str, str], default=None):
         """Class constructor.
         """
 
@@ -211,16 +221,16 @@ class CharMapper(object):
         """
         return self.map_string(s)
 
+    # TODO: Make fpath be any path-like object.
     @staticmethod
-    def mapper_from_json(fpath):
+    def mapper_from_json(fpath: str) -> 'CharMapper':
         """Creates a :obj:`CharMapper` instance from a JSON file.
 
         Args:
-            fpath (:obj:`str`): Path to JSON file.
+            fpath: Path to JSON file.
 
         Returns:
-            :obj:`CharMapper`: A new :obj:`CharMapper` instance generated from
-            given JSON file.
+            A new :obj:`CharMapper` instance generated from given JSON file.
 
         Raises:
             :obj:`InvalidCharMapKeyError`: If a key in charmap is not a Unicode
@@ -242,19 +252,17 @@ class CharMapper(object):
         )
 
     @staticmethod
-    def builtin_mapper(map_name):
+    def builtin_mapper(map_name: str) -> 'CharMapper':
         """Creates a :obj:`CharMapper` instance from built-in mappings.
 
         Args:
-            map_name (:obj:`str`): Name of built-in map.
+            map_name: Name of built-in map.
 
         Returns:
-            :obj:`CharMapper`: A new :obj:`CharMapper` instance of built-in
-            map.
+            A new :obj:`CharMapper` instance of built-in map.
 
         Raises:
-            :obj:`BuiltinCharMapNotFound`: If `map_name` is not in the list of
-                built-in maps.
+            :obj:`BuiltinCharMapNotFound`: If `map_name` is not in the list of built-in maps.
         """
 
         if map_name not in CharMapper.BUILTIN_CHARMAPS:
@@ -277,15 +285,15 @@ class CharMapper(object):
 
         return CharMapper.mapper_from_json(map_path)
 
-    def map_string(self, s):
+    def map_string(self, s: str) -> str:
         """Maps each character in a given string to its corresponding value in
         the charmap.
 
         Args:
-            s (:obj:`str`): A Unicode string to be mapped.
+            s: A Unicode string to be mapped.
 
         Returns:
-            :obj:`str`: A new Unicode string with the charmap applied.
+            A new Unicode string with the charmap applied.
 
         Raises:
             :obj:`TypeError`: If s is not a Unicode string.
@@ -296,7 +304,7 @@ class CharMapper(object):
                 'Expected Unicode string as input, got {} instead.'
             ).format(type(s)))
 
-        buff = deque()
+        buff: deque[str] = deque()
 
         for char in s:
             transliteration = self._charmap.get(char, self._default)
