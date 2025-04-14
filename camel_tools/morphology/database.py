@@ -68,7 +68,7 @@ class MorphologyDB:
             builtin databases.
         """
 
-        return list(CATALOGUE.get_component('MorphologyDB').datasets)
+        return list(CATALOGUE.get_component('MorphologyDB').datasets.values())
 
     @staticmethod
     def builtin_db(db_name=None, flags='a'):

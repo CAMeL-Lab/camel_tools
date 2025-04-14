@@ -113,8 +113,10 @@ def main():
 
         if arguments['--list']:
             for db_entry in _BUILTIN_DBS:
-                print("{}   {}".format(db_entry.name.ljust(8),
-                                       db_entry.description))
+                # TODO: Print descriptions when they are added to catalogue.
+                # print("{}   {}".format(db_entry.name.ljust(8),
+                #                        db_entry.description))
+                print(db_entry.name)
             sys.exit(0)
 
         db_name = None
