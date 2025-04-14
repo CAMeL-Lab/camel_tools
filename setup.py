@@ -88,7 +88,7 @@ INSTALL_REQUIRES = [
 ]
 
 INSTALL_REQUIRES_NOT_WINDOWS = [
-    'camel-kenlm >= 2024.5.6 ; platform_system!="Windows"'
+    'camel-kenlm >= 2025.4.8 ; platform_system!="Windows"'
 ]
 
 if sys.platform != 'win32':
