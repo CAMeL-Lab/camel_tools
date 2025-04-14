@@ -38,7 +38,8 @@ from camel_tools.morphology.errors import DatabaseParseError
 from camel_tools.data import CATALOGUE
 
 
-MorphologyDBFlags = namedtuple('MorphologyDBFlags', ['analysis', 'generation',
+MorphologyDBFlags = namedtuple('MorphologyDBFlags', ['analysis',
+                                                     'generation',
                                                      'reinflection'])
 
 

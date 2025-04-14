@@ -91,7 +91,7 @@ __version__ = camelt.__version__
 _ANALYSIS_BACKOFFS = frozenset(('NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL',
                                 'ADD_PROP'))
 _GENARATION_BACKOFFS = frozenset(('NONE', 'REINFLECT'))
-_BUILTIN_DBS = frozenset(MorphologyDB.list_builtin_dbs())
+_BUILTIN_DBS = frozenset([d.name for d in MorphologyDB.list_builtin_dbs()])
 _DEFAULT_DB = 'calima-msa-r13'
 
 _DIAC_RE = re.compile(r'[' + re.escape(u''.join(AR_DIAC_CHARSET)) + r']')
@@ -143,8 +143,10 @@ def _open_files(finpath, foutpath):
 
 
 def _list_dbs():
-    for db in sorted(MorphologyDB.list_builtin_dbs()):
-        sys.stdout.write('{}\t{}\n'.format(db.name, db.version))
+    for db in sorted(MorphologyDB.list_builtin_dbs(), key=lambda d: d.name):
+        # TODO: Print versions and descriptions when they are added to catalogue.
+        # sys.stdout.write('{}\t{}\n'.format(db.name, db.version))
+        sys.stdout.write('{}\n'.format(db.name))
 
 
 def _serialize_analyses(fout, word, analyses, order, generation=False):
