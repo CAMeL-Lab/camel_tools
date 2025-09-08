@@ -70,7 +70,7 @@ INSTALL_REQUIRES = [
     'future',
     'six',
     'docopt',
-    'cachetools',
+    'cachetools<=6.0.0',
     'numpy<2',
     'scipy',
     'pandas',
