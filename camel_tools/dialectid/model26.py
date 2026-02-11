@@ -92,7 +92,7 @@ _LABEL_TO_CITY_MAP = {
     'DAM': 'Damascus',
     'DOH': 'Doha',
     'FES': 'Fes',
-    'JED': 'Jeddha',
+    'JED': 'Jeddah',
     'JER': 'Jerusalem',
     'KHA': 'Khartoum',
     'MOS': 'Mosul',
@@ -101,7 +101,7 @@ _LABEL_TO_CITY_MAP = {
     'RAB': 'Rabat',
     'RIY': 'Riyadh',
     'SAL': 'Salt',
-    'SAN': 'Sana\'a',
+    'SAN': 'Sanaa',
     'SFX': 'Sfax',
     'TRI': 'Tripoli',
     'TUN': 'Tunis'
