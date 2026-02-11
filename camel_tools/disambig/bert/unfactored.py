@@ -63,6 +63,7 @@ def _dediac_sentence(sentence):
             dediaced_sentence.append(dediaced)
         else:
             dediaced_sentence.append(word)
+
     return dediaced_sentence
 
 
@@ -89,6 +90,7 @@ class _BERTFeatureTagger:
         """
         num_labels = len(self._labels_map)
         labels = [self._labels_map[i] for i in range(num_labels)]
+
         return labels
 
     def _align_predictions(self, predictions, label_ids, sent_ids):
