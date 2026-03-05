@@ -78,6 +78,7 @@ INSTALL_REQUIRES = [
     'numpy>=2.0.0',
     'pandas',
     'pyrsistent',
+    'regex',
     'requests',
     'scikit-learn',
     'scipy',

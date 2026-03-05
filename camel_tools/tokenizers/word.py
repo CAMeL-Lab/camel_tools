@@ -23,40 +23,98 @@
 # SOFTWARE.
 
 
-"""This module contains utilities for word-boundary tokenization.
-"""
+"""This module contains utilities for word-boundary tokenization."""
 
 
-import re
+import regex as re
 
-from camel_tools.utils.charsets import UNICODE_PUNCT_SYMBOL_CHARSET
-from camel_tools.utils.charsets import UNICODE_LETTER_MARK_NUMBER_CHARSET
-from camel_tools.utils.charsets import UNICODE_LETTER_CHARSET
-from camel_tools.utils.charsets import UNICODE_MARK_CHARSET
-from camel_tools.utils.charsets import UNICODE_NUMBER_CHARSET
-from camel_tools.utils.charsets import EMOJI_MULTICHAR_CHARSET
+from camel_tools.utils.charsets import EMOJI_ALL_CHARSET, UNICODE_PUNCT_SYMBOL_CHARSET
 
 
-__all__ = ['simple_word_tokenize']
+__all__ = ["simple_word_tokenize"]
 
 
-_ALL_PUNCT_SYMBOLS = (UNICODE_PUNCT_SYMBOL_CHARSET | EMOJI_MULTICHAR_CHARSET)
-_ALL_PUNCT_SYMBOLS = [re.escape(x) for x in _ALL_PUNCT_SYMBOLS]
-_ALL_PUNCT_SYMBOLS = sorted(_ALL_PUNCT_SYMBOLS, key=len, reverse=True)
+_SYMBOLS_ALL = frozenset() | UNICODE_PUNCT_SYMBOL_CHARSET | EMOJI_ALL_CHARSET
 
-_ALL_NUMBER = u''.join(UNICODE_NUMBER_CHARSET)
-_ALL_LETTER_MARK = u''.join((UNICODE_LETTER_CHARSET | UNICODE_MARK_CHARSET))
-_ALL_LETTER_MARK_NUMBER = u''.join(UNICODE_LETTER_MARK_NUMBER_CHARSET)
+# Matches possible Emoji sequences, symbols and punctuation.
+# Based on the regex suggested in UTS #51: https://www.unicode.org/reports/tr51/#EBNF_and_Regex
+_SYMBOLS_RE = re.compile(
+    # TODO: Refactor this using verbose mode.
+    r"(?:(?:\p{RI}\p{RI}|\p{Emoji}(?:\p{EMod}|\uFE0F\u20E3?|[\U000E0020-\U000E007E]+\U000E007F)?(?:\u200D(?:\p{RI}\p{RI}|\p{Emoji}(?:\p{EMod}|\uFE0F\u20E3?|[\U000E0020-\U000E007E]+\U000E007F)?))*)|(?:[0-9*#]\u20e3)|\p{S}|\p{P})"
+)
 
-_TOKENIZE_RE = re.compile(u'|'.join(_ALL_PUNCT_SYMBOLS) + r'|[' +
-                          re.escape(_ALL_LETTER_MARK_NUMBER) + r']+')
-_TOKENIZE_NUMBER_RE = re.compile(u'|'.join(_ALL_PUNCT_SYMBOLS) + r'|[' +
-                                 re.escape(_ALL_NUMBER) + r']+|[' +
-                                 re.escape(_ALL_LETTER_MARK) + r']+')
+_DIGITS_RE = re.compile(r"\d+")
 
 
-def simple_word_tokenize(sentence, split_digits=False):
-    """Tokenizes a sentence by splitting on whitespace and seperating
+def _simple_word_tokenize(s: str):
+    tokens = []
+
+    for word in s.split():
+        word_len = len(word)
+        curr_ndx = 0
+        curr_start = 0
+
+        while curr_ndx < word_len:
+            # Check if the current start is an emoji or symbol
+            symbol_match = _SYMBOLS_RE.match(word, pos=curr_ndx)
+            if symbol_match is not None:
+                match_str = symbol_match[0]
+                if match_str in _SYMBOLS_ALL:
+                    if curr_ndx != curr_start:
+                        tokens.append(word[curr_start:curr_ndx])
+                    tokens.append(match_str)
+                    curr_ndx = curr_start = symbol_match.end()
+                    continue
+
+            curr_ndx += 1
+
+        last = word[curr_start:curr_ndx]
+        if len(last):
+            tokens.append(word[curr_start:])
+
+    return tokens
+
+
+def _simple_word_tokenize_split_digit(s: str):
+    tokens = []
+
+    for word in s.split():
+        word_len = len(word)
+        curr_ndx = 0
+        curr_start = 0
+
+        while curr_ndx < word_len:
+            # Check if the current start is an emoji or symbol
+            symbol_match = _SYMBOLS_RE.match(word, pos=curr_ndx)
+            if symbol_match is not None:
+                match_str = symbol_match[0]
+                if match_str in _SYMBOLS_ALL:
+                    if curr_ndx != curr_start:
+                        tokens.append(word[curr_start:curr_ndx])
+                    tokens.append(match_str)
+                    curr_ndx = curr_start = symbol_match.end()
+                    continue
+
+            # Check if we are at a digit sequence
+            digit_match = _DIGITS_RE.match(word, pos=curr_ndx)
+            if digit_match is not None:
+                if curr_ndx != curr_start:
+                    tokens.append(word[curr_start:curr_ndx])
+                tokens.append(digit_match[0])
+                curr_ndx = curr_start = digit_match.end()
+                continue
+
+            curr_ndx += 1
+
+        last = word[curr_start:curr_ndx]
+        if len(last):
+            tokens.append(word[curr_start:])
+
+    return tokens
+
+
+def simple_word_tokenize(s, split_digits = False):
+    """Tokenizes a sentence by splitting on whitespace and separating
     punctuation. The resulting tokens are either alpha-numeric words, single
     punctuation/symbol/emoji characters, or multi-character emoji sequences.
     This function is language agnostic and splits all characters marked as
@@ -77,6 +135,6 @@ def simple_word_tokenize(sentence, split_digits=False):
     """
 
     if split_digits:
-        return _TOKENIZE_NUMBER_RE.findall(sentence)
-    else:
-        return _TOKENIZE_RE.findall(sentence)
+        return _simple_word_tokenize_split_digit(s)
+
+    return _simple_word_tokenize(s)
