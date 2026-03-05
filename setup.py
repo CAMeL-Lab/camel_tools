@@ -24,8 +24,8 @@
 
 
 import os
+
 from setuptools import setup
-import sys
 
 
 VERSION_FILE = os.path.join(os.path.dirname(__file__),
@@ -47,11 +47,11 @@ CLASSIFIERS = [
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
     'Topic :: Scientific/Engineering',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
     'Topic :: Scientific/Engineering :: Information Analysis',
@@ -67,32 +67,26 @@ with open(README_FILE, 'r', encoding='utf-8') as version_fp:
     LONG_DESCRIPTION = version_fp.read().strip()
 
 INSTALL_REQUIRES = [
-    'future',
-    'six',
+    'cachetools>=6.0.0',
+    'camel-kenlm>=2026.02.07; platform_system!="Windows"',
+    'dill>=0.4.0',
     'docopt',
-    'cachetools<=6.0.0',
-    'numpy<2',
-    'scipy',
-    'pandas',
-    'scikit-learn',
-    'dill',
-    'torch>=2.0',
-    'transformers>=4.0,<4.44.0',
     'editdistance',
-    'requests',
     'emoji',
-    'pyrsistent',
-    'tabulate',
-    'tqdm',
+    'future',
     'muddler',
+    'numpy>=2.0.0',
+    'pandas',
+    'pyrsistent',
+    'requests',
+    'scikit-learn',
+    'scipy',
+    'six',
+    'tabulate',
+    'torch>=2.0',
+    'tqdm',
+    'transformers>=4.44.0',
 ]
-
-INSTALL_REQUIRES_NOT_WINDOWS = [
-    'camel-kenlm<=2025.09.16 ; platform_system!="Windows"'
-]
-
-if sys.platform != 'win32':
-    INSTALL_REQUIRES.extend(INSTALL_REQUIRES_NOT_WINDOWS)
 
 setup(
     name='camel_tools',
@@ -101,18 +95,20 @@ setup(
     author_email='oobeid@nyu.edu',
     maintainer='Ossama W. Obeid',
     maintainer_email='oobeid@nyu.edu',
-    packages=['camel_tools',
-              'camel_tools.cli',
-              'camel_tools.utils',
-              'camel_tools.morphology',
-              'camel_tools.disambig',
-              'camel_tools.disambig.bert',
-              'camel_tools.tokenizers',
-              'camel_tools.tagger',
-              'camel_tools.data',
-              'camel_tools.sentiment',
-              'camel_tools.dialectid',
-              'camel_tools.ner'],
+    packages=[
+        'camel_tools',
+        'camel_tools.cli',
+        'camel_tools.data',
+        'camel_tools.dialectid',
+        'camel_tools.disambig.bert',
+        'camel_tools.disambig',
+        'camel_tools.morphology',
+        'camel_tools.ner',
+        'camel_tools.sentiment',
+        'camel_tools.tagger',
+        'camel_tools.tokenizers',
+        'camel_tools.utils',
+    ],
     package_data={
         'camel_tools.utils': ['charmaps/*.json'],
     },
@@ -141,5 +137,5 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
-    python_requires='>=3.8.0, <3.13'
+    python_requires='>=3.10.0'
 )
