@@ -41,6 +41,7 @@ if sys.platform == 'win32':
 else:
     import kenlm
 
+
 import numpy as np
 import pandas as pd
 import scipy as sp
@@ -423,7 +424,8 @@ class DIDModel6(object):
 
         result = collections.deque()
         for scores in predicted_scores:
-            score_tups = list(zip(self._labels_sorted, scores))
+            scores_conv = map(lambda x: float(x), scores)
+            score_tups = list(zip(self._labels_sorted, scores_conv))
             predicted_dialect = max(score_tups, key=lambda x: x[1])[0]
             dialect_scores = dict(score_tups)
             result.append(convert(DIDPred(predicted_dialect, dialect_scores)))
