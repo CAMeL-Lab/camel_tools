@@ -71,9 +71,9 @@ _REWRITE_CAPHI_RE_1 = re.compile(u'(l-)\\+(t\\_|th\\_|d\\_|th\\.\\_|r\\_|z\\_|'
 # Replace shadda
 _REWRITE_CAPHI_RE_2 = re.compile(u'(\\S)[-]*\\+~')
 # Replace ending i_y with ii if suffix is not a vowel
-_REWRITE_CAPHI_RE_3 = re.compile(u'i\\_y-\\+([^iau]+|$)')
+_REWRITE_CAPHI_RE_3 = re.compile(u'i\\_y-(\\+[^iau]+|$)')
 # Replacing ending u_w with uu if suffix is not a vowel
-_REWRITE_CAPHI_RE_4 = re.compile(u'u\\_w-\\+([^iau]+|$)')
+_REWRITE_CAPHI_RE_4 = re.compile(u'u\\_w-(\\+[^iau]+|$)')
 # Remove hamza wasl if preceeded by a vowel
 _REWRITE_CAPHI_RE_5 = re.compile(u'([iua])\\+-2_[iua]')
 # Remove hamza wasl if preceeded by a non-vowel
@@ -217,6 +217,8 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
     result = copy.copy(stem_feats)
 
     for stem_feat in stem_feats:
+        if stem_feat == 'source':
+            continue
         suffix_feat_val = suffix_feats.get(stem_feat, '')
         if suffix_feat_val != '-' and suffix_feat_val != '':
             result[stem_feat] = suffix_feat_val

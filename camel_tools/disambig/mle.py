@@ -103,7 +103,7 @@ class MLEDisambiguator(Disambiguator):
             then no word-based MLE lookup is performed skipping directly to
             using the pos-lex model. Defaults to `None`.
         top (:obj:`int`, optional): The maximum number of top analyses to
-            return. Defaults to 1.
+            return. Set to -1 to return all analyses. Defaults to 1.
         cache_size (:obj:`int`, optional): The number of unique word
             disambiguations to cache. The cache uses a least-frequently-used
             eviction policy. Defaults to 100000.
@@ -129,7 +129,7 @@ class MLEDisambiguator(Disambiguator):
 
         self._analyzer = analyzer
 
-        if top < 1:
+        if top != -1 and top < 1:
             top = 1
         self._top = top
 
@@ -155,7 +155,7 @@ class MLEDisambiguator(Disambiguator):
                 analyzer to use. If None, an instance of the model's default
                 analyzer is created. Defaults to None.
             top (:obj:`int`, optional): The maximum number of top analyses to
-                return. Defaults to 1.
+                return. Set to -1 to return all analyses. Defaults to 1.
             cache_size (:obj:`int`, optional): The number of unique word
                 disambiguations to cache. The cache uses a
                 least-frequently-used eviction policy. Defaults to 100000.
@@ -200,6 +200,8 @@ class MLEDisambiguator(Disambiguator):
                     a.get('lex_logprob', -99),      # lex_logprob
                 ) for s, a in scored]
 
+            if self._top == -1:
+                return scored_analyses
             return scored_analyses[0:self._top]
 
         else:
@@ -222,6 +224,8 @@ class MLEDisambiguator(Disambiguator):
 
             scored_analyses.sort()
 
+            if self._top == -1:
+                return scored_analyses
             return scored_analyses[0:self._top]
         
     def _scored_analyses_cached(self, word_dd):
