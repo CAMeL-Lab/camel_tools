@@ -141,6 +141,13 @@ class MorphDataset(Dataset):
 
             for word, label in zip(sentence.words, sentence.labels):
                 word_tokens = tokenizer.tokenize(word)
+                # if word_tokens ==[]:
+                # If the word is not in the vocabulary, we use the
+                # [UNK] token to represent it.
+                if not word_tokens or all(token == tokenizer.unk_token for token in word_tokens):
+                    # word_tokens = ['[UNK]']
+                    # Use the [UNK] label id for the unknown word
+                    word_tokens = [tokenizer.unk_token]
                 # bert-base-multilingual-cased sometimes output "nothing ([])
                 # when calling tokenize with just a space.
                 if len(word_tokens) > 0:
