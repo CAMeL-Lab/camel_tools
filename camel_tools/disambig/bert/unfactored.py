@@ -659,3 +659,15 @@ class BERTUnfactoredDisambiguator(Disambiguator):
         """
 
         return self._analyzer.tok_feats()
+
+    def set_analyzer(self, analyzer):
+        """Replace the currently used analyzer with a new one.
+
+        Args:
+            analyzer (:obj:`~camel_tools.morphology.analyzer.Analyzer`): The new analyzer to use.
+        """
+
+        if analyzer is not None and isinstance(analyzer, Analyzer):
+            self._analyzer = analyzer
+
+        # TODO: Maybe throw error if an invalid analyzer is supplied.
