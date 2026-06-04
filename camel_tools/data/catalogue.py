@@ -35,7 +35,7 @@ import hashlib
 import os
 import sys
 
-from pyrsistent import pvector, pmap
+from pyrsistent import pvector
 from tqdm import tqdm
 
 import camel_tools
