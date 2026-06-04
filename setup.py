@@ -47,7 +47,6 @@ CLASSIFIERS = [
     'Operating System :: OS Independent',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
@@ -80,7 +79,7 @@ INSTALL_REQUIRES = [
     'pyrsistent',
     'regex',
     'requests',
-    'scikit-learn',
+    'scikit-learn>=1.8.0',
     'scipy',
     'six',
     'tabulate',
@@ -138,5 +137,5 @@ setup(
     long_description=LONG_DESCRIPTION,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
-    python_requires='>=3.10.0'
+    python_requires='>=3.11.0'
 )
