@@ -140,14 +140,19 @@ class MorphDataset(Dataset):
             label_ids = []
 
             for word, label in zip(sentence.words, sentence.labels):
+                if word is None or word.strip() == "":
+                    continue  # skip empty or whitespace words and do not add them to the tokens and label_ids lists
                 word_tokens = tokenizer.tokenize(word)
-                # bert-base-multilingual-cased sometimes output "nothing ([])
-                # when calling tokenize with just a space.
-                if len(word_tokens) > 0:
-                    tokens.append(word_tokens)
-                    # Use the real label id for the first token of the word,
-                    # and padding ids for the remaining tokens
-                    label_ids.append([label_map[label]] +
+                # If the word is not in the vocabulary, we use the [UNK] token to represent it.
+                if not word_tokens or all(token == tokenizer.unk_token for token in word_tokens):
+                    # word_tokens = ['[UNK]']
+                    # Use the [UNK] label id for the unknown word
+                    word_tokens = [tokenizer.unk_token]
+
+                tokens.append(word_tokens)
+                # Use the real label id for the first token of the word,
+                # and padding ids for the remaining tokens
+                label_ids.append([label_map[label]] +
                                      [pad_token_label_id] *
                                      (len(word_tokens) - 1))
 
