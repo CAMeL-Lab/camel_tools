@@ -25,7 +25,8 @@ Below is a list of databases that ship with CAMeL Tools:
 * **calima-msa-r13** Database for analyzing Modern Standard Arabic. [#fn1]_
 * **calima-egy-r13** Database for analyzing Egyptian Arabic. [#fn2]_
 * **calima-glf-01** Database for analyzing Gulf Arabic. [#fn3]_
-
+* **calima-msa-s31** Database for analyzing Modern Standard Arabic with more coverage than *calima-msa-r13*. [#fn4]_
+  It requires additional :ref:`installation steps <calima-msa-s31-db-post-install>`.
 
 Examples
 --------
@@ -86,3 +87,6 @@ Examples
 
 .. [#fn3] **calima-glf-01** database is distributed under the
    `the Creative Commons Attribution 4.0 International License <http://creativecommons.org/licenses/by/4.0/>`_.
+
+.. [#fn4] **calima-msa-s31** is a modified version of the LDC Standard Arabic Morphological Analyzer (SAMA) Version 3.1
+   database. It requires a licensed copy of `SAMA 3.1 <https://catalog.ldc.upenn.edu/LDC2010L01>`_.
