@@ -44,7 +44,7 @@ from camel_tools.data.post_install import post_install
 
 
 HASH_BLOCK_SIZE = 65536
-CATALOGUE_URL = "https://raw.githubusercontent.com/CAMeL-Lab/camel-tools-data/main/catalogue-1.5.json"
+CATALOGUE_URL = "https://raw.githubusercontent.com/CAMeL-Lab/camel-tools-data/main/catalogue-1.6.json"
 
 
 def _get_appdatadir():
