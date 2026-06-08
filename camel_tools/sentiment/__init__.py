@@ -31,8 +31,13 @@ import torch
 import torch.nn.functional as torch_fun
 from torch.utils.data import Dataset, DataLoader
 from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import utils as tf_utils
 
 from camel_tools.data import CATALOGUE
+
+
+# Disable transformers warnings.
+tf_utils.logging.set_verbosity_error()
 
 
 _LABELS = ('positive', 'negative', 'neutral')

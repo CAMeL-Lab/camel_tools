@@ -31,8 +31,13 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from transformers import BertForTokenClassification, BertTokenizer
+from transformers import utils as tf_utils
 
 from camel_tools.data import CATALOGUE
+
+
+# Disable transformers warnings.
+tf_utils.logging.set_verbosity_error()
 
 
 _LABELS = ['B-LOC', 'B-ORG', 'B-PERS', 'B-MISC', 'I-LOC', 'I-ORG', 'I-PERS',

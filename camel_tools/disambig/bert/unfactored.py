@@ -34,6 +34,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from transformers import BertForTokenClassification, BertTokenizer
+from transformers import utils as tf_utils
 
 from camel_tools.data import CATALOGUE
 from camel_tools.morphology.database import MorphologyDB
@@ -44,6 +45,10 @@ from camel_tools.disambig.bert._bert_morph_dataset import MorphDataset
 from camel_tools.disambig.score_function import score_analysis_uniform
 from camel_tools.disambig.score_function import FEATURE_SET_MAP
 from camel_tools.utils.dediac import dediac_ar
+
+
+# Disable transformers warnings.
+tf_utils.logging.set_verbosity_error()
 
 
 _SCORING_FUNCTION_MAP = {
