@@ -58,12 +58,13 @@ def _get_appdatadir():
 
 
 CT_DATA_PATH_DEFAULT = _get_appdatadir()
-CT_DATA_PATH_DEFAULT.mkdir(parents=True, exist_ok=True)
 CT_DATA_DIR = CT_DATA_PATH_DEFAULT
 
 if os.environ.get('CAMELTOOLS_DATA') is not None:
     CT_DATA_DIR = Path(
         os.environ.get('CAMELTOOLS_DATA')).expanduser().absolute()
+
+CT_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 CT_VERSIONS_PATH = Path(CT_DATA_DIR, 'versions.json')
 
