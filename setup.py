@@ -71,7 +71,7 @@ INSTALL_REQUIRES = [
     'dill>=0.4.0',
     'docopt',
     'editdistance',
-    'emoji',
+    'emoji>=2.0.0',
     'future',
     'muddler',
     'numpy>=2.0.0',
