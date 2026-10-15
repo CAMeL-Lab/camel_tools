@@ -110,5 +110,5 @@ HSB_LETTERS_CHARSET = frozenset(u'\'ADHST_bcdfghjklmnpqrstvwxyz'
                                 u'\u00c2\u00c4\u00e1\u00f0\u00fd\u0100\u0102'
                                 u'\u010e\u0127\u0161\u0175\u0177\u03b3\u03b8'
                                 u'\u03c2')
-HSB_DIAC_CHARSET = frozenset(u'.aiu~\u00c4\u00e1\u00e3\u0129\u0169')
+HSB_DIAC_CHARSET = frozenset(u'.aiu~\u00e1\u00e3\u0129\u0169')
 HSB_CHARSET = HSB_LETTERS_CHARSET | HSB_DIAC_CHARSET
