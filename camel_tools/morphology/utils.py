@@ -217,6 +217,10 @@ def merge_features(db, prefix_feats, stem_feats, suffix_feats, diac_mode="AF"):
     result = copy.copy(stem_feats)
 
     for stem_feat in stem_feats:
+        # The source describes where the stem came from, so affixes keep out.
+        if stem_feat == 'source':
+            continue
+
         suffix_feat_val = suffix_feats.get(stem_feat, '')
         if suffix_feat_val != '-' and suffix_feat_val != '':
             result[stem_feat] = suffix_feat_val
