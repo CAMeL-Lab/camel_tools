@@ -140,9 +140,18 @@ class Analyzer:
     Args:
         db (:obj:`~camel_tools.morphology.database.MorphologyDB`): Database to
             use for analysis. Must be opened in analysis or reinflection mode.
-        backoff (:obj:`str`, optional): Backoff mode. Can be one of the
-            following: 'NONE', 'NOAN_ALL', 'NOAN_PROP', 'ADD_ALL', or
-            'ADD_PROP'. Defaults to 'NONE'.
+        backoff (:obj:`str`, optional): Backoff mode. Defaults to 'NONE'.
+            Can be one of the following:
+
+            - 'NONE': No backoff analyses are generated.
+            - 'NOAN_ALL': Generate all backoff analyses only if no analyses
+              are generated.
+            - 'NOAN_PROP': Generate proper noun backoff analyses only if no
+              analyses are generated.
+            - 'ADD_ALL': Generate all backoff analyses in addition to
+              generated analyses.
+            - 'ADD_PROP': Generate proper noun backoff analyses in addition to
+              generated analyses.
         norm_map (:obj:`~camel_tools.utils.charmap.CharMapper`, optional):
             Character map for normalizing input words. If set to None, then
             :const:`DEFAULT_NORMALIZE_MAP` is used.
